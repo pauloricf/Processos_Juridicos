@@ -12,3 +12,48 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Usuarios{
+  id               String  @id @unique @db.Char(11)   // Matricula
+  Usua_Nome        String  @db.VarChar(100)
+  Usua_Email       String  @unique @db.VarChar(84)
+  Usua_Senha       String  @db.VarChar(30)
+  Usua_CPF         String  @unique @db.Char(11)
+  Usua_TipoUsuario String  @db.Char(17)  //Procurador -> Efetivo ou Geral, Secretária, Assessora
+  Usua_Identidade  String  @unique @db.VarChar(14)
+  Usua_Telefone    String  @db.Char(11)
+  Usua_Sexo        String  @db.Char(9)
+  licenca          Licencas[]
+  calendario       CalendarioAlteracoes[]
+  procuradores     Procuradores[]
+}
+
+model Calendario{
+  Cale_Data        DateTime @id @unique @db.Date
+  Cale_DiaSemana   String   @db.Char(7)  
+  Cale_TipoData    String   @db.Char(15)
+}
+
+model Licencas{
+  Lice_Motivo     String   @db.VarChar(150)
+  Lice_Usuario    String
+  Lice_DataFim    DateTime @db.Date
+  Lice_DataInicio DateTime @id @db.Date
+  usuario         Usuarios @relation(fields: [Lice_Usuario], references: [id])
+}
+
+model CalendarioAlteracoes{
+  id             Int       @id @default(autoincrement())
+  Calt_Usuario   String
+  Calt_Data      DateTime  @db.Date
+  Calt_Motivo    String    @db.VarChar(100)
+  usuario        Usuarios  @relation(fields: [Calt_Usuario], references: [id])
+}
+
+model Procuradores{
+  Pcrd_NumeroOAB  String   @db.Char(11)
+  Pcrd_Cargo      String   @db.VarChar(7)
+  Pcrd_Usuario    String   @id 
+  usuario         Usuarios @relation(fields: [Pcrd_Usuario], references: [id])
+}
+
