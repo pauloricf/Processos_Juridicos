@@ -13,28 +13,28 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Usuarios{
-  id               String  @id @unique @db.Char(11)   // Matricula
-  Usua_Nome        String  @db.VarChar(100)
-  Usua_Email       String  @unique @db.VarChar(84)
-  Usua_Senha       String  @db.VarChar(30)
-  Usua_CPF         String  @unique @db.Char(11)
-  Usua_TipoUsuario String  @db.Char(17)  //Procurador -> Efetivo ou Geral, Secretária, Assessora
-  Usua_Identidade  String  @unique @db.VarChar(14)
-  Usua_Telefone    String  @db.Char(11)
-  Usua_Sexo        String  @db.Char(9)
+model Usuarios {
+  id               String                 @id @unique @db.Char(11) // Matricula
+  Usua_Nome        String                 @db.VarChar(100)
+  Usua_Email       String                 @unique @db.VarChar(84)
+  Usua_Senha       String                 @db.VarChar(30)
+  Usua_CPF         String                 @unique @db.Char(11)
+  Usua_TipoUsuario String                 @db.Char(17) //Procurador -> Efetivo ou Geral, Secretária, Assessora
+  Usua_Identidade  String                 @unique @db.VarChar(14)
+  Usua_Telefone    String                 @db.Char(11)
+  Usua_Sexo        String                 @db.Char(9)
   licenca          Licencas[]
   calendario       CalendarioAlteracoes[]
   procuradores     Procuradores[]
 }
 
-model Calendario{
-  Cale_Data        DateTime @id @unique @db.Date
-  Cale_DiaSemana   String   @db.Char(7)  
-  Cale_TipoData    String   @db.Char(15)
+model Calendario {
+  Cale_Data      DateTime @id @unique @db.Date
+  Cale_DiaSemana String   @db.Char(7)
+  Cale_TipoData  String   @db.Char(15)
 }
 
-model Licencas{
+model Licencas {
   Lice_Motivo     String   @db.VarChar(150)
   Lice_Usuario    String
   Lice_DataFim    DateTime @db.Date
@@ -42,18 +42,94 @@ model Licencas{
   usuario         Usuarios @relation(fields: [Lice_Usuario], references: [id])
 }
 
-model CalendarioAlteracoes{
-  id             Int       @id @default(autoincrement())
-  Calt_Usuario   String
-  Calt_Data      DateTime  @db.Date
-  Calt_Motivo    String    @db.VarChar(100)
-  usuario        Usuarios  @relation(fields: [Calt_Usuario], references: [id])
+model CalendarioAlteracoes {
+  id           Int      @id @default(autoincrement())
+  Calt_Usuario String
+  Calt_Data    DateTime @db.Date
+  Calt_Motivo  String   @db.VarChar(100)
+  usuario      Usuarios @relation(fields: [Calt_Usuario], references: [id])
 }
 
-model Procuradores{
-  Pcrd_NumeroOAB  String   @db.Char(11)
-  Pcrd_Cargo      String   @db.VarChar(7)
-  Pcrd_Usuario    String   @id 
-  usuario         Usuarios @relation(fields: [Pcrd_Usuario], references: [id])
+model Procuradores {
+  Pcrd_NumeroOAB String   @db.Char(11)
+  Pcrd_Cargo     String   @db.VarChar(7)
+  Pcrd_Usuario   String   @id
+  usuario        Usuarios @relation(fields: [Pcrd_Usuario], references: [id])
 }
 
+model Processos {
+  id                  Int                  @id @default(autoincrement())
+  Pcss_NumeroProcesso String               @db.Char(25)
+  Pcss_ValorAcao      Float?               @db.Float
+  Pcss_DataInicio     DateTime             @db.Date
+  Pcss_Status         String               @db.VarChar(50)
+  Pcss_Observacoes    String?              @db.Text
+  Pcss_Procuradores   Procuradores?        @relation(fields: [Pcss_Procurador], references: [Pcrd_Usuario])
+  Pcss_Procurador     String?
+  assuntos            ProcAssuntos[]
+  naoJudiciais        ProcNaoJudiciais?
+  judiciais           ProcJudiciais?
+  documentos          DocumentosAnexados[]
+}
+
+model ProcAssuntos {
+  id                  Int       @id @default(autoincrement())
+  Pass_Assunto        String    @db.VarChar(150)
+  Pass_NumeroProcesso String    @db.Char(25)
+  processo            Processos @relation(fields: [Pass_NumeroProcesso], references: [Pcss_NumeroProcesso])
+}
+
+model ProcNaoJudiciais {
+  id                  Int          @id @default(autoincrement())
+  Pnjd_TipoPrazo      TiposPrazos? @relation(fields: [Pnjd_TipoPrazoId], references: [id])
+  Pnjd_TipoPrazoId    Int?
+  processo            Processos    @relation(fields: [Pnjd_NumeroProcesso], references: [Pcss_NumeroProcesso])
+  Pnjd_NumeroProcesso String       @db.Char(25)
+}
+
+model TiposPrazos {
+  id           Int                @id @default(autoincrement())
+  Tpraz_Tipo   String             @db.VarChar(50)
+  Tpraz_Dias   Int                @db.Integer
+  naoJudiciais ProcNaoJudiciais[]
+}
+
+model ProcJudiciais {
+  id                  Int       @id @default(autoincrement())
+  Pjud_Vara           String    @db.VarChar(100)
+  Pjud_LocalAudiencia String?   @db.VarChar(100)
+  Pjud_DataAudiencia  DateTime? @db.Date
+  processo            Processos @relation(fields: [Pjud_NumeroProcesso], references: [Pcss_NumeroProcesso])
+  Pjud_NumeroProcesso String    @db.Char(25)
+}
+
+model DocumentosAnexados {
+  id                   Int       @id @default(autoincrement())
+  Danex_NumeroProcesso String    @db.Char(25)
+  Danex_Data           DateTime  @db.Date
+  Danex_Nome           String    @db.VarChar(150)
+  Danex_Documento      String    @db.VarChar(255)
+  processo             Processos @relation(fields: [Danex_NumeroProcesso], references: [Pcss_NumeroProcesso])
+}
+
+model Transferencias {
+  id                     Int          @id @default(autoincrement())
+  Tran_UsuarioOrigem     String       @db.Char(11)
+  Tran_NumeroProcesso    String       @db.Char(25)
+  Tran_ProcuradorDestino String       @db.Char(11)
+  Tran_Data              DateTime     @db.Date
+  Tran_Motivo            String       @db.VarChar(150)
+  processo               Processos    @relation(fields: [Tran_NumeroProcesso], references: [Pcss_NumeroProcesso])
+  procuradorOrigem       Procuradores @relation(fields: [Tran_UsuarioOrigem], references: [Pcrd_Usuario])
+  procuradorDestino      Procuradores @relation(fields: [Tran_ProcuradorDestino], references: [Pcrd_Usuario])
+}
+
+model ProcMovimentacoes {
+  id                  Int       @id @default(autoincrement())
+  Pmov_Processo       Processos @relation(fields: [Pmov_NumeroProcesso], references: [Pcss_NumeroProcesso])
+  Pmov_NumeroProcesso String    @db.Char(25)
+  Pmov_Data           DateTime  @db.Date
+  Pmov_Usuario        Usuarios  @relation(fields: [Pmov_UsuarioId], references: [id])
+  Pmov_UsuarioId      String    @db.Char(11)
+  Pmov_Descricao      String    @db.Text
+}
