@@ -14,7 +14,8 @@ datasource db {
 }
 
 model Usuarios {
-  id               String                 @id @unique @db.Char(11) // Matricula
+  id               Int                    @id @default(autoincrement())
+  Usua_Matricula   String                 @unique @db.VarChar(11)
   Usua_Nome        String                 @db.VarChar(100)
   Usua_Email       String                 @unique @db.VarChar(84)
   Usua_Senha       String                 @db.VarChar(30)
@@ -26,20 +27,25 @@ model Usuarios {
   licenca          Licencas[]
   calendario       CalendarioAlteracoes[]
   procuradores     Procuradores[]
+  Transferencias   Transferencias[]
 }
 
 model Calendario {
-  Cale_Data      DateTime @id @unique @db.Date
+  id             Int      @id @default(autoincrement())
+  Cale_Data      DateTime @unique @db.Date
   Cale_DiaSemana String   @db.Char(7)
   Cale_TipoData  String   @db.Char(15)
 }
 
 model Licencas {
+  id              Int      @id @default(autoincrement())
   Lice_Motivo     String   @db.VarChar(150)
-  Lice_Usuario    String
   Lice_DataFim    DateTime @db.Date
-  Lice_DataInicio DateTime @id @db.Date
-  usuario         Usuarios @relation(fields: [Lice_Usuario], references: [id])
+  Lice_DataInicio DateTime @db.Date
+  Lice_Usuario    String
+
+  Lice_Usuario_id Int?
+  usuario         Usuarios? @relation(fields: [Lice_Usuario_id], references: [id])
 }
 
 model CalendarioAlteracoes {
@@ -47,44 +53,61 @@ model CalendarioAlteracoes {
   Calt_Usuario String
   Calt_Data    DateTime @db.Date
   Calt_Motivo  String   @db.VarChar(100)
-  usuario      Usuarios @relation(fields: [Calt_Usuario], references: [id])
+
+  Calt_Usuario_id Int
+  usuario         Usuarios @relation(fields: [Calt_Usuario_id], references: [id])
 }
 
 model Procuradores {
-  Pcrd_NumeroOAB String   @db.Char(11)
-  Pcrd_Cargo     String   @db.VarChar(7)
-  Pcrd_Usuario   String   @id
-  usuario        Usuarios @relation(fields: [Pcrd_Usuario], references: [id])
+  id             Int    @id @default(autoincrement())
+  Pcrd_NumeroOAB String @db.Char(11)
+  Pcrd_Cargo     String @db.VarChar(7)
+  Pcrd_Usuario   String
+  Processos         Processos[]
+  Transferencias    Transferencias[]
+  ProcMovimentacoes ProcMovimentacoes[]
+
+  Pcrd_Usuario_id   Int
+  usuario           Usuarios            @relation(fields: [Pcrd_Usuario_id], references: [id])
 }
 
 model Processos {
-  id                  Int                  @id @default(autoincrement())
-  Pcss_NumeroProcesso String               @db.Char(25)
-  Pcss_ValorAcao      Float?               @db.Float
-  Pcss_DataInicio     DateTime             @db.Date
-  Pcss_Status         String               @db.VarChar(50)
-  Pcss_Observacoes    String?              @db.Text
-  Pcss_Procuradores   Procuradores?        @relation(fields: [Pcss_Procurador], references: [Pcrd_Usuario])
+  id                  Int      @id @default(autoincrement())
+  Pcss_NumeroProcesso String   @db.Char(25)
+  Pcss_ValorAcao      Decimal  @db.Decimal(10, 2)
+  Pcss_DataInicio     DateTime @db.Date
+  Pcss_Status         String   @db.VarChar(50)
+  Pcss_Observacoes    String?  @db.Text
   Pcss_Procurador     String?
-  assuntos            ProcAssuntos[]
-  naoJudiciais        ProcNaoJudiciais?
-  judiciais           ProcJudiciais?
-  documentos          DocumentosAnexados[]
+
+  assuntos          ProcAssuntos[]
+  naoJudiciais      ProcNaoJudiciais?
+  judiciais         ProcJudiciais?
+  documentos        DocumentosAnexados[]
+  Transferencias    Transferencias[]
+  ProcMovimentacoes ProcMovimentacoes[]
+  
+  Pcss_Procurador_id  Int?
+  Pcss_Procuradores Procuradores?        @relation(fields: [Pcss_Procurador_id], references: [id])
 }
 
 model ProcAssuntos {
-  id                  Int       @id @default(autoincrement())
-  Pass_Assunto        String    @db.VarChar(150)
-  Pass_NumeroProcesso String    @db.Char(25)
-  processo            Processos @relation(fields: [Pass_NumeroProcesso], references: [Pcss_NumeroProcesso])
+  id                  Int    @id @default(autoincrement())
+  Pass_Assunto        String @db.VarChar(150)
+  Pass_NumeroProcesso String @db.Char(25)
+
+  Pass_NumeroProcesso_id Int
+  processo               Processos @relation(fields: [Pass_NumeroProcesso_id], references: [id])
 }
 
 model ProcNaoJudiciais {
-  id                  Int          @id @default(autoincrement())
-  Pnjd_TipoPrazo      TiposPrazos? @relation(fields: [Pnjd_TipoPrazoId], references: [id])
-  Pnjd_TipoPrazoId    Int?
-  processo            Processos    @relation(fields: [Pnjd_NumeroProcesso], references: [Pcss_NumeroProcesso])
+  id               Int  @id @default(autoincrement())
+  Pnjd_TipoPrazoId Int?
+
   Pnjd_NumeroProcesso String       @db.Char(25)
+  Pnjd_Processo_id    Int          @unique
+  Pnjd_TipoPrazo      TiposPrazos? @relation(fields: [Pnjd_TipoPrazoId], references: [id])
+  processo            Processos    @relation(fields: [Pnjd_Processo_id], references: [id])
 }
 
 model TiposPrazos {
@@ -99,37 +122,51 @@ model ProcJudiciais {
   Pjud_Vara           String    @db.VarChar(100)
   Pjud_LocalAudiencia String?   @db.VarChar(100)
   Pjud_DataAudiencia  DateTime? @db.Date
-  processo            Processos @relation(fields: [Pjud_NumeroProcesso], references: [Pcss_NumeroProcesso])
+
   Pjud_NumeroProcesso String    @db.Char(25)
+  Pjud_Processo_id    Int       @unique
+  processo            Processos @relation(fields: [Pjud_Processo_id], references: [id])
 }
 
 model DocumentosAnexados {
-  id                   Int       @id @default(autoincrement())
+  id              Int      @id @default(autoincrement())
+  Danex_Data      DateTime @db.Date
+  Danex_Nome      String   @db.VarChar(150)
+  Danex_Documento String   @db.VarChar(255)
+
   Danex_NumeroProcesso String    @db.Char(25)
-  Danex_Data           DateTime  @db.Date
-  Danex_Nome           String    @db.VarChar(150)
-  Danex_Documento      String    @db.VarChar(255)
-  processo             Processos @relation(fields: [Danex_NumeroProcesso], references: [Pcss_NumeroProcesso])
+  Danex_Processo_id    Int
+  processo             Processos @relation(fields: [Danex_Processo_id], references: [id])
 }
 
 model Transferencias {
-  id                     Int          @id @default(autoincrement())
-  Tran_UsuarioOrigem     String       @db.Char(11)
-  Tran_NumeroProcesso    String       @db.Char(25)
-  Tran_ProcuradorDestino String       @db.Char(11)
-  Tran_Data              DateTime     @db.Date
-  Tran_Motivo            String       @db.VarChar(150)
-  processo               Processos    @relation(fields: [Tran_NumeroProcesso], references: [Pcss_NumeroProcesso])
-  procuradorOrigem       Procuradores @relation(fields: [Tran_UsuarioOrigem], references: [Pcrd_Usuario])
-  procuradorDestino      Procuradores @relation(fields: [Tran_ProcuradorDestino], references: [Pcrd_Usuario])
+  id                     Int      @id @default(autoincrement())
+  Tran_Data              DateTime @db.Date
+  Tran_Motivo            String   @db.VarChar(150)
+  Tran_NumeroProcesso    String   @db.Char(25)
+  Tran_UsuarioOrigem     String   @db.Char(11)
+  Tran_ProcuradorDestino String   @db.Char(11)
+
+  Tran_UsuarioOrigem_id     Int
+  Tran_ProcuradorDestino_id Int
+  Tran_Processo_id          Int
+
+  usuarioOrigem     Usuarios     @relation(fields: [Tran_UsuarioOrigem_id], references: [id])
+  procuradorDestino Procuradores @relation(fields: [Tran_ProcuradorDestino_id], references: [id])
+  processo          Processos    @relation(fields: [Tran_Processo_id], references: [id])
 }
 
 model ProcMovimentacoes {
-  id                  Int       @id @default(autoincrement())
-  Pmov_Processo       Processos @relation(fields: [Pmov_NumeroProcesso], references: [Pcss_NumeroProcesso])
-  Pmov_NumeroProcesso String    @db.Char(25)
-  Pmov_Data           DateTime  @db.Date
-  Pmov_Usuario        Usuarios  @relation(fields: [Pmov_UsuarioId], references: [id])
-  Pmov_UsuarioId      String    @db.Char(11)
-  Pmov_Descricao      String    @db.Text
+  id               Int      @id @default(autoincrement())
+  Pmov_Despacho    String   @db.VarChar(50)
+  Pmov_Publicacao  String   @db.VarChar(50)
+  Pmov_Providencia String   @db.VarChar(50)
+  Pmov_Data        DateTime @db.Date
+  Pmov_Descricao   String   @db.Text
+
+  Pmov_Procurador_id Int
+  Pmov_Processo_id   Int
+
+  procurador Procuradores @relation(fields: [Pmov_Procurador_id], references: [id])
+  processo   Processos    @relation(fields: [Pmov_Processo_id], references: [id])
 }
