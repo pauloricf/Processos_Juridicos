@@ -72,10 +72,14 @@ model Procuradores {
 model Processos {
   id                  Int      @id @default(autoincrement())
   Pcss_NumeroProcesso String   @db.Char(25)
+  Pcss_Siged          String   @db.Char(22)
   Pcss_ValorAcao      Decimal  @db.Decimal(10, 2)
   Pcss_DataInicio     DateTime @db.Date
-  Pcss_Status         String   @db.VarChar(50)
+  Pcss_Status         String   @db.VarChar(20)
   Pcss_Observacoes    String?  @db.Text
+  Pcss_Destino        String?  @db.Char(15)
+  Pcss_Requerente     String   @db.VarChar(100)
+  Pcss_Requerido      String?  @db.VarChar(100)
 
   assuntos          ProcAssuntos[]
   naoJudiciais      ProcNaoJudiciais?
@@ -97,10 +101,10 @@ model ProcAssuntos {
 }
 
 model ProcNaoJudiciais {
-  id               Int  @id @default(autoincrement())
-  Pnjd_TipoPrazoId Int?
+  id                  Int          @id @default(autoincrement())
+  Pnjd_TipoPrazoId    Int?
 
-  Pnjd_NumeroProcesso String       @db.Char(25)
+  Pnjd_Prazo          Int          @db.Integer
   Pnjd_Processo_id    Int          @unique
   Pnjd_TipoPrazo      TiposPrazos? @relation(fields: [Pnjd_TipoPrazoId], references: [id])
   processo            Processos    @relation(fields: [Pnjd_Processo_id], references: [id])
@@ -128,7 +132,7 @@ model ProcJudiciais {
 model DocumentosAnexados {
   id              Int      @id @default(autoincrement())
   Danex_Data      DateTime @db.Date    
-  Danex_Nome      String   @db.VarChar(150) 
+  Danex_Nome      String   @db.VarChar(100) 
   Danex_Documento String   @db.VarChar(255)  
 
   Danex_Usuario  Int
