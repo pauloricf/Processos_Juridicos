@@ -73,7 +73,7 @@ model Processos {
   id                  Int      @id @default(autoincrement())
   Pcss_NumeroProcesso String   @db.Char(25)
   Pcss_Siged          String   @db.Char(22)
-  Pcss_ValorAcao      Decimal  @db.Decimal(10, 2)
+  Pcss_ValorAcao      Float    @db.DoublePrecision
   Pcss_DataInicio     DateTime @db.Date
   Pcss_Status         String   @db.VarChar(20)
   Pcss_Observacoes    String?  @db.Text
