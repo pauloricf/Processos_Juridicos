@@ -2,7 +2,7 @@
 const express = require('express');
 const cors = require('cors');
 const app = express();
-const cadastrarProcessos_Routers = require("./routes/cadastrarProcessos_Routers")
+const cadastrarProcessos_Routers = require("./routes/processosRouter")
 
 // Usando Cors para permitir requisições de qualquer origem 
 app.use(cors());
