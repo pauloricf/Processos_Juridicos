@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import api from '../../services/apiConfig';
 import ProcessTable from './ProcessTable';
-import styles from './ProcessPage.module.css';
+import  './ProcessPage.css';
+import Sidebar from '../../components/Sidebar';
+import { FaCircle , FaSearch, FaFilter } from "react-icons/fa";
+
 
 const ProcessPage = () => {
   const [processes, setProcesses] = useState([]);
   const dataAtual = new Date();
+  
 
   const fetchProcesses = async () => {
     try {
@@ -21,10 +25,33 @@ const ProcessPage = () => {
   }, []);
 
   return (
-    <div className={styles.background}>
-      <div className={styles.content}>
-        <h3>Listagem de processos cadastrados</h3>
-        <ProcessTable processes={processes} data={dataAtual} />
+    <div className="page-content">
+      <Sidebar/>
+      <div className="main-container">
+          <div className="filter-section-bar">
+            <label>Selecionar Status: </label>
+            <button >
+              <FaCircle color='#2871A7'/>
+              Emitidos
+            </button>
+            <button >
+              <FaCircle color='#19D109'/>
+              Concluidos
+            </button>
+            <button >
+              <FaCircle color='#FF0000'  />
+              Vencidos
+            </button>
+            <div className="search-input-container">
+              <input type="text" className="input"></input>
+              <FaSearch className="icon_search"/>
+            </div>
+            <FaFilter className="icon_filter"/>
+          </div>
+        <div className="content">
+          <h3>Listagem de processos cadastrados</h3>
+          <ProcessTable processes={processes} data={dataAtual} />
+        </div>
       </div>
     </div>
   );

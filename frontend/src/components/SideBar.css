@@ -1,12 +1,39 @@
 .sidebar {
     width: 140px;
-    background-color: #1d75da;
     color: white;
     display: flex;
     flex-direction: column;
-    padding: 20px;
+}
+.logo-uea-container {
+    width: 150px; 
+    border-radius: 8px; /* Bordas arredondadas */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px;
 }
 
+.li-content{
+    display: flex;
+    flex-direction: column;
+}
+.button-li{
+    display: flex;
+    flex-direction: row;
+    width: 150px;
+    align-items: center;
+    gap: 8px;
+    background-color: #17427c;
+    color: white;
+    
+}
+.button-li.active{
+    color: #0092C1;
+}
+
+.icon-li{
+    font-size: 18px;
+}
 .sidebar-logo img {
     width: 150px;
     margin-bottom: 20px;
@@ -19,8 +46,9 @@
 }
 
 .sidebar li {
-    margin: 10px 0;
+    margin: 20px 0;
     cursor: pointer;
+    gap: 20px;
 }
 
 .box-option{

@@ -1,42 +1,62 @@
 import React from 'react';
-import './SideBar.css';
+import './Sidebar.css';
 import logo_uea from '../img/uea.svg';
-import image_func from '../img/image_func.svg';
-import image_calen from '../img/image_calen.svg';
-import image_processos from '../img/image_processos.svg';
-import image_cadProce from '../img/image_cadProce.svg';
+import { FaRegCalendarAlt } from "react-icons/fa";
+import { FaRegNewspaper, FaPeopleGroup } from "react-icons/fa6";
+import { Link, useLocation } from 'react-router-dom';
 
 function Sidebar() {
+    const location = useLocation();
+    let page = ""
+    switch (location.pathname) {
+        case "/process":
+            page = "process";
+            break;
+        case "/register-process":
+            page = "register-process";
+            break
+        default:
+            break
+        
+    }
     return (
         <div className="sidebar">
             <div className="sidebar-logo">
             {/* <img src="logo.png" alt="Logo UEA" /> */}
-            <img src={logo_uea} alt='Logo da UEA' />
+            <div className='logo-uea-container'>
+                <img src={logo_uea} alt='Logo da UEA' className='logo-uea'/>
+            </div>
             </div> 
             <ul>
-                <li>
-                    <div className='box-option'>
-                    <img src={image_calen} alt='Calendario' />
-                        Calendário
-                    </div>
+                <li className='li-content'>
+                    {/* <div> */}
+                    <button className='button-li'>
+                        <FaRegCalendarAlt className='icon-li'/>
+                        Calendario
+                    </button>
+                    {/* </div> */}
                 </li>
                 <li>
-                    <div className='box-option'>
-                        <img src={image_processos} alt='Logo' />
+                    <Link to={"/process"}>
+                    <button className={`button-li ${page === "process"? "active" : ""}`}>
+                        <FaRegNewspaper className='icon-li'/>
                         Processos
-                    </div>
+                    </button>
+                    </Link>
                 </li>
                 <li>
-                    <div className='box-option'>
-                        <img src={image_func} alt='Cad Funcionario' />
+                    <button className="button-li">
+                        <FaPeopleGroup className='icon-li'/>
                         Funcionários
-                    </div>
+                    </button>
                 </li>
                 <li>
-                    <div className='box-option'>
-                        <img src={image_cadProce} alt='Cad Processos' />
+                    <Link to={"/register-process"}>
+                    <button className={`button-li ${page === "register-process"? "active" : ""}`}>
+                        <FaRegCalendarAlt className='icon-li'/>
                         Cadastrar
-                    </div>
+                    </button>
+                    </Link>
                 </li>
             </ul>
         </div>

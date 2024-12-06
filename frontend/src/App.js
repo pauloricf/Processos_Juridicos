@@ -1,15 +1,17 @@
 import './App.css';
 import ProcessPage from './pages/ProcessPage/ProcessPage';
-import CadastrarProcessos from "./pages/cadastrarProcessos";
+import RegisterProcessPage from "./pages/RegisterProcessPage/RegisterProcessPage";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 const App = () => {
   return (
     <Router>
+      <div className='app-container'>
       <Routes>
-        <Route path='/cadProcessos' element={<CadastrarProcessos/>}/>
+        <Route path='/register-process' element={<RegisterProcessPage/>}/>
         <Route path='/process' element={<ProcessPage/>} />
       </Routes>
+      </div>
     </Router>
   )
 }

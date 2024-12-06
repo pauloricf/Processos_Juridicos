@@ -60,9 +60,16 @@ async function cadastrarProcesso (req, res) {
 const getAllProcessos = async(req, res) =>{
     try {
         const processos = await prisma.processos.findMany(
-            {include: {
+            {
+                include: 
+                {
                 judiciais: true,
-            }}
+                assuntos: true,
+            },
+            
+
+
+        }
         )
         res.status(200).json(processos)
     } catch (error) {

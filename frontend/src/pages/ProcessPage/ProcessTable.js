@@ -1,6 +1,6 @@
 import React from 'react';
 import { TableContainer, Table, TableHead, TableBody, TableCell, TableRow } from '@mui/material';
-import styles from "./ProcessTable.module.css"
+import "./ProcessTable.css"
 import { FaTrash, FaPencil, FaC} from "react-icons/fa6";
 import { FaCircle } from "react-icons/fa";
 
@@ -17,9 +17,9 @@ const formatarVencimento = (prazo) => {
 };
 
 const ProcessTable = ({ processes }) => {
+  console.log(processes);
   return (
-  
-      <TableContainer className={styles.table_container}>
+      <TableContainer className="table_container">
         <Table>
           <TableHead>
             <TableRow>
@@ -48,7 +48,7 @@ const ProcessTable = ({ processes }) => {
                 <TableCell>{process.Pcss_Siged}</TableCell>
                 <TableCell>{process.Pcss_Requerente}</TableCell>
                 <TableCell>"Tipo"</TableCell>
-                <TableCell>{process.assunto || 'assunto'}</TableCell>
+                <TableCell>{process.assuntos[0]?.Pass_Assunto || 'assunto'}</TableCell>
                 <TableCell>Vencimento</TableCell>
                 <TableCell>
                   {formatarVencimento(process.judiciais?.Pjud_Prazo || 0)}
