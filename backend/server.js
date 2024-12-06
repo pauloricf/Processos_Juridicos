@@ -2,7 +2,7 @@
 const express = require('express');
 const cors = require('cors');
 const app = express();
-const cadastrarProcessos_Routers = require("./routes/processosRouter")
+const processRouter = require("./routes/processRouter")
 
 // Usando Cors para permitir requisições de qualquer origem 
 app.use(cors());
@@ -11,7 +11,7 @@ app.use(cors());
 app.use(express.json());
 
 // Usando as rotas
-app.use('/api/', cadastrarProcessos_Routers);
+app.use('/api/', processRouter);
 
 // Inicia o servidor
 const PORT = process.env.PORT || 3003;

@@ -1,0 +1,10 @@
+.table_container {
+  background-color: rgba(255, 255, 255, 0.8); 
+  padding: 20px;
+  border-radius: 8px; /* Bordas arredondadas */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para destaque */
+  max-height: 80vh; /* Limita a altura para evitar que a tabela ultrapasse a tela */
+  overflow-y: auto; /* Habilita rolagem caso a tabela seja muito grande */
+  width: 100%;
+  margin: 20px 0;
+}
