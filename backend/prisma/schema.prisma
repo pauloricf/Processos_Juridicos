@@ -103,8 +103,8 @@ model ProcAssuntos {
 model ProcNaoJudiciais {
   id                  Int          @id @default(autoincrement())
   Pnjd_TipoPrazoId    Int?
-
-  Pnjd_Prazo          Int          @db.Integer
+  Pnjd_DataVencimento DateTime     @db.Date
+  //Pnjd_Prazo          Int          @db.Integer
   Pnjd_Processo_id    Int          @unique
   Pnjd_TipoPrazo      TiposPrazos? @relation(fields: [Pnjd_TipoPrazoId], references: [id])
   processo            Processos    @relation(fields: [Pnjd_Processo_id], references: [id])

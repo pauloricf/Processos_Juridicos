@@ -1,0 +1,35 @@
+.sidebar {
+    width: 140px;
+    background-color: #1d75da;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.sidebar-logo img {
+    width: 150px;
+    margin-bottom: 20px;
+}
+
+.sidebar ul {
+    margin-top: 10px;
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar li {
+    margin: 10px 0;
+    cursor: pointer;
+}
+
+.box-option{
+    background-color: rgb(17, 19, 105);
+    height: 20px;
+    width: 110px;
+    padding: 20px;
+    text-align: center;
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}

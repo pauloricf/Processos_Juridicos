@@ -11,15 +11,16 @@ async function post_cadastrarProcesso (req, res) {
 
         // Atributos
         const {Pcss_NumeroProcesso, Pcss_Siged, Pcss_Status, Pcss_Observacoes, Pcss_Destino, Pcss_Requerente, Pcss_Requerido, Pass_Assuntos, Pjud_Vara, Pjud_LocalAudiencia, Pjud_DataAudiencia, Pjud_Prazo, Pjud_DataIntimacao} = req.body;
-
+ 
         // Mudando o tipo do Pcss_ValorAcao
         Pcss_ValorAcao = parseFloat(req.body.Pcss_ValorAcao)
 
         // Atributos que não podem ser vazios
         if(!Pcss_NumeroProcesso || !Pcss_Siged || !Pcss_ValorAcao || !Pcss_Requerente){
             res.json({error : "Não é possível cadastrar o processo porque há dados faltantes"})
-
+        
         } else{ 
+           
             // Objeto para criar o processo
             const novoProcesso = await prisma.processos.create({
             data : {Pcss_NumeroProcesso, 
@@ -42,8 +43,8 @@ async function post_cadastrarProcesso (req, res) {
                         Pjud_Prazo: Pjud_Prazo,
                         Pjud_DataAudiencia: Pjud_DataAudiencia,
                         Pjud_DataIntimacao: Pjud_DataIntimacao
-                    }}
-                    
+                    }},
+
             }});
 
             // Resposta
