@@ -10,16 +10,26 @@ async function cadastrarProcesso (req, res) {
         console.log("Dados recebidos:", req.body);
 
         // Atributos
-        const {Pcss_NumeroProcesso, Pcss_Siged, Pcss_Status, Pcss_Observacoes, Pcss_Destino, Pcss_Requerente, Pcss_Requerido, Pass_Assuntos, Pjud_Vara, Pjud_LocalAudiencia, Pjud_DataAudiencia, Pjud_Prazo, Pjud_DataIntimacao} = req.body;
+        const {Pcss_NumeroProcesso, Pcss_Siged, Pcss_Status, Pcss_Observacoes, Pcss_Destino, Pcss_Requerente, Pcss_Requerido, Pass_Assuntos, Pjud_Vara, Pjud_LocalAudiencia, Pjud_DataAudiencia, Pjud_Prazo, Pjud_DataIntimacao, Categoria} = req.body;
 
         // Mudando o tipo do Pcss_ValorAcao
         Pcss_ValorAcao = parseFloat(req.body.Pcss_ValorAcao)
+        
+        let idCategoria = 0;
+        if(Categoria=="Ação Ordinária"){
+            idCategoria = 1
+        } else if (Categoria=="Juizado Especial"){
+            idCategoria = 2
+        } else if(Categoria=="Mandado de Segurança"){
+            idCategoria = 3
+        }
 
         // Atributos que não podem ser vazios
         if(!Pcss_NumeroProcesso || !Pcss_Siged || !Pcss_ValorAcao || !Pcss_Requerente){
             res.json({error : "Não é possível cadastrar o processo porque há dados faltantes"})
 
         } else{ 
+
             // Objeto para criar o processo
             const novoProcesso = await prisma.processos.create({
             data : {Pcss_NumeroProcesso, 
@@ -33,7 +43,7 @@ async function cadastrarProcesso (req, res) {
                     Pcss_Requerido,
                     assuntos: {
                         create: Pass_Assuntos.map(assunto => ({
-                          Pass_Assunto: assunto,
+                            Pass_Assunto: assunto,
                         })),
                     },
                     judiciais: {create: {
@@ -42,8 +52,14 @@ async function cadastrarProcesso (req, res) {
                         Pjud_Prazo: Pjud_Prazo,
                         Pjud_DataAudiencia: Pjud_DataAudiencia,
                         Pjud_DataIntimacao: Pjud_DataIntimacao
+                    }}, 
+                    naoJudiciais: {create: {
+                        Pnjd_TipoPrazo: {connect:
+                            {id : idCategoria}
+                        },
+                        Pnjd_DataVencimento: new Date()
                     }}
-                    
+
             }});
 
             // Resposta
@@ -51,8 +67,8 @@ async function cadastrarProcesso (req, res) {
         }
 
     } catch{
-         // Mensagem de erro
-         res.status(500).json({ error : 'Erro ao criar o processo'});
+            // Mensagem de erro
+            res.status(500).json({ error : 'Erro ao criar o processo'});
     }
     
 };

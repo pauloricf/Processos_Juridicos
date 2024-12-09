@@ -3,7 +3,7 @@ const routes = express.Router();
 const processController = require("../controllers/processController") 
 
 // Rota
-routes.post("/processo", processController.cadastrarProcesso)
+routes.post("/cadastrar", processController.cadastrarProcesso)
 routes.get("/processo", processController.getAllProcessos)
 
 // Exportar
