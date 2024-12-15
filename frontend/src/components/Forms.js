@@ -23,8 +23,8 @@ function Form() {
         Pjud_LocalAudiencia: '',
         Pcss_Requerente: '',
         Pcss_Requerido: '',
-        Pcss_Observacoes: '',
-        Pass_Assuntos
+        Pcss_Observacoes: ''
+        //Pass_Assuntos
     });
 
 
@@ -67,8 +67,8 @@ function Form() {
                     Pjud_LocalAudiencia: '',
                     Pcss_Requerente: '',
                     Pcss_Requerido: '',
-                    Pcss_Observacoes: '',
-                    Pass_Assuntos
+                    Pcss_Observacoes: ''
+                    //Pass_Assuntos
                 });
             } else{
                 alert(`Erro: ${data.error}`);
@@ -115,14 +115,14 @@ function Form() {
 
                         <input type="text" placeholder="Local da audiência" name='Pjud_LocalAudiencia' value={formData.Pjud_LocalAudiencia} onChange={handleChange} />
                     </div>
-                </section>
+                {/*</section>
                     <div className="form-row">
                         <p>Assunto</p>
-                        <input type='char' placeholder="Assuntos" name='Pass_Assunntos' value={formData.Pass_Assuntos} onChange={handleChange}/>
+                        <input type='char' placeholder="Assuntos" name='Pass_Assuntos' value={formData.Pass_Assuntos} onChange={handleChange}/>
 
                         <Dropdowns />
                     </div>
-                <section>
+                <section>*/}
 
                 </section>
 

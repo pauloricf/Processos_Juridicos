@@ -54,9 +54,7 @@ async function cadastrarProcesso (req, res) {
                         Pjud_DataIntimacao: Pjud_DataIntimacao
                     }}, 
                     naoJudiciais: {create: {
-                        Pnjd_TipoPrazo: {connect:
-                            {id : idCategoria}
-                        },
+                        Pnjd_TipoPrazo: Pnjd_TipoPrazo,
                         Pnjd_DataVencimento: new Date()
                     }}
 

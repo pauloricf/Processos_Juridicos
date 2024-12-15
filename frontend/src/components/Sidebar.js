@@ -15,6 +15,9 @@ function Sidebar() {
         case "/register-process":
             page = "register-process";
             break
+        case "/register-user":
+            page = 'register-user';
+            break
         default:
             break
         
