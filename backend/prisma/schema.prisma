@@ -148,7 +148,7 @@ model Transferencias {
   Tran_Motivo            String   @db.VarChar(150)
 
   Tran_UsuarioOrigem_id     Int
-  Tran_ProcuradorDestino_id Int
+  Tran_ProcuradorDestino_id Int 
   Tran_NumeroProcesso_id          Int
 
   usuarioOrigem     Usuarios     @relation(fields: [Tran_UsuarioOrigem_id], references: [id])

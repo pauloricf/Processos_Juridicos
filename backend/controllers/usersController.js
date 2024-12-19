@@ -12,7 +12,7 @@ async function cadastrarFuncionarios(req, res) {
     const {Usua_Matricula, Usua_Nome, Usua_Email, Usua_CPF, Usua_TipoUsuario, Usua_Identidade, Usua_Telefone, Usua_Sexo, Pcrd_NumeroOAB} = req.body;
     
     try{
-         // Atributos que não podem ser vazios
+        // Atributos que não podem ser vazios
         if(!Usua_Nome || !Usua_CPF || !Usua_Email || !Usua_TipoUsuario || !Usua_Identidade || !Usua_Sexo || !Usua_Telefone){
             res.json({error : "Não é possível cadastrar o usuário porque há dados faltantes"})
          
