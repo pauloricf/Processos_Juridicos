@@ -80,6 +80,7 @@ model Processos {
   Pcss_Destino        String?  @db.Char(15)
   Pcss_Requerente     String   @db.VarChar(100)
   Pcss_Requerido      String?  @db.VarChar(100)
+  Pcss_DataEmitido    DateTime @db.Date
 
   assuntos          ProcAssuntos[]
   naoJudiciais      ProcNaoJudiciais?
@@ -111,9 +112,10 @@ model ProcNaoJudiciais {
 }
 
 model TiposPrazos {
-  id           Int                @id @default(autoincrement())
-  Tpraz_Tipo   String             @db.VarChar(50)
-  Tpraz_Dias   Int                @db.Integer
+  id                 Int                @id @default(autoincrement())
+  Tpraz_Tipo         String             @db.VarChar(50)
+  Tpraz_Dias         Int                @db.Integer
+  Tpraz_DiasCorridos Boolean            @db.Boolean
   naoJudiciais ProcNaoJudiciais[]
 }
 
