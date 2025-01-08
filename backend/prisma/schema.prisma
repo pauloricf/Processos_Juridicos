@@ -80,7 +80,6 @@ model Processos {
   Pcss_Destino        String?  @db.Char(15)
   Pcss_Requerente     String   @db.VarChar(100)
   Pcss_Requerido      String?  @db.VarChar(100)
-  Pcss_DataEmitido    DateTime @db.Date
 
   assuntos          ProcAssuntos[]
   naoJudiciais      ProcNaoJudiciais?
@@ -88,6 +87,9 @@ model Processos {
   documentos        DocumentosAnexados[]
   Transferencias    Transferencias[]
   ProcMovimentacoes ProcMovimentacoes[]
+
+  Pcss_Prazo         Int  
+  prazos            TiposPrazos         @relation(fields: [Pcss_Prazo], references: [id])
   
   Pcss_Procurador_id  Int?
   Pcss_Procuradores Procuradores?        @relation(fields: [Pcss_Procurador_id], references: [id])
@@ -102,12 +104,10 @@ model ProcAssuntos {
 }
 
 model ProcNaoJudiciais {
-  id                  Int          @id @default(autoincrement())
-  Pnjd_TipoPrazoId    Int?
+  id                   Int          @id @default(autoincrement())
   Pnjd_DataVencimento DateTime     @db.Date
-  //Pnjd_Prazo          Int          @db.Integer
+  
   Pnjd_Processo_id    Int          @unique
-  Pnjd_TipoPrazo      TiposPrazos? @relation(fields: [Pnjd_TipoPrazoId], references: [id])
   processo            Processos    @relation(fields: [Pnjd_Processo_id], references: [id])
 }
 
@@ -115,8 +115,9 @@ model TiposPrazos {
   id                 Int                @id @default(autoincrement())
   Tpraz_Tipo         String             @db.VarChar(50)
   Tpraz_Dias         Int                @db.Integer
-  Tpraz_DiasCorridos Boolean            @db.Boolean
-  naoJudiciais ProcNaoJudiciais[]
+  Tpraz_DiasCorridos Boolean            @db.Boolean @default(false)
+
+  processos       Processos[]
 }
 
 model ProcJudiciais {
@@ -125,7 +126,6 @@ model ProcJudiciais {
   Pjud_LocalAudiencia String?   @db.VarChar(100)
   Pjud_DataAudiencia  DateTime? @db.Date
   Pjud_DataIntimacao  DateTime? @db.Date
-  Pjud_Prazo          Int       @db.Integer
 
   Pjud_NumeroProcesso_id    Int       @unique
   processo            Processos @relation(fields: [Pjud_NumeroProcesso_id], references: [id])

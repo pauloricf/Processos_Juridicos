@@ -4,7 +4,7 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 // Adcionar licenças
-async function licencas(req, res) {
+async function licenses(req, res) {
     // Dados recebidos 
     console.log(req.body);
 
@@ -38,7 +38,20 @@ async function licencas(req, res) {
 
 }
 
+async function getLicenses(req, res) {
+    try{
+        // Pegando as datas cadastradas
+        const licencas = await prisma.licencas.findMany();
+        res.status(200).json(licencas);
+
+    } catch (error){
+        // Mensagem de erro
+        res.status(500).json({ error : 'Erro as licenças'});
+    }
+}
+
 // Exportar funções
 module.exports = {
-    licencas
+    licenses,
+    getLicenses
 }

@@ -4,7 +4,7 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 // Função para cadastrar Funcionários
-async function cadastrarFuncionarios(req, res) {
+async function registerEmployee(req, res) {
     // Dados recebidos 
     console.log(req.body);
 
@@ -79,7 +79,7 @@ async function cadastrarFuncionarios(req, res) {
 }
 
 // Função para editar usuários
-async function editarFuncionarios(req, res) {
+async function editEmployee(req, res) {
     // Dados recebidos 
     console.log(req.body);
     console.log(req.params);
@@ -117,7 +117,7 @@ async function editarFuncionarios(req, res) {
 } 
 
 // Pegar as informações do usuário
-async function obterFuncionarios(req, res) {
+async function getEmployee(req, res) {
     try{
         // Pegando os usuários cadastrados
         const funcionarios = await prisma.usuarios.findMany();
@@ -129,9 +129,12 @@ async function obterFuncionarios(req, res) {
     }
 }
 
+// Fazer a ideia de Deletar Funcionário que é tirar o acesso dele no sistema
+
+
 // Exportar funções
 module.exports = {
-    cadastrarFuncionarios,
-    editarFuncionarios,
-    obterFuncionarios
+    registerEmployee,
+    editEmployee,
+    getEmployee
 }
