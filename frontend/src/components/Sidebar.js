@@ -1,5 +1,5 @@
 import React from 'react';
-import './Sidebar.css';
+import styles from './Sidebar.module.css'; // Alteração para module CSS
 import logo_uea from '../img/uea.svg';
 import { FaRegCalendarAlt } from "react-icons/fa";
 import { FaRegNewspaper, FaPeopleGroup } from "react-icons/fa6";
@@ -7,7 +7,7 @@ import { Link, useLocation } from 'react-router-dom';
 
 function Sidebar() {
     const location = useLocation();
-    let page = ""
+    let page = "";
     switch (location.pathname) {
         case "/process":
             page = "process";
@@ -19,46 +19,47 @@ function Sidebar() {
             page = 'register-user';
             break
         default:
-            break
-        
+            break;
     }
+
     return (
-        <div className="sidebar">
-            <div className="sidebar-logo">
-            {/* <img src="logo.png" alt="Logo UEA" /> */}
-            <div className='logo-uea-container'>
-                <img src={logo_uea} alt='Logo da UEA' className='logo-uea'/>
-            </div>
+        <div className={styles.sidebar}>
+            <div className={styles.sidebar_logo}>
+                <div className={styles.logo_uea_container}>
+                    <img src={logo_uea} alt="Logo da UEA" className={styles.logo_uea} />
+                </div>
             </div> 
-            <ul>
-                <li className='li-content'>
-                    {/* <div> */}
-                    <button className='button-li'>
-                        <FaRegCalendarAlt className='icon-li'/>
-                        Calendario
+            <ul className={styles.sidebar_ul}>
+                <li className={styles.li_content}>
+                    <button className={styles.button_li}>
+                        <FaRegCalendarAlt className={styles.icon_li} />
+                        Calendário
                     </button>
-                    {/* </div> */}
                 </li>
                 <li>
-                    <Link to={"/process"}>
-                    <button className={`button-li ${page === "process"? "active" : ""}`}>
-                        <FaRegNewspaper className='icon-li'/>
-                        Processos
-                    </button>
+                    <Link to="/process">
+                        <button 
+                            className={`${styles.button_li} ${page === "process" ? styles.active : ""}`}
+                        >
+                            <FaRegNewspaper className={styles.icon_li} />
+                            Processos
+                        </button>
                     </Link>
                 </li>
                 <li>
-                    <button className="button-li">
-                        <FaPeopleGroup className='icon-li'/>
+                    <button className={styles.button_li}>
+                        <FaPeopleGroup className={styles.icon_li} />
                         Funcionários
                     </button>
                 </li>
                 <li>
-                    <Link to={"/register-process"}>
-                    <button className={`button-li ${page === "register-process"? "active" : ""}`}>
-                        <FaRegCalendarAlt className='icon-li'/>
-                        Cadastrar
-                    </button>
+                    <Link to="/register-process">
+                        <button 
+                            className={`${styles.button_li} ${page === "register-process" ? styles.active : ""}`}
+                        >
+                            <FaRegCalendarAlt className={styles.icon_li} />
+                            Cadastrar
+                        </button>
                     </Link>
                 </li>
             </ul>

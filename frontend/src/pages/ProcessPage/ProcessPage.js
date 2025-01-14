@@ -1,20 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import api from '../../services/apiConfig';
 import ProcessTable from './ProcessTable';
-import  './ProcessPage.css';
-import Sidebar from '../../components/Sidebar';
-import { FaCircle , FaSearch, FaFilter } from "react-icons/fa";
-
+import styles from './ProcessPage.module.css'; // Alterado para importar o módulo CSS
+import { FaCircle, FaSearch, FaFilter } from "react-icons/fa";
+import { getAllProcess, updateProcess } from '../../services/processService';
 
 const ProcessPage = () => {
   const [processes, setProcesses] = useState([]);
   const dataAtual = new Date();
-  
 
   const fetchProcesses = async () => {
     try {
-      const response = await api.get('/processo');
-      setProcesses(response.data);
+      const response = await getAllProcess();
+      console.log("Dados retornados da API", response);
+      setProcesses(response);
     } catch (error) {
       console.log(error);
     }
@@ -24,33 +22,68 @@ const ProcessPage = () => {
     fetchProcesses();
   }, []);
 
+  const updateStatus = async (id, status) => {
+    try {
+      await updateProcess(id, { Pcss_Status: status });
+      setProcesses((prevProcesses) =>
+        prevProcesses.map((process) =>
+          process.id === id ? { ...process, Pcss_Status: status } : process
+        )
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const calculatePrazo = (date, id) => {
+    const dateToday = new Date();
+    console.log(dateToday)
+    const dateVencimento = new Date(date);
+    dateVencimento.setHours(dateVencimento.getHours() + 4);
+    console.log(dateVencimento)
+    
+    const diffTime = dateVencimento - dateToday;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffTime < 0) {
+      const process = processes.find((p) => p.id === id);
+      if (process && process.Pcss_Status !== "Vencido") {
+        updateStatus(id, "Vencido");
+      }
+    }
+    console.log(diffDays)
+    return diffDays;
+  };
+
   return (
-    <div className="page-content">
-      <Sidebar/>
-      <div className="main-container">
-          <div className="filter-section-bar">
-            <label>Selecionar Status: </label>
-            <button >
-              <FaCircle color='#2871A7'/>
-              Emitidos
-            </button>
-            <button >
-              <FaCircle color='#19D109'/>
-              Concluidos
-            </button>
-            <button >
-              <FaCircle color='#FF0000'  />
-              Vencidos
-            </button>
-            <div className="search-input-container">
-              <input type="text" className="input"></input>
-              <FaSearch className="icon_search"/>
-            </div>
-            <FaFilter className="icon_filter"/>
+    <div className={styles.page_content}>
+      <div className={styles.main_container}>
+        <div className={styles.filter_section_bar}>
+          <label>Selecionar Status: </label>
+          <button>
+            <FaCircle color="#2871A7" />
+            Emitidos
+          </button>
+          <button>
+            <FaCircle color="#19D109" />
+            Concluídos
+          </button>
+          <button>
+            <FaCircle color="#FF0000" />
+            Vencidos
+          </button>
+          <div className={styles.search_input_container}>
+            <input type="text" className={styles.input}></input>
+            <FaSearch className={styles.icon_search} />
           </div>
-        <div className="content">
+          <FaFilter className={styles.icon_filter} />
+        </div>
+        <div className={styles.content}>
           <h3>Listagem de processos cadastrados</h3>
-          <ProcessTable processes={processes} data={dataAtual} />
+          <ProcessTable 
+            processes={processes} 
+            calculatePrazo={calculatePrazo}
+          />
         </div>
       </div>
     </div>
