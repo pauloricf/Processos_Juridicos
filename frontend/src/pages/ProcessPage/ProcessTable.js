@@ -2,6 +2,7 @@ import React from 'react';
 import { TableContainer, Table, TableHead, TableBody, TableCell, TableRow } from '@mui/material';
 import styles from './ProcessTable.module.css'; // Alteração para module CSS
 import { FaTrash, FaPencil, FaCircle } from "react-icons/fa6";
+import { Link, useNavigate } from 'react-router-dom';
 
 const formatDate = (date) => {
   const dateIso = new Date(date);
@@ -18,6 +19,7 @@ const formatDate = (date) => {
 const ProcessTable = ({ processes, calculatePrazo, updateStatus }) => {
 
   console.log(processes);
+  const navigate = useNavigate();
   return (
     <TableContainer className={styles.table_container}>
       <Table>
@@ -65,7 +67,9 @@ const ProcessTable = ({ processes, calculatePrazo, updateStatus }) => {
                 <FaTrash />
               </TableCell>
               <TableCell>
-                <FaPencil />
+                <Link to={`/process/edit/${process.id}`}>
+                  <FaPencil/>
+                </Link>
               </TableCell>
             </TableRow>
           ))}

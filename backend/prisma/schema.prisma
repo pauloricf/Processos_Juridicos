@@ -129,8 +129,8 @@ model DocumentosAnexados {
   Danex_Nome      String   @db.VarChar(100)
   Danex_Documento String   @db.VarChar(255)
 
-  Danex_Usuario Int
-  usuario       Usuarios @relation(fields: [Danex_Usuario], references: [id])
+  Danex_Usuario Int?
+  usuario       Usuarios? @relation(fields: [Danex_Usuario], references: [id])
 
   Danex_NumeroProcesso_id Int
   processo                Processos @relation(fields: [Danex_NumeroProcesso_id], references: [id])

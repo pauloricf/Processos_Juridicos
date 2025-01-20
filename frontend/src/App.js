@@ -1,5 +1,6 @@
 import './App.css';
 import Sidebar from './components/Sidebar';
+import EditProcessPage from './pages/EditProcessPage/EditProcessPage';
 import ProcessPage from './pages/ProcessPage/ProcessPage';
 import RegisterProcessPage from "./pages/RegisterProcessPage/RegisterProcessPage";
 import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom';
@@ -20,6 +21,7 @@ const App = () => {
           <Route path='/register-process' element={<RegisterProcessPage/>}/>
           <Route path='/process' element={<ProcessPage/>}/>
           <Route path='/register-user' element={<RegisterUsersPage/>} />
+          <Route path='/process/edit/:id' element={<EditProcessPage/>}/>
         </Route>
       </Routes>
     </Router>
