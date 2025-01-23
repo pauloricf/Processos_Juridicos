@@ -6,6 +6,7 @@ import RegisterProcessPage from "./pages/RegisterProcessPage/RegisterProcessPage
 import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom';
 import RegisterUsersPage from './pages/UsersPages/RegisterUsersPage';
 
+
 const Layout = () => (
   <>
     <Sidebar/>

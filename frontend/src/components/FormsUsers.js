@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import './Forms.css';
-import Dropdowns from './Dropdowns'
+import './FormsUsers.css';
+// import Dropdowns from './Dropdowns'
 import api from '../services/apiConfig';
 
 // Função para formatar datas no padrão ISO 8601
@@ -85,39 +85,62 @@ function Form() {
             <form onSubmit={handleSubmit}>
                 {/* Informações básicas */}
                 <h2>Cadastro de Funcionários</h2>
-                <section>
-                    <div className="form-row">
-                        <input type="text" placeholder="Nome Completo:" name='' />
+                
+                <div className="form-row">
+                    <label>Nome completo:
+                        <input type="text" placeholder='Digite seu nome completo' name='fullName'/>
+                    </label>
 
-                        <input type="text" placeholder="Email:" name=''/>
+                    <label>Email:
+                        <input type="email" placeholder='Digite seu email' name='email' />
+                    </label>
+                </div>
 
-                        <input type="text" placeholder="Identidade:" name='' />
+                <div className="form-row">
+                    <label>Identidade (RG):
+                        <input type="text" name="rg" id="rg" placeholder='0000000-0'/>
+                    </label>
 
-                        <input type="text" placeholder="Sexo:" name='' />
+                    <label>CPF:
+                        <input type="text" name='cpf' id='cpf' placeholder='000.000.000-00'/>
+                    </label>
 
-                    </div>
-                </section>
+                    <label>Matrícula:
+                        <input type="text" name='matricula' id='matricula' placeholder='000000000' />
+                    </label>
 
-                <section>
-                    <div className="form-row">
+                    <label>Data de nascimento: 
+                        <input type="date" name="birthday" id="birthday" />
+                    </label>
 
-                        <input type="text" placeholder="Número da OAB:" name='' />
+                    <label>Sexo: 
+                        <select name="sex" id="sex">
+                            <option value="...">...</option>
+                            <option value="Masculino">Masculino</option>
+                            <option value="Feminino">Feminino</option>
+                        </select>
+                    </label>
+                </div>
 
-                        <input type="text" placeholder="CPF:" name='' />
+                <div className="form-row">
+                    <label>Cargo:
+                        <select name="position" id="position">
+                            <option value="procurador">Procurador(a)</option>
+                            {/* outras opções */}
+                        </select>
+                    </label>
 
-                        <input type="text" placeholder="Matrícula:" name='' />
+                    <label>Número da OAB:
+                        <input type="text" placeholder='UF000000' name='numeroOab'/>
+                    </label>
 
-                        
-                        <input type="text" placeholder="Telefone:" name='' />
+                    <label>Telefone:
+                        <input type="tel" placeholder='+00 (00) 00000-0000' name='phone'/>
+                    </label>
+                </div>
 
-                        <Dropdowns /> {/* Tipo Usuário */}
-                    </div>
-                </section>
-
-                {/* Botões */}
                 <div className="form-buttons">
-                    <button type="reset" >Descartar</button>
-                    <button type="submit">Cadastrar</button>
+                    <button type="submit" className='btn-concluir'>Concluir</button>
                 </div>
             </form>
         </div>

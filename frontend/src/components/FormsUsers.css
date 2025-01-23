@@ -1,63 +1,58 @@
 .form-container {
-    display: flex;
-    flex-direction: column;
-    padding: 10px;
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    height: 100%;
-    
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin-top: 60px;
 }
 
-form{
-    display: flex;
-    flex-direction: column;
-    height: 100%;
+.form-container h2 {
+    margin-bottom: 20px;
+    font-size: 1.5rem;
 }
+
 .form-row {
     display: flex;
+    flex-wrap: wrap;
     gap: 10px;
     margin-bottom: 15px;
-    height: 40px;
 }
 
-input, select, textarea {
+.form-row label {
     flex: 1;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    min-width: 120px;
     font-size: 14px;
+    display: flex;
+    flex-direction: column;
 }
 
-textarea {
-    resize: none;
-    height: 100px;
+input, select {
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
 }
 
 .form-buttons {
     display: flex;
     justify-content: flex-end;
-    align-items: flex-end;
-    gap: 10px;
-    margin-top: auto;
+    margin-top: 20px;
 }
 
-button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-button[type="reset"] {
-    background: #ccc;
-}
-
-button[type="submit"] {
-    background: #00509e;
+.btn-concluir {
+    background-color: #007BFF;
     color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 4px;
 }
 
-section textarea{
-    width: 700px;
-    height: 40px;
+.btn-concluir:hover {
+    background-color: #0056b3;
 }

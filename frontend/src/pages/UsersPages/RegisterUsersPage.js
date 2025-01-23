@@ -5,7 +5,7 @@ import FormsUsers from '../../components/FormsUsers';
 function RegisterUsersPage() {
     return (
         <div className="page-content">
-            <Sidebar />
+            {/* <Sidebar /> */}
             <div className='main-container'>
                 <div className='gray-bar'>
                 </div>
