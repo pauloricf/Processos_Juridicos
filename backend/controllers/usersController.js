@@ -75,7 +75,7 @@ async function registerEmployee(req, res) {
         // Mensagem de erro
         res.status(500).json({ error : 'Erro ao criar o processo'});
     }
-
+    console.log("Dados recebidos no backend:", req.body);
 }
 
 // Função para editar usuários

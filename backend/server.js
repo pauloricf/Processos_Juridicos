@@ -8,7 +8,6 @@ const transferRouter = require("./routes/transferRouter");
 const licensesRouter = require("./routes/licensesRouter");
 const procMovimentacoesRouter = require("./routes/procMovimentacoesRouter");
 const calendarRouter = require("./routes/calendarRouter");
-const processRouter = require("./routes/processRouter")
 const documentRouter = require("./routes/documentRouter")
 
 // Usando Cors para permitir requisições de qualquer origem 
