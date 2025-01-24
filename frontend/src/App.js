@@ -1,25 +1,32 @@
-import logo from './logo.svg';
 import './App.css';
+import Sidebar from './components/Sidebar';
+import EditProcessPage from './pages/EditProcessPage/EditProcessPage';
+import ProcessPage from './pages/ProcessPage/ProcessPage';
+import RegisterProcessPage from "./pages/RegisterProcessPage/RegisterProcessPage";
+import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom';
+import RegisterUsersPage from './pages/UsersPages/RegisterUsersPage';
 
-function App() {
+
+const Layout = () => (
+  <>
+    <Sidebar/>
+    <Outlet/>
+  </>
+)
+
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <Router>
+      <Routes>
+        <Route path='/' element={<Layout/>}>
+          <Route path='/register-process' element={<RegisterProcessPage/>}/>
+          <Route path='/process' element={<ProcessPage/>}/>
+          <Route path='/register-user' element={<RegisterUsersPage/>} />
+          <Route path='/process/edit/:id' element={<EditProcessPage/>}/>
+        </Route>
+      </Routes>
+    </Router>
+  )
 }
 
-export default App;
+export default App
