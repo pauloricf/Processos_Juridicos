@@ -10,6 +10,8 @@ async function registerEmployee(req, res) {
 
     // Atributos
     const {Usua_Matricula, Usua_Nome, Usua_Email, Usua_CPF, Usua_TipoUsuario, Usua_Identidade, Usua_Telefone, Usua_Sexo, Pcrd_NumeroOAB} = req.body;
+
+    let cargo;
     
     try{
         // Atributos que não podem ser vazios
@@ -18,8 +20,6 @@ async function registerEmployee(req, res) {
          
         } else {
             if (Usua_TipoUsuario === "ProcuradorGeral" || Usua_TipoUsuario === "ProcuradorEfetivo"){
-
-                let cargo;
 
                 if (Usua_TipoUsuario.includes("Geral")){
                     cargo = "Geral";
@@ -73,9 +73,10 @@ async function registerEmployee(req, res) {
 
     } catch{
         // Mensagem de erro
-        res.status(500).json({ error : 'Erro ao criar o processo'});
+        res.status(500).json({ error : 'Erro ao cadastrar usuário'});
     }
     console.log("Dados recebidos no backend:", req.body);
+    console.log(cargo)
 }
 
 // Função para editar usuários

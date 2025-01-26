@@ -12,7 +12,7 @@ function Form() {
     matricula: '',
     birthday: '',
     sex: '',
-    position: 'procurador',
+    position: '',
     numeroOab: '',
     phone: ''
    })
@@ -41,7 +41,7 @@ function Form() {
         if (!formData.matricula) newErrors.matricula = 'A matrícula é obrigatória.';
         if (!formData.birthday) newErrors.birthday = 'A data de nascimento é obrigatória.';
         if (formData.sex === '...') newErrors.sex = 'Selecione um sexo.';
-        if (!formData.numeroOab) newErrors.numeroOab = 'O número da OAB é obrigatório.';
+        //if (!formData.numeroOab) newErrors.numeroOab = 'O número da OAB é obrigatório.';
         if (!phoneRegex.test(formData.phone)) newErrors.phone = 'Telefone inválido. Use o formato +00 (00) 00000-0000.';
 
         return newErrors
@@ -123,9 +123,10 @@ function Form() {
                 <div className="form-row">
                     <label>Cargo:
                         <select name="position" id="position" value={formData.position} onChange={handleChange} required>
-                            <option value="procurador">Procurador(a)</option>
-                            <option value="advogado">Advogado(a)</option>
-                            <option value="estagiario">Estagiário(a)</option>
+                            <option value="ProcuradorGeral">Procurador(a) Geral</option>
+                            <option value="ProcuradorEfetivo">Procurador(a) Efetivo</option>
+                            <option value="Secretario">Secretario(a)</option>
+                            <option value="Assessoria">Assessoria</option>
                             {/* outras opções */}
                         </select>
                     </label>
