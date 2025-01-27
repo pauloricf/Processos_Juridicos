@@ -256,7 +256,7 @@ const updateProcess = async(req, res) => {
                 Pcss_Destino, 
                 Pcss_Requerente, 
                 Pcss_Requerido, 
-                Pcss_DataVencimento, 
+                Pcss_DataVencimento: new Date(Pcss_DataVencimento), 
                 Pcss_TipoPrazoId, 
                 Pcss_Procurador_id 
             }
