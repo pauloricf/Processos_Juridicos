@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import api from '../../services/apiConfig';
 import styles from './EditForm.module.css';
-import { getAllProcess, getProcessById } from '../../services/processService';
-import { Link } from 'react-router-dom';
+import { getProcessById, updateProcess } from '../../services/processService';
 import ModalDocuments from './ModalDocuments';
 
 const EditForm = ({id}) => {
@@ -104,7 +102,8 @@ const EditForm = ({id}) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // const response = await api.put(`process/${id}`, formData)
+    const response = await updateProcess(id, formData)
+    console.log(response)
   }
 
   return (
