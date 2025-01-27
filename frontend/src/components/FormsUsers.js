@@ -41,7 +41,6 @@ function Form() {
         if (!formData.matricula) newErrors.matricula = 'A matrícula é obrigatória.';
         if (!formData.birthday) newErrors.birthday = 'A data de nascimento é obrigatória.';
         if (formData.sex === '...') newErrors.sex = 'Selecione um sexo.';
-        //if (!formData.numeroOab) newErrors.numeroOab = 'O número da OAB é obrigatório.';
         if (!phoneRegex.test(formData.phone)) newErrors.phone = 'Telefone inválido. Use o formato +00 (00) 00000-0000.';
 
         return newErrors
@@ -51,25 +50,47 @@ function Form() {
    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        try {
-            const response = await api.post('/cadastrarUsua', {
-                Usua_Matricula: formData.matricula,
-                Usua_Nome: formData.fullName,
-                Usua_Email: formData.email,
-                Usua_CPF: formData.cpf,
-                Usua_TipoUsuario: formData.position,
-                Usua_Identidade: formData.rg,
-                Usua_Telefone: formData.phone,
-                Usua_Sexo: formData.sex,
-                Pcrd_NumeroOAB: formData.numeroOab,
-            });
-
-            alert('Funcionário cadastrado com sucesso!');
-            console.log(response.data);
-        } catch (error) {
-            console.error('Erro ao cadastrar funcionário:', error);
-            alert('Erro ao cadastrar funcionário. Confira os dados e tente novamente.');
+        if (formData.position === "ProcuradorGeral" || formData.position === "ProcuradorEfetivo"){
+            try {
+                const response = await api.post('/cadastrarUsua', {
+                    Usua_Matricula: formData.matricula,
+                    Usua_Nome: formData.fullName,
+                    Usua_Email: formData.email,
+                    Usua_CPF: formData.cpf,
+                    Usua_TipoUsuario: formData.position,
+                    Usua_Identidade: formData.rg,
+                    Usua_Telefone: formData.phone,
+                    Usua_Sexo: formData.sex,
+                    Pcrd_NumeroOAB: formData.numeroOab,
+                });
+    
+                alert('Funcionário cadastrado com sucesso!');
+                console.log(response.data);
+            } catch (error) {
+                console.error('Erro ao cadastrar funcionário:', error);
+                alert('Erro ao cadastrar funcionário. Confira os dados e tente novamente.');
+            }
+        } else{
+            try {
+                const response = await api.post('/cadastrarUsua', {
+                    Usua_Matricula: formData.matricula,
+                    Usua_Nome: formData.fullName,
+                    Usua_Email: formData.email,
+                    Usua_CPF: formData.cpf,
+                    Usua_TipoUsuario: formData.position,
+                    Usua_Identidade: formData.rg,
+                    Usua_Telefone: formData.phone,
+                    Usua_Sexo: formData.sex,
+                });
+    
+                alert('Funcionário cadastrado com sucesso!');
+                console.log(response.data);
+            } catch (error) {
+                console.error('Erro ao cadastrar funcionário:', error);
+                alert('Erro ao cadastrar funcionário. Confira os dados e tente novamente.');
+            }
         }
+
     };
     return (
         <div className="form-container">
@@ -123,6 +144,7 @@ function Form() {
                 <div className="form-row">
                     <label>Cargo:
                         <select name="position" id="position" value={formData.position} onChange={handleChange} required>
+                            <option value="" disabled>Selecione um cargo...</option>
                             <option value="ProcuradorGeral">Procurador(a) Geral</option>
                             <option value="ProcuradorEfetivo">Procurador(a) Efetivo</option>
                             <option value="Secretario">Secretario(a)</option>
@@ -132,7 +154,7 @@ function Form() {
                     </label>
 
                     <label>Número da OAB:
-                        <input type="text" placeholder='UF000000' name='numeroOab' required value={formData.numeroOab} onChange={handleChange}/>
+                        <input type="text" placeholder='UF000000' name='numeroOab' value={formData.numeroOab} onChange={handleChange}/>
                         {errors.numeroOab && <span className="error">{errors.numeroOab}</span>}
                     </label>
 
