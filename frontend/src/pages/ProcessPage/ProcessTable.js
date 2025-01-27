@@ -17,7 +17,6 @@ const formatDate = (date) => {
 
 
 const ProcessTable = ({ processes, calculatePrazo, updateStatus }) => {
-
   console.log(processes);
   const navigate = useNavigate();
   return (

@@ -8,16 +8,19 @@ import { Link, useLocation } from 'react-router-dom';
 function Sidebar() {
     const location = useLocation();
     let page = "";
-    switch (location.pathname) {
-        case "/process":
+    switch (true) {
+        case location.pathname === "/process":
             page = "process";
             break;
-        case "/register-process":
+        case location.pathname.startsWith("/process/edit/"):
+            page = "process-edit";
+            break;
+        case location.pathname === "/register-process":
             page = "register-process";
-            break
-        case "/register-user":
-            page = 'register-user';
-            break
+            break;
+        case location.pathname === "/register-user":
+            page = "register-user";
+            break;
         default:
             break;
     }
@@ -41,7 +44,7 @@ function Sidebar() {
                 <li>
                     <Link to="/process">
                         <button 
-                            className={`${styles.button_li} ${page === "process" ? styles.active : ""}`}
+                            className={`${styles.button_li} ${page === "process" || page === "process-edit" ? styles.active : ""}`}
                         >
                             <FaRegNewspaper className={styles.icon_li} />
                             Processos
