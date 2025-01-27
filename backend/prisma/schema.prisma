@@ -133,7 +133,7 @@ model DocumentosAnexados {
   usuario       Usuarios? @relation(fields: [Danex_Usuario], references: [id])
 
   Danex_NumeroProcesso_id Int
-  processo                Processos @relation(fields: [Danex_NumeroProcesso_id], references: [id])
+  processo                Processos @relation(fields: [Danex_NumeroProcesso_id], references: [id], onDelete: Cascade)
 }
 
 model Transferencias {

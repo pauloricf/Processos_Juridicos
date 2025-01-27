@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import './FormsUsers.css';
-// import Dropdowns from './Dropdowns'
 import api from '../services/apiConfig';
 import { Link } from "react-router-dom";
 import { FaAsterisk } from "react-icons/fa";

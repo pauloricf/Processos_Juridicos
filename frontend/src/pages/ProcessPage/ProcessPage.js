@@ -39,10 +39,11 @@ const ProcessPage = () => {
     const dateToday = new Date();
     console.log(dateToday)
     const dateVencimento = new Date(date);
-    dateVencimento.setHours(dateVencimento.getHours() + 4);
+    dateVencimento.setHours(dateVencimento.getHours() + 4 + 23, 59, 59);
     console.log(dateVencimento)
     
     const diffTime = dateVencimento - dateToday;
+    console.log("difftime", diffTime)
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
     if (diffTime < 0) {

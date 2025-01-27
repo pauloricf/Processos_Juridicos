@@ -21,11 +21,11 @@ async function cadastrarProcesso (req, res) {
         const status = "Emitido"
         // console.log("categoria", categoria)
         let idCategoria = 0;
-        if(categoria=="acao ordinaria"){
+        if(categoria=="acao_ordinaria"){
             idCategoria = 1
-        } else if (categoria=="juizado especial"){
+        } else if (categoria=="juizado_especial"){
             idCategoria = 2
-        } else if(categoria=="mandado de seg"){
+        } else if(categoria=="mandado_seguranca"){
             idCategoria = 3
         }
         console.log(idCategoria)
@@ -34,8 +34,15 @@ async function cadastrarProcesso (req, res) {
             res.json({error : "Não é possível cadastrar o processo porque há dados faltantes"})
             
         } else{ 
+            const procurador = await prisma.procuradores.findFirst({
+                orderBy: {
+                    Processos: {
+                        _count: "asc"
+                    }
+                }
+            })
             
-            
+            console.log("Procurador selecionado:", procurador);
             // Objeto para criar o processo
             let novoProcesso;
             // Se o tipo for judicial
@@ -53,6 +60,7 @@ async function cadastrarProcesso (req, res) {
                         Pcss_Requerido,
                         Pcss_DataEmitido: new Date(Pcss_DataEmitido),
                         Pcss_DataVencimento: new Date(Pcss_DataVencimento), // Usando a data de início do formulário
+                        Pcss_Procurador_id: procurador.id,
                         assuntos: {
                             create: Pass_Assuntos.map(assunto => ({
                                 Pass_Assunto: assunto,
@@ -98,6 +106,7 @@ async function cadastrarProcesso (req, res) {
                         Pcss_Requerido,
                         Pcss_DataEmitido: new Date(Pcss_DataEmitido),
                         Pcss_DataVencimento: new Date(Pcss_DataVencimento),
+                        Pcss_Procurador_id: procurador.id,
                         assuntos: {
                             create: Pass_Assuntos.map(assunto => ({
                                 Pass_Assunto: assunto,
@@ -129,14 +138,19 @@ async function cadastrarProcesso (req, res) {
                         Pcss_NumeroProcesso,
                         Pcss_Siged,
                         Pcss_ValorAcao: valorAcao,
-                        Pcss_DataInicio: new Date(Pcss_DataInicio), // Usando a data de início do formulário
+                        Pcss_DataInicio: new Date(), // Usando a data de início do formulário
                         Pcss_Status: status,
                         Pcss_Observacoes,
                         Pcss_Destino,
                         Pcss_Requerente,
                         Pcss_Requerido,
-                        Pcss_DataEmitido: new Date(),
-                        Pcss_DataVencimento: new Date(),
+                        Pcss_DataEmitido: new Date(Pcss_DataEmitido),
+                        Pcss_DataVencimento: new Date(Pcss_DataVencimento),
+                        Pcss_Procuradores:{
+                            connect:{
+                                id: procurador.id
+                            }
+                        },
                         assuntos: {
                             create: Pass_Assuntos.map(assunto => ({
                                 Pass_Assunto: assunto,
@@ -177,6 +191,7 @@ async function cadastrarProcesso (req, res) {
                         Pcss_Requerido,
                         Pcss_DataEmitido: new Date(Pcss_DataEmitido),
                         Pcss_DataVencimento: new Date(Pcss_DataVencimento),
+                        Pcss_Procuradores: procurador.id,
                         assuntos: {
                             create: Pass_Assuntos.map(assunto => ({
                                 Pass_Assunto: assunto,
@@ -272,9 +287,32 @@ const getAllProcessos = async(req, res) =>{
     }
 }
 
+const getProcessById =  async(req, res) => {
+    const {id} = req.params
+    console.log(id)
+    try {
+        const processo = await prisma.processos.findUnique({
+            where: {
+                id: parseInt(id)
+            },
+            include: {
+                judiciais: true,
+                assuntos: true,
+                Pcss_TipoPrazo: true,
+            }
+        })
+        res.status(200).json(processo)
+    } catch (error) {
+        res.status(500).json({error: "Erro ao buscar processo"})
+    }
+}
+
+
 // Exportar funções
 module.exports = {
     cadastrarProcesso,
     getAllProcessos,
-    updateProcess
+    updateProcess,
+    getProcessById
+
 };

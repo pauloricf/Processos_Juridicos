@@ -6,6 +6,7 @@ const processController = require("../controllers/processController")
 routes.post("/process", processController.cadastrarProcesso)
 routes.get("/process", processController.getAllProcessos)
 routes.put("/process/:id", processController.updateProcess)
+routes.get("/process/:id", processController.getProcessById)
 
 // Exportar
 module.exports = routes;
