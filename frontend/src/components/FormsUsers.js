@@ -103,11 +103,6 @@ function Form() {
                         <input type="text" placeholder='Digite seu nome completo' name='fullName' required onChange={handleChange} value={formData.fullName}/>
                         {errors.fullName && <span className="error">{errors.fullName}</span>}
                     </label>
-
-                    <label>Email:
-                        <input type="email" placeholder='Digite seu email' name='email' required onChange={handleChange} value={formData.email}/>
-                        {errors.email && <span className="error">{errors.email}</span>}
-                    </label>
                 </div>
 
                 <div className="form-row">
@@ -121,14 +116,17 @@ function Form() {
                         {errors.cpf && <span className="error">{errors.cpf}</span>}
                     </label>
 
-                    <label>Matrícula:
-                        <input type="text" name='matricula' id='matricula' placeholder='000000000' required value={formData.matricula} onChange={handleChange}/>
-                        {errors.matricula && <span className="error">{errors.matricula}</span>}
-                    </label>
-
                     <label>Data de nascimento: 
                         <input type="date" name="birthday" id="birthday" required value={formData.birthday} onChange={handleChange}/>
                         {errors.birthday && <span className="error">{errors.birthday}</span>}
+                    </label>
+                </div>
+
+
+                <div className='form-row'>
+                    <label>Matrícula:
+                            <input type="text" name='matricula' id='matricula' placeholder='000000000' required value={formData.matricula} onChange={handleChange}/>
+                            {errors.matricula && <span className="error">{errors.matricula}</span>}
                     </label>
 
                     <label>Sexo: 
@@ -142,6 +140,7 @@ function Form() {
                 </div>
 
                 <div className="form-row">
+
                     <label>Cargo:
                         <select name="position" id="position" value={formData.position} onChange={handleChange} required>
                             <option value="" disabled>Selecione um cargo...</option>
@@ -158,8 +157,17 @@ function Form() {
                         {errors.numeroOab && <span className="error">{errors.numeroOab}</span>}
                     </label>
 
+                </div>
+
+                <div className='form-row' >
+
+                    <label>Email:
+                        <input type="email" placeholder='Digite seu email' name='email' required onChange={handleChange} value={formData.email}/>
+                        {errors.email && <span className="error">{errors.email}</span>}
+                    </label>
+
                     <label>Telefone:
-                        <input type="tel" placeholder='+00 (00) 00000-0000' name='phone' required value={formData.phone} onChange={handleChange}/>
+                        <input type="tel" placeholder='0000000-0000' name='phone' required value={formData.phone} onChange={handleChange}/>
                         {errors.phone && <span className="error">{errors.phone}</span>}
                     </label>
                 </div>

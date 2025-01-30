@@ -49,7 +49,7 @@ function Sidebar() {
                 <li>
                     <button className={styles.button_li}>
                         <FaPeopleGroup className={styles.icon_li} />
-                        Funcionários
+                        Gerenciar
                     </button>
                 </li>
                 <li>
