@@ -9,6 +9,7 @@ export const getEmployee = async () => {
     }
 }
 
+// Mudar
 export const postProcess = async (data) => {
   try{
     const response = await api.post("/process", data);
@@ -19,11 +20,22 @@ export const postProcess = async (data) => {
   }
 }
 
+// Mudar
 export const editEmployee = async (id, status) => {
   try{
     const response = await api.put(`/atualizarUsua/:${id}`, status)
     return response.data
   } catch (error){
     console.error('Erro ao atualizar as informações do usuário:', error);
+  }
+}
+
+export const getAttorneys = async() => {
+  try {
+    const procur = await api.get('/procuradores');
+    console.log(procur.data);
+    return procur.data;
+  } catch (error) {
+      console.log(error);
   }
 }

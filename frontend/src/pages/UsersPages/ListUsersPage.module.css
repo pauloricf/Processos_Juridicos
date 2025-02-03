@@ -11,14 +11,49 @@
 
   .icons_pencil{
     position: relative;
-    right: 55%;
+    right: 170%;
     font-size: 20px;
     pointer-events: none;
   }
 
   .icons_trash{
     position: relative;
-    right: 145%;
+    right: 355%;
+    font-size: 20px;
+    pointer-events: none;
+  }
+
+  .icons_user{
+    position: relative;
+    right: 265%;
+    font-size: 20px;
+    pointer-events: none;
+  }
+
+  .icons_file{
+    position: relative;
+    right: 455%;
+    font-size: 20px;
+    pointer-events: none;
+  }
+
+  .number_process_emitido{
+    position: relative;
+    right: 27%;
+    font-size: 20px;
+    pointer-events: none;
+  }
+
+  .number_process_concluido{
+    position: relative;
+    right: 24%;
+    font-size: 20px;
+    pointer-events: none;
+  }
+
+  .number_process_vencido{
+    position: relative;
+    right: 20%;
     font-size: 20px;
     pointer-events: none;
   }

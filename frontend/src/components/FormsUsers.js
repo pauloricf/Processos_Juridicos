@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './FormsUsers.css';
 // import Dropdowns from './Dropdowns'
 import api from '../services/apiConfig';
+import { Link } from "react-router-dom";
 
 function Form() {
    const [formData, setFormData] = useState({
@@ -173,6 +174,13 @@ function Form() {
                 </div>
 
                 <div className="form-buttons">
+
+                    <Link to="/user">
+                        <button className='btn-cancel'>
+                            Cancelar
+                        </button>
+                    </Link>
+                    
                     <button type="submit" className='btn-concluir' disabled={isSubmitting}>
                         {isSubmitting ? 'Enviando...' : 'Concluir'}
                     </button>

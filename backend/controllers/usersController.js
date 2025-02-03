@@ -136,6 +136,17 @@ async function getEmployee(req, res) {
     }
 }
 
+async function getAttorneys(req, res) {
+    try{
+        // Pegando os usuários cadastrados que são procuradores
+        const procurador = await prisma.procuradores.findMany();
+        res.status(200).json(procurador);
+    } catch (error){
+        // Mensagem de erro
+        res.status(500).json({ error : 'Erro ao pegar as informações'});
+    };
+}
+
 // Fazer a ideia de Deletar Funcionário que é tirar o acesso dele no sistema
 
 
@@ -143,5 +154,6 @@ async function getEmployee(req, res) {
 module.exports = {
     registerEmployee,
     editEmployee,
-    getEmployee
+    getEmployee,
+    getAttorneys
 }

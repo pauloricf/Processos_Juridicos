@@ -1,11 +1,12 @@
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { Fab, Table, TableBody, TableCell, TableContainer, TableRow } from '@mui/material';
 import React from 'react';
 import styles from './ListUsersPage.module.css';
-import { FaTrash, FaPencil, FaCircle } from "react-icons/fa6";
+import { FaPencilAlt, FaBed, FaTrash, FaFileAlt } from "react-icons/fa";
 
-const UsersTable = ({ users }) => {
-
-    console.log(users);
+const UsersTable = ({ users, processes, procurador}) => {
+    console.log("Valores de Procurador:", procurador);
+    console.log("Valores de users:", users);
+    console.log("Valores de processes:", processes);
 
     const procuradores = users.filter(user =>
         user.Usua_TipoUsuario === 'ProcuradorGeral  ' || user.Usua_TipoUsuario === 'ProcuradorEfetivo'
@@ -19,32 +20,71 @@ const UsersTable = ({ users }) => {
         user.Usua_TipoUsuario === 'Secretária       '
     );
 
+    const processosPorProcurador = (procurador ?? []).map(procurador => {
+        const usuarioProcurador = users.find(user => user.id === procurador.Pcrd_Usuario_id);
+        const nomeProcurador = usuarioProcurador ? usuarioProcurador.Usua_Nome : "Nome não encontrado";
+      
+        const processosDoProcurador = processes.filter(proc => proc.Pcss_Procurador_id === procurador.id);
+      
+        return {
+          ...procurador,
+          nome: nomeProcurador,
+          totalProcessos: processosDoProcurador.length,
+          emitidos: processosDoProcurador.filter(proc => proc.Pcss_Status === "Emitido").length,
+          concluidos: processosDoProcurador.filter(proc => proc.Pcss_Status === "Concluído").length,
+          vencidos: processosDoProcurador.filter(proc => proc.Pcss_Status === "Vencido").length,
+        };
+      });
+          
+    console.log('informações pegadas:', processosPorProcurador);
+
     return (
         <div>
             <h4>Procuradores (as)</h4>
             <TableContainer className={styles.table_container}>
                 <Table>
                     <TableBody>
-                        {procuradores.length > 0 ? (
-                            procuradores.map(user => (
-                                <TableRow key={user.Usua_Id}>
-                                    <TableCell>{user.Usua_Nome}</TableCell>
+                        {processosPorProcurador.map(user => (
+                            <TableRow key={user.id}>
+                                <TableCell>
+                                    {user.nome}
                                     
                                     <TableCell>
-                                        <FaPencil className={styles.icons_pencil}/>
+                                        Total de Processos: {user.totalProcessos}
                                     </TableCell>
 
-                                    <TableCell>
-                                        <FaTrash className={styles.icons_trash}/>
-                                    </TableCell>
-                                    
-                                </TableRow>
-                            ))
-                        ) : (
-                            <TableRow>
-                                <TableCell colSpan={2}>Nenhum procurador encontrado.</TableCell>
+                                </TableCell>
+
+                                <TableCell>
+                                    <FaPencilAlt className={styles.icons_pencil}/>
+                                </TableCell>
+
+                                <TableCell>
+                                    <FaBed className={styles.icons_user}/>
+                                </TableCell>
+
+                                <TableCell>
+                                    <FaTrash className={styles.icons_trash}/>
+                                </TableCell>
+
+                                <TableCell>
+                                    <FaFileAlt className={styles.icons_file}/>
+                                </TableCell>
+
+                                <TableCell className={styles.number_process_emitido}>
+                                    {user.emitidos}   
+                                </TableCell>
+
+                                <TableCell className={styles.number_process_concluido}>
+                                    {user.concluidos}       
+                                </TableCell>
+
+                                <TableCell className={styles.number_process_vencido}>
+                                    {user.vencidos}
+                                </TableCell>
+
                             </TableRow>
-                        )}
+                        ))}
                     </TableBody>
                 </Table>
             </TableContainer>
@@ -55,11 +95,27 @@ const UsersTable = ({ users }) => {
                 <Table>
                     <TableBody>
                         {assessores.map(user => (
-                            <TableRow key={user.Usua_Id}>
+                            <TableRow key={user.id}>
                                 <TableCell>{user.Usua_Nome}</TableCell>
-                                <FaPencil/>
-                                <FaTrash/>
+
+                                <TableCell >
+                                    <FaPencilAlt />
+                                </TableCell>
+
+                                <TableCell>
+                                    <FaBed />
+                                </TableCell>
+
+                                <TableCell>
+                                    <FaTrash />
+                                </TableCell>
+
+                                <TableCell>
+                                    <FaFileAlt />
+                                </TableCell>
+
                             </TableRow>
+                        
                         ))}
                     </TableBody>
                 </Table>
@@ -76,8 +132,7 @@ const UsersTable = ({ users }) => {
                                         {user.Usua_Nome}
                                     </TableCell>
                                 </TableCell>
-                                <FaPencil/>
-                                <FaTrash/>
+                                
                             </TableRow>
                         ))}
                     </TableBody>
