@@ -1,0 +1,365 @@
+.container {
+    text-align: center;
+    padding: 20px;
+    background-color: #f0f4f8;
+    height: 100vh;
+    /* Ocupa toda a altura da tela */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.navButton {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    /* 4 colunas para encaixar tudo na tela */
+    gap: 10px;
+    max-width: 100%;
+}
+
+.month {
+    background: white;
+    padding: 5px;
+    border-radius: 8px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    font-size: 12px;
+    cursor: pointer;
+    /* Reduz o tamanho do texto para encaixar melhor */
+}
+
+th {
+    background-color: transparent;
+    color: blue;
+    padding: 3px;
+    font-size: 12px;
+    /* Reduz o tamanho do texto dos dias da semana */
+}
+
+td {
+    text-align: center;
+    padding: 3px;
+    font-size: 10px;
+    cursor: pointer;
+    /* Reduz o tamanho do texto dos números dos dias */
+}
+
+td:nth-child(1),
+td:nth-child(7) {
+    /* Domingos e Sábados */
+    color: red;
+}
+
+.monthView {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 90%;
+    max-width: 900px;
+    margin: auto;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.monthView table {
+    width: 100%;
+    font-size: 16px;
+    /* Aumenta o tamanho do texto */
+}
+
+.monthView th,
+.monthView td {
+    padding: 10px;
+    font-size: 14px;
+}
+
+.editPanel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    margin: auto;
+}
+
+.editPanel h2 {
+    margin-bottom: 20px;
+    margin-top: 20px;
+    color: #003366;
+}
+
+.editPanel label {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+.editPanel select,
+.editPanel textarea {
+    width: 100%;
+    padding: 8px;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.editPanel textarea {
+    height: 100px;
+    padding: 40px;
+    resize: none;
+}
+
+.saveButton {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+}
+
+.saveButton:hover {
+    background-color: #0056b3;
+}
+
+.backButton {
+    background: none;
+    border: none;
+    color: #007bff;
+    font-size: 16px;
+    cursor: pointer;
+    align-self: flex-start;
+    margin-bottom: 10px;
+}
+
+.backButton:hover {
+    text-decoration: underline;
+}
+
+.selectedDay {
+    background-color: #007bff;
+    color: white;
+    border-radius: 50%;
+}
+
+.editedDay {
+    display: flex;
+    flex-direction: column;
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;;
+}
+
+.dayLabel {
+    font-weight: bold;
+    color: red;
+    text-transform: capitalize;
+}
+
+.dayType {
+    font-weight: bold;
+    color: #333;
+}
+
+.dayJustification {
+    font-size: 14px;
+    color: #666;
+    margin-top: 4px;
+}
+
+.savedDataPanel {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    width: 100%;
+    max-width: 500px;
+    margin-top: 20px;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+}
+
+.savedDataPanel .editedDay {
+    display: flex;
+    flex-direction: column;
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 10px;
+}
+
+.savedDataPanel .dayLabel {
+    font-weight: bold;
+    color: #003366;
+    text-transform: capitalize;
+}
+
+.savedDataPanel .dayType {
+    font-weight: bold;
+    color: #007bff;
+}
+
+.savedDataPanel .dayJustification {
+    font-size: 14px;
+    color: #555;
+    margin-top: 4px;
+}
+
+.savedDataPanel .dayLabel,
+.savedDataPanel .dayType,
+.savedDataPanel .dayJustification {
+    margin-bottom: 5px;
+}
+
+.savedDataPanel .editedDay:last-child {
+    border-bottom: none;
+}
+
+.container {
+    text-align: center;
+    padding: 20px;
+    background-color: #f0f4f8;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.contentWrapper {
+    display: flex;
+    justify-content: space-between;
+    /* Deixa os itens alinhados lado a lado */
+    gap: 20px;
+    /* Espaçamento entre o calendário e o painel de edição */
+    width: 100%;
+}
+
+.calendarContainer {
+    flex: 1;
+    /* Ocupa o espaço disponível */
+}
+
+.monthView {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 900px;
+    margin: auto;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.editPanel {
+    width: 300px;
+    /* Largura fixa para o painel de edição */
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 350px;
+    flex-shrink: 0;
+    /* Não encolherá ao redimensionar */
+}
+
+.editPanel h3 {
+    margin-bottom: 20px;
+    margin-top: 20px;
+    color: #003366;
+}
+
+.editPanel select,
+.editPanel textarea {
+    width: 100%;
+    padding: 8px;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.editPanel textarea {
+    height: 100px;
+    padding: 10px;
+    resize: none;
+}
+
+.saveButton {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+}
+
+.saveButton:hover {
+    background-color: #0056b3;
+}
+
+.changeHistory {
+    width: 100%;
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+.changeHistory h4 {
+    margin-bottom: 15px;
+    font-size: 16px;
+    color: #003366;
+}
+
+.changeItem {
+    padding: 8px;
+    margin-bottom: 10px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.changeItem p {
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+.changeItem hr {
+    margin-top: 10px;
+    border: 1px solid #ddd;
+}
