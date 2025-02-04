@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom
 import RegisterUsersPage from './pages/UsersPages/RegisterUsersPage';
 import ListUsersPage from './pages/UsersPages/ListUsersPage';
 import UsersPage from './pages/UsersPages/UsersPage';
+import CalendarPage from './pages/CalendarPage/CalendarPage'
 
 
 const Layout = () => (
@@ -26,6 +27,7 @@ const App = () => {
           <Route path='/register-user' element={<RegisterUsersPage/>} />
           <Route path='/process/edit/:id' element={<EditProcessPage/>}/>
           <Route path='/user' element={<UsersPage/>}/>
+          <Route path='/calendar-page' element={<CalendarPage/>}/>
         </Route>
       </Routes>
     </Router>
