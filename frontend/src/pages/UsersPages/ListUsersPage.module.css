@@ -57,3 +57,31 @@
     font-size: 20px;
     pointer-events: none;
   }
+
+  .icons_pencil_{
+    position: relative;
+    right: 0%;
+    font-size: 20px;
+    pointer-events: none;
+  }
+  
+  .icons_trash_{
+    position: relative;
+    right: 190%;
+    font-size: 20px;
+    pointer-events: none;
+  }
+
+  .icons_user_{
+    position: relative;
+    right: 95%;
+    font-size: 20px;
+    pointer-events: none;
+  }
+
+  .icons_file_{
+    position: relative;
+    right: 285%;
+    font-size: 20px;
+    pointer-events: none;
+  }

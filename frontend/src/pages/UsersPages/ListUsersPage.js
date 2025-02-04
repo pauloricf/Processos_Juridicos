@@ -2,6 +2,7 @@ import { Fab, Table, TableBody, TableCell, TableContainer, TableRow } from '@mui
 import React from 'react';
 import styles from './ListUsersPage.module.css';
 import { FaPencilAlt, FaBed, FaTrash, FaFileAlt } from "react-icons/fa";
+import { Link } from 'react-router-dom';
 
 const UsersTable = ({ users, processes, procurador}) => {
     console.log("Valores de Procurador:", procurador);
@@ -99,19 +100,19 @@ const UsersTable = ({ users, processes, procurador}) => {
                                 <TableCell>{user.Usua_Nome}</TableCell>
 
                                 <TableCell >
-                                    <FaPencilAlt />
+                                    <FaPencilAlt className={styles.icons_pencil_}/>
                                 </TableCell>
 
                                 <TableCell>
-                                    <FaBed />
+                                    <FaBed className={styles.icons_user_}/>
                                 </TableCell>
 
                                 <TableCell>
-                                    <FaTrash />
+                                    <FaTrash className={styles.icons_trash_}/>
                                 </TableCell>
 
                                 <TableCell>
-                                    <FaFileAlt />
+                                    <FaFileAlt  className={styles.icons_file_}/>
                                 </TableCell>
 
                             </TableRow>
@@ -131,6 +132,22 @@ const UsersTable = ({ users, processes, procurador}) => {
                                     <TableCell>
                                         {user.Usua_Nome}
                                     </TableCell>
+                                </TableCell>
+
+                                <TableCell >
+                                    <FaPencilAlt className={styles.icons_pencil_}/>
+                                </TableCell>
+
+                                <TableCell>
+                                    <FaBed className={styles.icons_user_}/>
+                                </TableCell>
+
+                                <TableCell>
+                                    <FaTrash className={styles.icons_trash_}/>
+                                </TableCell>
+
+                                <TableCell>
+                                    <FaFileAlt  className={styles.icons_file_}/>
                                 </TableCell>
                                 
                             </TableRow>
