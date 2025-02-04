@@ -10,6 +10,10 @@ async function registerEmployee(req, res) {
 
     // Atributos
     const {Usua_Matricula, Usua_Nome, Usua_Email, Usua_CPF, Usua_TipoUsuario, Usua_Identidade, Usua_Telefone, Usua_Sexo, Pcrd_NumeroOAB} = req.body;
+
+    let cargo;
+
+    let tipoUsua;
     
     try{
         // Atributos que não podem ser vazios
@@ -17,9 +21,8 @@ async function registerEmployee(req, res) {
             res.json({error : "Não é possível cadastrar o usuário porque há dados faltantes"})
          
         } else {
+            tipoUsua = Usua_TipoUsuario;
             if (Usua_TipoUsuario === "ProcuradorGeral" || Usua_TipoUsuario === "ProcuradorEfetivo"){
-
-                let cargo;
 
                 if (Usua_TipoUsuario.includes("Geral")){
                     cargo = "Geral";
@@ -49,7 +52,8 @@ async function registerEmployee(req, res) {
                 // Resposta
                 res.status(200).json(novoUsuario);
             } else{
-
+                console.log(1);
+                
                 // Objeto para criar o Usuário
                 const novoUsuario = await prisma.usuarios.create({
                     data: {
@@ -71,11 +75,14 @@ async function registerEmployee(req, res) {
 
         }
 
-    } catch{
+    } catch(e){
         // Mensagem de erro
-        res.status(500).json({ error : 'Erro ao criar o processo'});
+        res.status(500).json(e);
+        console.log(e)
     }
     console.log("Dados recebidos no backend:", req.body);
+    console.log(cargo);
+    console.log(tipoUsua);
 }
 
 // Função para editar usuários
@@ -129,6 +136,17 @@ async function getEmployee(req, res) {
     }
 }
 
+async function getAttorneys(req, res) {
+    try{
+        // Pegando os usuários cadastrados que são procuradores
+        const procurador = await prisma.procuradores.findMany();
+        res.status(200).json(procurador);
+    } catch (error){
+        // Mensagem de erro
+        res.status(500).json({ error : 'Erro ao pegar as informações'});
+    };
+}
+
 // Fazer a ideia de Deletar Funcionário que é tirar o acesso dele no sistema
 
 
@@ -136,5 +154,6 @@ async function getEmployee(req, res) {
 module.exports = {
     registerEmployee,
     editEmployee,
-    getEmployee
+    getEmployee,
+    getAttorneys
 }

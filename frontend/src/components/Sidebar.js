@@ -47,10 +47,12 @@ function Sidebar() {
                     </Link>
                 </li>
                 <li>
+                    <Link to="/user">
                     <button className={styles.button_li}>
                         <FaPeopleGroup className={styles.icon_li} />
-                        Funcionários
+                        Gerenciar
                     </button>
+                    </Link>
                 </li>
                 <li>
                     <Link to="/register-process">

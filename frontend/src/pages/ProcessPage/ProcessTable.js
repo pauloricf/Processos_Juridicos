@@ -39,7 +39,7 @@ const ProcessTable = ({ processes, calculatePrazo, updateStatus }) => {
         </TableHead>
 
         <TableBody>
-          {processes.map((process) => (
+          {processes?.map((process) => (
             <TableRow key={process.id}>
               <TableCell>
                 {process.Pcss_Status === "Emitido" && <FaCircle color='#2871A7' />}

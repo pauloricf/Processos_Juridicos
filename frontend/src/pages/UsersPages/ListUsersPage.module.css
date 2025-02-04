@@ -1,0 +1,87 @@
+.table_container {
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    max-height: 80vh; 
+    overflow-y: auto; 
+    width: 100%;
+    margin: 20px 0;
+  }
+
+  .icons_pencil{
+    position: relative;
+    right: 170%;
+    font-size: 20px;
+    pointer-events: none;
+  }
+
+  .icons_trash{
+    position: relative;
+    right: 355%;
+    font-size: 20px;
+    pointer-events: none;
+  }
+
+  .icons_user{
+    position: relative;
+    right: 265%;
+    font-size: 20px;
+    pointer-events: none;
+  }
+
+  .icons_file{
+    position: relative;
+    right: 455%;
+    font-size: 20px;
+    pointer-events: none;
+  }
+
+  .number_process_emitido{
+    position: relative;
+    right: 27%;
+    font-size: 20px;
+    pointer-events: none;
+  }
+
+  .number_process_concluido{
+    position: relative;
+    right: 24%;
+    font-size: 20px;
+    pointer-events: none;
+  }
+
+  .number_process_vencido{
+    position: relative;
+    right: 20%;
+    font-size: 20px;
+    pointer-events: none;
+  }
+
+  .icons_pencil_{
+    position: relative;
+    right: 0%;
+    font-size: 20px;
+    pointer-events: none;
+  }
+  
+  .icons_trash_{
+    position: relative;
+    right: 190%;
+    font-size: 20px;
+    pointer-events: none;
+  }
+
+  .icons_user_{
+    position: relative;
+    right: 95%;
+    font-size: 20px;
+    pointer-events: none;
+  }
+
+  .icons_file_{
+    position: relative;
+    right: 285%;
+    font-size: 20px;
+    pointer-events: none;
+  }
