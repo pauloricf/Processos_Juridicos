@@ -31,10 +31,12 @@ function Sidebar() {
             </div> 
             <ul className={styles.sidebar_ul}>
                 <li className={styles.li_content}>
-                    <button className={styles.button_li}>
-                        <FaRegCalendarAlt className={styles.icon_li} />
-                        Calendário
-                    </button>
+                    <Link to="/calendar-page">
+                        <button className={styles.button_li}>
+                            <FaRegCalendarAlt className={styles.icon_li} />
+                            Calendário
+                        </button>
+                    </Link>
                 </li>
                 <li>
                     <Link to="/process">

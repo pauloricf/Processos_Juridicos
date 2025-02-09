@@ -83,7 +83,7 @@ const UsersPage = () => {
                     {/* Fazer a opção " < Total/Mês > "  */}
                 </div>
                 <div className={styles.content}>
-                    <h3>Listagem de processos cadastrados</h3>
+                    <h3>Listagem de servidores públicos cadastrados</h3>
                         <ListUsersPage
                             users={users}
                             processes={processes}

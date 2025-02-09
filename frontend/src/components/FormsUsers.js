@@ -97,7 +97,7 @@ function Form() {
         <div className="form-container">
             <form onSubmit={handleSubmit}>
                 {/* Informações básicas */}
-                <h2>Cadastro de Funcionários</h2>
+                <h2>Cadastro de servidores</h2>
                 
                 <div className="form-row">
                     <label>Nome completo:

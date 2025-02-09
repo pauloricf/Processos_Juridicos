@@ -21,9 +21,9 @@ export const postProcess = async (data) => {
 }
 
 // Mudar
-export const editEmployee = async (id, status) => {
+export const editEmployee = async (id) => {
   try{
-    const response = await api.put(`/atualizarUsua/:${id}`, status)
+    const response = await api.put(`/atualizarUsua/:${id}`)
     return response.data
   } catch (error){
     console.error('Erro ao atualizar as informações do usuário:', error);
@@ -37,5 +37,14 @@ export const getAttorneys = async() => {
     return procur.data;
   } catch (error) {
       console.log(error);
+  }
+}
+
+export const getOneAttorneys = async (id) => {
+  try {
+    const response = await api.get(`/obterUsua/:${id}`)
+    return response.data
+  } catch (error) {
+    console.error('Erro ao pegar as informações do usuário:', error);
   }
 }

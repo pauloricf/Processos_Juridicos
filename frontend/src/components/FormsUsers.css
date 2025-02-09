@@ -30,7 +30,7 @@
     flex-direction: column;
 }
 
-input, select {
+.form-container input, .form-container select {
     padding: 8px;
     font-size: 14px;
     border: 1px solid #ccc;

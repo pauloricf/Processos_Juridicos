@@ -1,4 +1,4 @@
-.table_container {
+.table_container{
     background-color: rgba(255, 255, 255, 0.8);
     padding: 20px;
     border-radius: 8px;
@@ -11,6 +11,7 @@
 
   .icons_pencil{
     position: relative;
+    color: black;
     right: 170%;
     font-size: 20px;
     pointer-events: none;
@@ -84,4 +85,8 @@
     right: 285%;
     font-size: 20px;
     pointer-events: none;
+  }
+
+  .text{
+    color: black;
   }

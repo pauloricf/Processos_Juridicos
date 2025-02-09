@@ -3,6 +3,7 @@ import React from 'react';
 import styles from './ListUsersPage.module.css';
 import { FaPencilAlt, FaBed, FaTrash, FaFileAlt } from "react-icons/fa";
 import { Link } from 'react-router-dom';
+import EditUsers from '../OptionsUsersPage/EditUsers';
 
 const UsersTable = ({ users, processes, procurador}) => {
     console.log("Valores de Procurador:", procurador);
@@ -47,7 +48,7 @@ const UsersTable = ({ users, processes, procurador}) => {
                     <TableBody>
                         {processosPorProcurador.map(user => (
                             <TableRow key={user.id}>
-                                <TableCell>
+                                <TableCell classNameame={styles.text}>
                                     {user.nome}
                                     
                                     <TableCell>
@@ -57,7 +58,9 @@ const UsersTable = ({ users, processes, procurador}) => {
                                 </TableCell>
 
                                 <TableCell>
-                                    <FaPencilAlt className={styles.icons_pencil}/>
+                                    <Link to={`/edit-user/${user.id}`}>
+                                        <FaPencilAlt className={styles.icons_pencil} />
+                                    </Link>
                                 </TableCell>
 
                                 <TableCell>
