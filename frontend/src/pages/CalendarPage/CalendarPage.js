@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "./CalendarPage.module.css";
+//import api from '../services/apiConfig';
 
 const months = [
   "Janeiro",
@@ -69,6 +70,20 @@ const CalendarPage = () => {
       headers: { "Content-type": "application/json" },
       body: JSON.stringify({Cale_Data: date, Cale_TipoData: type})
     })
+  };
+
+  const [date, setDate] = useState({
+      data: '',
+      diaSemana: '',
+      tipoData: ''
+  })
+  
+  // Atualizar os dados do form
+  const handleChange = (e) => {
+    setDate({
+      ...date,
+      [e.target.name]: e.target.value
+    });
   };
 
   return (
@@ -156,7 +171,7 @@ const CalendarPage = () => {
               <tr>
                 {["DOM", "SEG", "TER", "QUA", "QUI", "SEX", "SAB"].map(
                   (day) => (
-                    <th key={day}>{day}</th>
+                    <th className={styles.th} key={day}>{day}</th>
                   )
                 )}
               </tr>

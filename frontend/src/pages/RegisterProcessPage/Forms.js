@@ -49,33 +49,31 @@ function Form() {
     }, [formData.Pcss_DataEmitido, formData.prazo, formData.prazoCorrido]);
 
     useEffect(() => {
-        console.log(formData.categoria)
         if(formData.categoria === "outro"){
             setFormData((prevState) => ({
                 ...prevState,
                 prazo: '',
                 prazoCorrido: null
             }));
-        }else if(formData.categoria === "mandado de seg"){
+        }else if(formData.categoria === "mandado_seguranca"){
             setFormData((prevState) => ({
                 ...prevState,
                 prazo: "30",
                 prazoCorrido: true
             }));
-        }else if(formData.categoria === "juizado especial"){
+        }else if(formData.categoria === "juizado_especial"){
             setFormData((prevState) => ({
                 ...prevState,
                 prazo: '15',
                 prazoCorrido: false
             }));
-        }else if(formData.categoria === "acao ordinaria"){
+        }else if(formData.categoria === "acao_ordinaria"){
             setFormData((prevState) => ({
                 ...prevState,
                 prazo: '30',
                 prazoCorrido: false
             }));
         }
-        console.log(formData)
     }, [formData.categoria]);
 
 
@@ -105,7 +103,7 @@ function Form() {
         const dataVencimento = new Date(formData.Pcss_DataEmitido + "T00:00:00")
         console.log("dataEmitido", dataEmitido)
         console.log("prazo", prazo)
-        console.log("datavencimento inicial", dataVencimento)
+        console.log("datavencimento inicial ( = dataEmitido)", dataVencimento)
 
         if(prazoCorrido && prazo > 0){
             dataVencimento.setDate(dataEmitido.getDate() + prazo)
@@ -139,7 +137,7 @@ function Form() {
 
         try {
             const assuntos = formData.Pass_Assuntos.split(",").map((assunto) => assunto.trim());
-            const dataToSend = {
+            const { Pcss_DataVencimento, ...dataToSend} = {
                 ...formData,
                 Pjud_DataIntimacao: formatDateToISO(formData.Pjud_DataIntimacao),
                 Pjud_DataAudiencia: formatDateToISO(formData.Pjud_DataAudiencia),
@@ -148,30 +146,28 @@ function Form() {
             };
 
             const response = await postProcess(dataToSend);
-            if (response.status === 201 || response.status === 200) {
+            console.log(response.status)
+            
                 alert("Processo cadastrado com sucesso");
-                setFormData({ 
-                    Pcss_NumeroProcesso: '',
-                    Pcss_Siged: '',
-                    Pcss_Observacoes: '',
-                    Pcss_Destino: '',
-                    Pcss_Requerente: '',
-                    Pcss_Requerido: '',
-                    Pcss_ValorAcao: '',
-                    Pcss_DataInicio: "",
-                    prazo: "",
-                    tipo: "",
-                    Pass_Assuntos: "",
-                    Pjud_Vara: '',
-                    Pjud_LocalAudiencia: '',
-                    Pjud_DataAudiencia: '',
-                    Pjud_DataIntimacao: '',
-                    categoria: "",
-                });
-                localStorage.removeItem('formData'); // Limpa o Local Storage
-            } else {
-                alert(`Erro`);
-            }
+                // setFormData({ 
+                //     Pcss_NumeroProcesso: '',
+                //     Pcss_Siged: '',
+                //     Pcss_Observacoes: '',
+                //     Pcss_Destino: '',
+                //     Pcss_Requerente: '',
+                //     Pcss_Requerido: '',
+                //     Pcss_ValorAcao: '',
+                //     Pcss_DataInicio: "",
+                //     prazo: "",
+                //     tipo: "",
+                //     Pass_Assuntos: "",
+                //     Pjud_Vara: '',
+                //     Pjud_LocalAudiencia: '',
+                //     Pjud_DataAudiencia: '',
+                //     Pjud_DataIntimacao: '',
+                //     categoria: "",
+                // });
+                // localStorage.removeItem('formData'); // Limpa o Local Storage
         } catch (error) {
             console.error('Erro ao cadastrar o processo:', error);
         }
@@ -217,9 +213,9 @@ function Form() {
                             <label>Categoria</label>
                             <select onChange={handleChange} value={formData.categoria} name="categoria">
                                 <option value=""></option>
-                                <option value="acao ordinaria">Ação Ordinária</option>
-                                <option value="juizado especial">Juizado Especial</option>
-                                <option value="mandado de seg">Mandado de Segurança</option>
+                                <option value="acao_ordinaria">Ação Ordinária</option>
+                                <option value="juizado_especial">Juizado Especial</option>
+                                <option value="mandado_seguranca">Mandado de Segurança</option>
                                 <option value="outro">Outro</option>
                             </select>
                         </div>

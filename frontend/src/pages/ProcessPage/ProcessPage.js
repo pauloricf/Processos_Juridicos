@@ -3,10 +3,21 @@ import ProcessTable from './ProcessTable';
 import styles from './ProcessPage.module.css'; // Alterado para importar o módulo CSS
 import { FaCircle, FaSearch, FaFilter } from "react-icons/fa";
 import { getAllProcess, updateProcess } from '../../services/processService';
+import { IoAddOutline } from "react-icons/io5";
+import { useNavigate } from 'react-router-dom';
 
 const ProcessPage = () => {
   const [processes, setProcesses] = useState([]);
-  const dataAtual = new Date();
+  const [search, setSearch] = useState('');
+  const navigate = useNavigate();
+
+  const searchedProcesses = search.length > 0 
+  ? processes.filter((process) =>  process.Pcss_NumeroProcesso.includes(search))
+  : [];
+
+  const handleFilteredProcesses = (e) => {
+    console.log(1)
+  }
 
   const fetchProcesses = async () => {
     try {
@@ -39,10 +50,11 @@ const ProcessPage = () => {
     const dateToday = new Date();
     console.log(dateToday)
     const dateVencimento = new Date(date);
-    dateVencimento.setHours(dateVencimento.getHours() + 4);
+    dateVencimento.setHours(dateVencimento.getHours() + 4 + 23, 59, 59);
     console.log(dateVencimento)
     
     const diffTime = dateVencimento - dateToday;
+    console.log("difftime", diffTime)
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
     if (diffTime < 0) {
@@ -60,7 +72,7 @@ const ProcessPage = () => {
       <div className={styles.main_container}>
         <div className={styles.filter_section_bar}>
           <label>Selecionar Status: </label>
-          <button>
+          <button onClick={handleFilteredProcesses}>
             <FaCircle color="#2871A7" />
             Emitidos
           </button>
@@ -73,15 +85,18 @@ const ProcessPage = () => {
             Vencidos
           </button>
           <div className={styles.search_input_container}>
-            <input type="text" className={styles.input}></input>
+            <input type="text" className={styles.input} value={search} onChange={e=> setSearch(e.target.value)}></input>
             <FaSearch className={styles.icon_search} />
           </div>
           <FaFilter className={styles.icon_filter} />
         </div>
         <div className={styles.content}>
-          <h3>Listagem de processos cadastrados</h3>
+          <div className={styles.title_container}>
+            <h3>Listagem de processos cadastrados</h3>
+            <IoAddOutline className={styles.add_icon} onClick={() => navigate("/register-process")}/>
+          </div>
           <ProcessTable 
-            processes={processes} 
+            processes={ search.length> 0 ? searchedProcesses : processes} 
             calculatePrazo={calculatePrazo}
           />
         </div>

@@ -1,4 +1,4 @@
-.form-container {
+.form_container {
     width: 100%;
     max-width: 600px;
     margin: 0 auto;
@@ -9,19 +9,19 @@
     margin-top: 60px;
 }
 
-.form-container h2 {
+.form_container h2 {
     margin-bottom: 20px;
     font-size: 1.5rem;
 }
 
-.form-row {
+.form_row {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
     margin-bottom: 15px;
 }
 
-.form-row label {
+.form_row label {
     flex: 1;
     min-width: 120px;
     font-size: 14px;
@@ -29,7 +29,7 @@
     flex-direction: column;
 }
 
-input, select {
+form_container input, form_container select {
     padding: 8px;
     font-size: 14px;
     border: 1px solid #ccc;
@@ -37,13 +37,13 @@ input, select {
     width: 100%;
 }
 
-.form-buttons {
+.form_buttons {
     display: flex;
     justify-content: flex-end;
     margin-top: 20px;
 }
 
-.btn-concluir {
+.btn_concluir {
     background-color: #007BFF;
     color: white;
     border: none;
@@ -53,6 +53,6 @@ input, select {
     border-radius: 4px;
 }
 
-.btn-concluir:hover {
+.btn_concluir:hover {
     background-color: #0056b3;
 }

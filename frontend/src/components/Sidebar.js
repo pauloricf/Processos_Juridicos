@@ -8,15 +8,21 @@ import { Link, useLocation } from 'react-router-dom';
 function Sidebar() {
     const location = useLocation();
     let page = "";
-    switch (location.pathname) {
-        case "/process":
+    switch (true) {
+        case location.pathname === "/process":
             page = "process";
             break;
-        case "/register-process":
+        case location.pathname.startsWith("/process/edit/"):
+            page = "process-edit";
+            break;
+        case location.pathname === "/register-process":
             page = "register-process";
-            break
-        case "/register-user":
-            page = 'register-user';
+            break;
+        case location.pathname === "/register-user":
+            page = "register-user";
+            break;
+        case location.pathname === "/calendar-page":
+            page = "calendar-page";
             break
         default:
             break;
@@ -31,15 +37,17 @@ function Sidebar() {
             </div> 
             <ul className={styles.sidebar_ul}>
                 <li className={styles.li_content}>
-                    <button className={styles.button_li}>
-                        <FaRegCalendarAlt className={styles.icon_li} />
-                        Calendário
-                    </button>
+                    <Link to="/calendar-page">
+                        <button className={styles.button_li}>
+                            <FaRegCalendarAlt className={styles.icon_li} />
+                            Calendário
+                        </button>
+                    </Link>
                 </li>
                 <li>
                     <Link to="/process">
                         <button 
-                            className={`${styles.button_li} ${page === "process" ? styles.active : ""}`}
+                            className={`${styles.button_li} ${page === "process" || page === "process-edit" ? styles.active : ""}`}
                         >
                             <FaRegNewspaper className={styles.icon_li} />
                             Processos
@@ -47,12 +55,14 @@ function Sidebar() {
                     </Link>
                 </li>
                 <li>
+                    <Link to="/user">
                     <button className={styles.button_li}>
                         <FaPeopleGroup className={styles.icon_li} />
-                        Funcionários
+                        Gerenciar
                     </button>
+                    </Link>
                 </li>
-                <li>
+                {/* <li>
                     <Link to="/register-process">
                         <button 
                             className={`${styles.button_li} ${page === "register-process" ? styles.active : ""}`}
@@ -61,7 +71,7 @@ function Sidebar() {
                             Cadastrar
                         </button>
                     </Link>
-                </li>
+                </li> */}
             </ul>
         </div>
     );

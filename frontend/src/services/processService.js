@@ -27,3 +27,12 @@ export const updateProcess = async (id, status) => {
     console.error('Erro ao atualizar o status do processo:', error);
   }
 }
+
+export const getProcessById = async (id) => {
+  try {
+    const response = await api.get(`/process/${id}`);
+    return response.data
+  } catch (error) {
+    console.error('Erro ao buscar o processo:', error); 
+  }
+}
