@@ -21,6 +21,9 @@ function Sidebar() {
         case location.pathname === "/register-user":
             page = "register-user";
             break;
+        case location.pathname === "/calendar-page":
+            page = "calendar-page";
+            break
         default:
             break;
     }
@@ -59,7 +62,7 @@ function Sidebar() {
                     </button>
                     </Link>
                 </li>
-                <li>
+                {/* <li>
                     <Link to="/register-process">
                         <button 
                             className={`${styles.button_li} ${page === "register-process" ? styles.active : ""}`}
@@ -68,7 +71,7 @@ function Sidebar() {
                             Cadastrar
                         </button>
                     </Link>
-                </li>
+                </li> */}
             </ul>
         </div>
     );

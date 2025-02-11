@@ -1,28 +1,27 @@
-.form-container {
+.form_container {
     width: 100%;
-    height: 88%;
-    max-width: 700px;
+    max-width: 600px;
     margin: 0 auto;
-    padding: 10px;
+    padding: 20px;
     background: #fff;
     border: 1px solid #ccc;
     border-radius: 8px;
     margin-top: 60px;
 }
 
-.form-container h2 {
+.form_container h2 {
     margin-bottom: 20px;
     font-size: 1.5rem;
 }
 
-.form-row {
+.form_row {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
     margin-bottom: 15px;
 }
 
-.form-row label {
+.form_row label {
     flex: 1;
     min-width: 120px;
     font-size: 14px;
@@ -30,7 +29,7 @@
     flex-direction: column;
 }
 
-.form-container input, .form-container select {
+form_container input, form_container select {
     padding: 8px;
     font-size: 14px;
     border: 1px solid #ccc;
@@ -38,23 +37,13 @@
     width: 100%;
 }
 
-.form-buttons {
+.form_buttons {
     display: flex;
     justify-content: flex-end;
     margin-top: 20px;
 }
 
-.btn-cancel{
-    background-color: red;
-    border: none;
-    padding: 10px 15px;
-    font-size: 14px;
-    cursor: pointer;
-    border-radius: 4px;
-    margin-right: 20px;
-}
-
-.btn-concluir {
+.btn_concluir {
     background-color: #007BFF;
     color: white;
     border: none;
@@ -64,7 +53,7 @@
     border-radius: 4px;
 }
 
-.btn-concluir:hover {
+.btn_concluir:hover {
     background-color: #0056b3;
 }
 

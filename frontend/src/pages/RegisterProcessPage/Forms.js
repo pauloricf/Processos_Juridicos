@@ -103,7 +103,7 @@ function Form() {
         const dataVencimento = new Date(formData.Pcss_DataEmitido + "T00:00:00")
         console.log("dataEmitido", dataEmitido)
         console.log("prazo", prazo)
-        console.log("datavencimento inicial", dataVencimento)
+        console.log("datavencimento inicial ( = dataEmitido)", dataVencimento)
 
         if(prazoCorrido && prazo > 0){
             dataVencimento.setDate(dataEmitido.getDate() + prazo)
@@ -137,7 +137,7 @@ function Form() {
 
         try {
             const assuntos = formData.Pass_Assuntos.split(",").map((assunto) => assunto.trim());
-            const dataToSend = {
+            const { Pcss_DataVencimento, ...dataToSend} = {
                 ...formData,
                 Pjud_DataIntimacao: formatDateToISO(formData.Pjud_DataIntimacao),
                 Pjud_DataAudiencia: formatDateToISO(formData.Pjud_DataAudiencia),

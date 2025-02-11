@@ -9,6 +9,8 @@ const licensesRouter = require("./routes/licensesRouter");
 const procMovimentacoesRouter = require("./routes/procMovimentacoesRouter");
 const calendarRouter = require("./routes/calendarRouter");
 const documentRouter = require("./routes/documentRouter")
+const { iniciarMonitoramento } = require('./services/alertService');
+
 
 // Usando Cors para permitir requisições de qualquer origem 
 app.use(cors());
@@ -30,4 +32,5 @@ app.use("/api/document", documentRouter)
 const PORT = process.env.PORT || 3003;
 app.listen(PORT, () => {
     console.log(`Servidor rodando em http://localhost:${PORT}`);
+    iniciarMonitoramento();
 });
