@@ -35,7 +35,6 @@
 }
 
 .container th {
-.container th {
     background-color: transparent;
     color: blue;
     padding: 3px;
@@ -43,7 +42,6 @@
     /* Reduz o tamanho do texto dos dias da semana */
 }
 
-.container td {
 .container td {
     text-align: center;
     padding: 3px;
