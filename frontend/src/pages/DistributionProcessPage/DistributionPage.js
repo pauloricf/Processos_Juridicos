@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import ListUsersPage from "./ListUsersPage";
-import styles from "./UsersPage.module.css";
+import styles from "./DistributionPage.module.css";
+import ListDistributionPage from './ListDistributionPage';
 import { FaCircle, FaFilter, FaPlus } from "react-icons/fa";
 import { getEmployee, getAttorneys } from '../../services/usersService';
 import { getAllProcess } from '../../services/processService';
@@ -11,16 +11,17 @@ const UsersPage = () => {
     const [users, setUsers] = useState([]);
     const [processes, setProcesses] = useState([]);
     const [procurador, setProcurador] = useState([]);
-    
+
     const fetchUsers = async () => {
-        try {
-          const response = await getEmployee();
-          console.log("Dados de usuários retornados da API", response);
-          setUsers(response);
-        } catch (error) {
-          console.log(error);
-        }
-      };
+            try {
+              const response = await getEmployee();
+              console.log("Dados de usuários retornados da API", response);
+              setUsers(response);
+            } catch (error) {
+              console.log(error);
+            }
+          };
+    
 
     const fetchProcesses = async () => {
         try{
@@ -62,7 +63,7 @@ const UsersPage = () => {
         <div className={styles.page_content}>
             <div className={styles.main_container}>
                 <div className={styles.filter_section_bar}>
-                    {/* 
+
                     <label className={styles.label}>Selecionar Status: </label>
                     <button>
                         <FaCircle color="#2871A7" />
@@ -76,22 +77,22 @@ const UsersPage = () => {
                         <FaCircle color="#FF0000" />
                         Vencidos
                     </button>
-                    */}
+                </div>
+                {/**
                     <Link to="/register-user">
                         <FaPlus className={styles.icon_plus}/>
                     </Link>
-                    
-
-                    {/* Fazer a opção " < Total/Mês > "  */}
-                </div>
+                 */}
+                
                 <div className={styles.content}>
-                    <h3>Listagem de servidores públicos</h3>
-                        <ListUsersPage
-                            users={users}
-                            processes={processes}
-                            procurador={procurador}
-                        />
+                    <h3>Contagem de processos por procurador</h3>
+                    <ListDistributionPage
+                        users={users}
+                        processes={processes}
+                        procurador={procurador}
+                    />
                 </div>
+                
             </div>
         </div>
 

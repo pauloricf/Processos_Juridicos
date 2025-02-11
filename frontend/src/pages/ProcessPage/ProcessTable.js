@@ -43,7 +43,7 @@ const ProcessTable = ({ processes, calculatePrazo, updateStatus }) => {
             <TableRow key={process.id}>
               <TableCell>
                 {process.Pcss_Status === "Emitido" && <FaCircle color='#2871A7' />}
-                {process.Pcss_Status === "Concluido" && <FaCircle color='#19D109' />}
+                {process.Pcss_Status === "Concluído" && <FaCircle color="#19D109" />}
                 {process.Pcss_Status === "Vencido" && <FaCircle color="#FF0000" />}
               </TableCell>
               <TableCell>{process.Pcss_NumeroProcesso}</TableCell>

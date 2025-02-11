@@ -50,11 +50,12 @@ const UsersTable = ({ users, processes, procurador}) => {
                             <TableRow key={user.id}>
                                 <TableCell classNameame={styles.text}>
                                     {user.nome}
-                                    
+
+                                {/*     
                                     <TableCell>
                                         Total de Processos: {user.totalProcessos}
                                     </TableCell>
-
+                                */}
                                 </TableCell>
 
                                 <TableCell>
@@ -74,7 +75,8 @@ const UsersTable = ({ users, processes, procurador}) => {
                                 <TableCell>
                                     <FaFileAlt className={styles.icons_file}/>
                                 </TableCell>
-
+                                
+                                {/* 
                                 <TableCell className={styles.number_process_emitido}>
                                     {user.emitidos}   
                                 </TableCell>
@@ -86,7 +88,7 @@ const UsersTable = ({ users, processes, procurador}) => {
                                 <TableCell className={styles.number_process_vencido}>
                                     {user.vencidos}
                                 </TableCell>
-
+                                */}
                             </TableRow>
                         ))}
                     </TableBody>
@@ -103,19 +105,19 @@ const UsersTable = ({ users, processes, procurador}) => {
                                 <TableCell>{user.Usua_Nome}</TableCell>
 
                                 <TableCell >
-                                    <FaPencilAlt className={styles.icons_pencil_}/>
+                                    <FaPencilAlt className={styles.icons_pencil}/>
                                 </TableCell>
 
                                 <TableCell>
-                                    <FaBed className={styles.icons_user_}/>
+                                    <FaBed className={styles.icons_user}/>
                                 </TableCell>
 
                                 <TableCell>
-                                    <FaTrash className={styles.icons_trash_}/>
+                                    <FaTrash className={styles.icons_trash}/>
                                 </TableCell>
 
                                 <TableCell>
-                                    <FaFileAlt  className={styles.icons_file_}/>
+                                    <FaFileAlt  className={styles.icons_file}/>
                                 </TableCell>
 
                             </TableRow>
@@ -138,19 +140,19 @@ const UsersTable = ({ users, processes, procurador}) => {
                                 </TableCell>
 
                                 <TableCell >
-                                    <FaPencilAlt className={styles.icons_pencil_}/>
+                                    <FaPencilAlt className={styles.icons_pencil}/>
                                 </TableCell>
 
                                 <TableCell>
-                                    <FaBed className={styles.icons_user_}/>
+                                    <FaBed className={styles.icons_user}/>
                                 </TableCell>
 
                                 <TableCell>
-                                    <FaTrash className={styles.icons_trash_}/>
+                                    <FaTrash className={styles.icons_trash}/>
                                 </TableCell>
 
                                 <TableCell>
-                                    <FaFileAlt  className={styles.icons_file_}/>
+                                    <FaFileAlt  className={styles.icons_file}/>
                                 </TableCell>
                                 
                             </TableRow>

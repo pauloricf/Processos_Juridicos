@@ -1,14 +1,16 @@
 import './App.css';
 import Sidebar from './components/Sidebar';
+import SidebarGerenciar from './components/SidebarGerenciar'
 import EditProcessPage from './pages/EditProcessPage/EditProcessPage';
 import ProcessPage from './pages/ProcessPage/ProcessPage';
 import RegisterProcessPage from "./pages/RegisterProcessPage/RegisterProcessPage";
-import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Outlet, useLocation } from 'react-router-dom';
 import RegisterUsersPage from './pages/UsersPages/RegisterUsersPage';
 import ListUsersPage from './pages/UsersPages/ListUsersPage';
 import UsersPage from './pages/UsersPages/UsersPage';
 import CalendarPage from './pages/CalendarPage/CalendarPage';
 import EditUsers from './pages/OptionsUsersPage/EditUsers';
+import DistributionPage from './pages/DistributionProcessPage/DistributionPage'
 
 
 const Layout = () => (
@@ -18,11 +20,25 @@ const Layout = () => (
   </>
 )
 
+const Layout_sidebar = () => {
+  const location = useLocation();
+
+  // Condicional para exibir diferentes Sidebars
+  const isUserPage = location.pathname.startsWith('/user');
+
+  return (
+    <>
+      {isUserPage ? <SidebarGerenciar /> : <Sidebar />}
+      <Outlet />
+    </>
+  );
+}
+
 const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path='/' element={<Layout/>}>
+        <Route path='/' element={<Layout_sidebar />}>
           <Route path='/register-process' element={<RegisterProcessPage/>}/>
           <Route path='/process' element={<ProcessPage/>}/>
           <Route path='/register-user' element={<RegisterUsersPage/>} />
@@ -30,6 +46,7 @@ const App = () => {
           <Route path='/user' element={<UsersPage/>}/>
           <Route path='/calendar-page' element={<CalendarPage />} />
           <Route path='/edit-user/:id' element={<EditUsers />} />
+          <Route path='/user/distribution' element={<DistributionPage/>} />
         </Route>
       </Routes>
     </Router>
