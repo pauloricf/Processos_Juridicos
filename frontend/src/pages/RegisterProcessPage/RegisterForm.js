@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import styles from './Forms.module.css'; // Alteração para module CSS
+import styles from './RegisterForm.module.css'; // Alteração para module CSS
 import { postProcess } from '../../services/processService';
 
 // Função para formatar datas no padrão ISO 8601

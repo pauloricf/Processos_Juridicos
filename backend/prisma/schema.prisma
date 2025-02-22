@@ -18,7 +18,7 @@ model Usuarios {
   Usua_Matricula     String                 @unique @db.VarChar(11)
   Usua_Nome          String                 @db.VarChar(100)
   Usua_Email         String                 @unique @db.VarChar(84)
-  Usua_Senha         String                 @db.VarChar(30)
+  Usua_Senha         String                 @db.VarChar(80)
   Usua_CPF           String                 @unique @db.Char(11)
   Usua_TipoUsuario   String                 @db.Char(17) //Procurador -> Efetivo ou Geral, Secretária, Assessora
   Usua_Identidade    String                 @unique @db.VarChar(14)
@@ -52,6 +52,7 @@ model CalendarioAlteracoes {
   id          Int      @id @default(autoincrement())
   Calt_Data   DateTime @db.Date
   Calt_Motivo String   @db.VarChar(100)
+  Calt_Tipo   String   @db.VarChar(15)
 
   Calt_Usuario_id Int
   usuario         Usuarios @relation(fields: [Calt_Usuario_id], references: [id])
