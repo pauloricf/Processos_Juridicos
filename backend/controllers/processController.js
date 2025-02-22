@@ -371,10 +371,44 @@ const getProcessById = async (req, res) => {
   }
 };
 
+const getProcessesByAttorney = async (req, res) => {
+  // console.log(req);
+  const { id } = req.params;
+  try {
+    console.log("id", id);
+    const procurador = await prisma.procuradores.findFirst({
+      where: {
+        Pcrd_Usuario_id: parseInt(id), // Encontra o procurador pelo ID do usuário
+      },
+    });
+
+    if (!procurador) {
+      return res.status(404).json({ error: "Procurador não encontrado" });
+    }
+
+    // Depois, busca os processos relacionados ao procurador
+    const processes = await prisma.processos.findMany({
+      where: {
+        Pcss_Procurador_id: procurador.id, // Busca processos do procurador encontrado
+      },
+      include: {
+        assuntos: true,
+      },
+      orderBy: {
+        Pcss_DataVencimento: "asc",
+      },
+    });
+    res.status(200).json(processes);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Erro ao buscar processos do procurador" });
+  }
+};
 // Exportar funções
 module.exports = {
   cadastrarProcesso,
   getAllProcessos,
   updateProcess,
   getProcessById,
+  getProcessesByAttorney,
 };

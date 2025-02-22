@@ -1,0 +1,57 @@
+.page_content{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+}
+
+.main_container{
+  width: 30%;
+  height: 70%;
+  border-radius: 4%;
+  background-color: #FFFFFF99;
+  display: flex;
+  flex-direction: column;
+  padding: 5rem 5rem;
+}
+
+.form > .form_group:first-child{
+  margin-bottom: 1rem;
+}
+
+.page_content input{
+  width: 100%;
+}
+.page_content h3{
+  margin-left: auto;
+  margin-right: auto;
+}
+.button_submit{
+  margin-top: 20px;
+  width: 40%;
+  margin-left: auto;
+  margin-right: auto;
+  border: none;
+  background: none;
+}
+
+.forgot_pass{
+  margin-top: 20px;
+  width: 70%;
+  margin-left: auto;
+  margin-right: auto;
+  border: none;
+  background: none;
+  transition: background 0.3s ease-in-out;
+}
+.forgot_pass:hover{
+  background-color: #98cbe5;
+  /* transition: 0.5s; */
+}
+
+.checkbox_group{
+  display: flex;
+  flex-direction: row;
+  margin-top: 1rem;
+}
