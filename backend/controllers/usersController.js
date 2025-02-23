@@ -147,27 +147,18 @@ async function getAttorneys(req, res) {
     };
 }
 
-// Pegar as informações de um procurador específico
-async function getOneAttorneys(req, res) {
-    // Atributos
-    const { id } = req.params;
-
-    try {
-        // Pegando o procurador específico cadastrado
-        const procurador = await prisma.procuradores.findUnique({
-            where: {
-                id: Number(id),
-            }
-        });
-
-        res.status(200).json(procurador);
-    } catch (error) {
-        // Mensagem de erro
-        res.status(500).json({ error: 'Erro ao pegar as informações' });
-    };
-}
-
 // Fazer a ideia de Deletar Funcionário que é tirar o acesso dele no sistema
+async function deleteEmployee(req, res) {
+    try {
+        const { id } = req.params;
+        await prisma.usuarios.delete({
+            where: { id: parseInt(id) }
+        });
+        res.json({ message: "O usuário foi deletado com sucesso" });
+    } catch (error) {
+        res.status(500).json({ error: "Erro ao deletar o usuário" });
+    }   
+}
 
 
 // Exportar funções
@@ -176,5 +167,5 @@ module.exports = {
     editEmployee,
     getEmployee,
     getAttorneys,
-    getOneAttorneys
+    deleteEmployee
 }

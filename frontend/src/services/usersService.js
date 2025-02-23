@@ -9,27 +9,6 @@ export const getEmployee = async () => {
     }
 }
 
-// Mudar
-export const postProcess = async (data) => {
-  try{
-    const response = await api.post("/process", data);
-    console.log(response.data)
-    return response.data
-  } catch (error){
-    console.error('Erro ao cadastrar o processo:', error);
-  }
-}
-
-// Mudar
-export const editEmployee = async (id) => {
-  try{
-    const response = await api.put(`/atualizarUsua/:${id}`)
-    return response.data
-  } catch (error){
-    console.error('Erro ao atualizar as informações do usuário:', error);
-  }
-}
-
 export const getAttorneys = async() => {
   try {
     const procur = await api.get('/procuradores');
@@ -40,11 +19,12 @@ export const getAttorneys = async() => {
   }
 }
 
-export const getOneAttorneys = async (id) => {
+export const deleteEmployee = async (id) => {
   try {
-    const response = await api.get(`/obterUsua/:${id}`)
-    return response.data
+    const procur = await api.get(`/deleteUsua/:${id}`);
+    console.log(procur.data);
+    return procur.data;
   } catch (error) {
-    console.error('Erro ao pegar as informações do usuário:', error);
+    console.log(error);
   }
 }

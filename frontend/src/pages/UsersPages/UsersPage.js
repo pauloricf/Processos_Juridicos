@@ -77,7 +77,7 @@ const UsersPage = () => {
                         Vencidos
                     </button>
                     */}
-                    <Link to="/register-user">
+                    <Link to="/user/register-user">
                         <FaPlus className={styles.icon_plus}/>
                     </Link>
                     

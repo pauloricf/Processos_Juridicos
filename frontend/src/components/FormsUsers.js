@@ -147,7 +147,7 @@ function Form() {
                             <option value="" disabled>Selecione um cargo...</option>
                             <option value="ProcuradorGeral">Procurador(a) Geral</option>
                             <option value="ProcuradorEfetivo">Procurador(a) Efetivo</option>
-                            <option value="Secretario">Secretario(a)</option>
+                            <option value="Secretária">Secretario(a)</option>
                             <option value="Assessoria">Assessoria</option>
                             {/* outras opções */}
                         </select>

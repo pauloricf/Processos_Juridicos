@@ -6,6 +6,20 @@
     flex-direction: column;
 }
 
+.title{
+    display: flex;
+    flex-direction: row;
+    width: 150px;
+    gap: 8px;
+    background-color: #17547c;
+    color: white;
+    font-size: 20px;
+    border: 2px solid black;
+    border-radius: 12px;
+    padding: 4px;
+    width: 170px;
+}
+
 .sidebar_logo img {
     width: 150px;
     margin-bottom: 20px;
@@ -28,7 +42,7 @@
 .button_li {
     display: flex;
     flex-direction: row;
-    width: 150px;
+    width: 170px;
     align-items: center;
     gap: 8px;
     background-color: #17427c;

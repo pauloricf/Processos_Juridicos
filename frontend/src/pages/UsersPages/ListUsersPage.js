@@ -39,6 +39,7 @@ const UsersTable = ({ users, processes, procurador}) => {
       });
           
     console.log('informações pegadas:', processosPorProcurador);
+    console.log('informações pegadas de secretário:', secretarios);
 
     return (
         <div>
@@ -59,7 +60,7 @@ const UsersTable = ({ users, processes, procurador}) => {
                                 </TableCell>
 
                                 <TableCell>
-                                    <Link to={`/edit-user/${user.id}`}>
+                                    <Link to={`/user/edit-user/${user.id}`}>
                                         <FaPencilAlt className={styles.icons_pencil} />
                                     </Link>
                                 </TableCell>
@@ -105,7 +106,9 @@ const UsersTable = ({ users, processes, procurador}) => {
                                 <TableCell>{user.Usua_Nome}</TableCell>
 
                                 <TableCell >
-                                    <FaPencilAlt className={styles.icons_pencil}/>
+                                    <Link to={`/user/edit-user/${user.id}`}>
+                                        <FaPencilAlt className={styles.icons_pencil} />
+                                    </Link>
                                 </TableCell>
 
                                 <TableCell>
@@ -140,7 +143,9 @@ const UsersTable = ({ users, processes, procurador}) => {
                                 </TableCell>
 
                                 <TableCell >
-                                    <FaPencilAlt className={styles.icons_pencil}/>
+                                    <Link to={`/user/edit-user/${user.id}`}>
+                                        <FaPencilAlt className={styles.icons_pencil} />
+                                    </Link>
                                 </TableCell>
 
                                 <TableCell>

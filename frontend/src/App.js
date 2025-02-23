@@ -13,14 +13,14 @@ import EditUsers from './pages/OptionsUsersPage/EditUsers';
 import DistributionPage from './pages/DistributionProcessPage/DistributionPage'
 
 
-const Layout = () => (
-  <>
-    <Sidebar/>
-    <Outlet/>
-  </>
-)
+//const Layout = () => (
+//  <>
+//    <Sidebar/>
+//    <Outlet/>
+//  </>
+//)
 
-const Layout_sidebar = () => {
+const Layout = () => {
   const location = useLocation();
 
   // Condicional para exibir diferentes Sidebars
@@ -38,14 +38,14 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path='/' element={<Layout_sidebar />}>
+        <Route path='/' element={<Layout />}>
           <Route path='/register-process' element={<RegisterProcessPage/>}/>
           <Route path='/process' element={<ProcessPage/>}/>
-          <Route path='/register-user' element={<RegisterUsersPage/>} />
+          <Route path='/user/register-user' element={<RegisterUsersPage/>} />
           <Route path='/process/edit/:id' element={<EditProcessPage/>}/>
           <Route path='/user' element={<UsersPage/>}/>
           <Route path='/calendar-page' element={<CalendarPage />} />
-          <Route path='/edit-user/:id' element={<EditUsers />} />
+          <Route path='/user/edit-user/:id' element={<EditUsers />} />
           <Route path='/user/distribution' element={<DistributionPage/>} />
         </Route>
       </Routes>
