@@ -124,6 +124,22 @@ const EditUsers = () => {
                         </label>
                     </div>
 
+                    <div>
+                        <label>Email:
+                            <input
+                                type="text"
+                                value={usuarioCorrespondente.Usua_Email || "Data não encontrado"}
+                                readOnly />
+                        </label>
+
+                        <label>Telefone:
+                            <input
+                                type="text"
+                                value={usuarioCorrespondente.Usua_Telefone || "Data não encontrado"}
+                                readOnly />
+                        </label>
+                 </div>
+
                 </form>
             ) : (
                 <p>Carregando dados do usuário...</p>

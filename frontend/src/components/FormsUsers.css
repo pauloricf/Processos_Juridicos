@@ -67,3 +67,14 @@
 .btn-concluir:hover {
     background-color: #0056b3;
 }
+
+.asterisk{
+    color: red;
+    font-size: 10px;
+}
+
+.label-text {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}

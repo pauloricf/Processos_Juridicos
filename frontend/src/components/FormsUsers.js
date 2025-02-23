@@ -3,6 +3,7 @@ import './FormsUsers.css';
 // import Dropdowns from './Dropdowns'
 import api from '../services/apiConfig';
 import { Link } from "react-router-dom";
+import { FaAsterisk } from "react-icons/fa";
 
 function Form() {
    const [formData, setFormData] = useState({
@@ -100,24 +101,28 @@ function Form() {
                 <h2>Cadastro de servidores</h2>
                 
                 <div className="form-row">
-                    <label>Nome completo:
+                    <label>
+                        <span className="label-text">Nome completo: <FaAsterisk className='asterisk' /></span>
                         <input type="text" placeholder='Digite seu nome completo' name='fullName' required onChange={handleChange} value={formData.fullName}/>
                         {errors.fullName && <span className="error">{errors.fullName}</span>}
                     </label>
                 </div>
 
                 <div className="form-row">
-                    <label>Identidade (RG): 
+                    <label>
+                        <span className="label-text">Identidade (RG): <FaAsterisk className='asterisk' /></span>
                         <input type="text" name="rg" id="rg" placeholder='0000000-0' required value={formData.rg} onChange={handleChange}/>
                         {errors.rg && <span className="error">{errors.rg}</span>}
                     </label>
 
-                    <label>CPF:
+                    <label>
+                        <span className="label-text">CPF: <FaAsterisk className='asterisk' /></span>
                         <input type="text" name='cpf' id='cpf' placeholder='000.000.000-00' required value={formData.cpf} onChange={handleChange}/>
                         {errors.cpf && <span className="error">{errors.cpf}</span>}
                     </label>
 
-                    <label>Data de nascimento: 
+                    <label>
+                        <span className="label-text">Data de Nascimento: <FaAsterisk className='asterisk' /></span>
                         <input type="date" name="birthday" id="birthday" required value={formData.birthday} onChange={handleChange}/>
                         {errors.birthday && <span className="error">{errors.birthday}</span>}
                     </label>
@@ -125,12 +130,14 @@ function Form() {
 
 
                 <div className='form-row'>
-                    <label>Matrícula:
-                            <input type="text" name='matricula' id='matricula' placeholder='000000000' required value={formData.matricula} onChange={handleChange}/>
-                            {errors.matricula && <span className="error">{errors.matricula}</span>}
+                    <label>
+                        <span className="label-text">Matrícula: <FaAsterisk className='asterisk' /></span>
+                        <input type="text" name='matricula' id='matricula' placeholder='000000000' required value={formData.matricula} onChange={handleChange}/>
+                        {errors.matricula && <span className="error">{errors.matricula}</span>}
                     </label>
 
-                    <label>Sexo: 
+                    <label>
+                        <span className="label-text">Sexo: <FaAsterisk className='asterisk' /></span>
                         <select name="sex" id="sex" value={formData.sex} onChange={handleChange} required>
                             <option value="...">...</option>
                             <option value="Masculino">Masculino</option>
@@ -142,7 +149,8 @@ function Form() {
 
                 <div className="form-row">
 
-                    <label>Cargo:
+                    <label>
+                        <span className="label-text">Cargo: <FaAsterisk className='asterisk' /></span>
                         <select name="position" id="position" value={formData.position} onChange={handleChange} required>
                             <option value="" disabled>Selecione um cargo...</option>
                             <option value="ProcuradorGeral">Procurador(a) Geral</option>
@@ -153,7 +161,8 @@ function Form() {
                         </select>
                     </label>
 
-                    <label>Número da OAB:
+                    <label>
+                        Número da OAB:
                         <input type="text" placeholder='UF000000' name='numeroOab' value={formData.numeroOab} onChange={handleChange}/>
                         {errors.numeroOab && <span className="error">{errors.numeroOab}</span>}
                     </label>
@@ -162,7 +171,8 @@ function Form() {
 
                 <div className='form-row' >
 
-                    <label>Email:
+                    <label>
+                        <span className="label-text">Email: <FaAsterisk className='asterisk' /></span>
                         <input type="email" placeholder='Digite seu email' name='email' required onChange={handleChange} value={formData.email}/>
                         {errors.email && <span className="error">{errors.email}</span>}
                     </label>
