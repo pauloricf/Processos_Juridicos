@@ -70,7 +70,9 @@ const UsersTable = ({ users, processes, procurador}) => {
                                 </TableCell>
 
                                 <TableCell>
-                                    <FaTrash className={styles.icons_trash}/>
+                                    <Link>
+                                        <FaTrash className={styles.icons_trash} />
+                                    </Link>
                                 </TableCell>
 
                                 <TableCell>

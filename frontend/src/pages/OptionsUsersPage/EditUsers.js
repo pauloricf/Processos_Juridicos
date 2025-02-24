@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styles from "./EditUsers.module.css";
-import { getEmployee, getAttorneys} from '../../services/usersService';
+import { editEmployee, getEmployee, getAttorneys} from '../../services/usersService';
 import { useParams } from "react-router-dom";
 
 const EditUsers = () => {
@@ -11,6 +11,8 @@ const EditUsers = () => {
     const [procuradores, setProcuradores] = useState([]);
     const [usuarioCorrespondente, setUsuarioCorrespondente] = useState(null);
     const [procur, setProcur] = useState([]);
+    const [email, setEmail] = useState(""); // Estado para email
+    const [telefone, setTelefone] = useState(""); // Estado para telefone
 
     useEffect(() => {
         const fetchData = async () => {
@@ -27,9 +29,10 @@ const EditUsers = () => {
                 // Encontrar o procurador correspondente ao ID da URL
                 const procurador = procuradoresResponse.find(proc => proc.id.toString() === id);
                 const procur = procuradoresResponse.find(proc => proc.id.toString() === id);
+                console.log("Procurador selecionado: ", procur);
                 setProcur(procur);
 
-                // 1️⃣ Procurar o usuário diretamente na tabela Users
+                // Procurar o usuário diretamente na tabela Users
                 const usuarioSele = usersResponse.find(user => user.id === userId);
                 console.log("Usuário selecionado: ", usuarioSele);
 
@@ -49,11 +52,45 @@ const EditUsers = () => {
         fetchData();
     }, [id]);  
 
+    // Função para salvar alterações
+    const handleSave = async (e) => {
+        e.preventDefault(); // Evitar recarregamento da página
+
+        try {
+            let userToUpdate = userId; // Por padrão, atualiza pelo userId
+
+            if (procur && procur.Pcrd_Usuario_id) {
+                userToUpdate = procur.Pcrd_Usuario_id; // Atualiza pelo ID do usuário vinculado ao procurador
+            }
+
+            const response = await editEmployee(userToUpdate, { Usua_Email: email, Usua_Telefone: telefone });
+
+            if (response) {
+                alert("Usuário atualizado com sucesso!");
+                console.log("Resposta da API sobre a atualização:", response);
+            } else {
+                throw new Error("Resposta da API inválida.");
+            }
+        } catch (error) {
+            console.log("Erro ao atualizar usuário:", error);
+            alert("Erro ao atualizar usuário.");
+        }
+    };
+
+    useEffect(() => {
+        if (usuarioCorrespondente) {
+            setEmail(usuarioCorrespondente.Usua_Email || "");  // Inicializa com o valor do usuário
+            setTelefone(usuarioCorrespondente.Usua_Telefone || "");
+            console.log("Email do usuário:", usuarioCorrespondente.Usua_Email);
+            console.log("Telefone do usuário:", usuarioCorrespondente.Usua_Telefone);
+        }
+    }, [usuarioCorrespondente]); // Atualiza os estados quando usuarioCorrespondente mudar
+
     return (
         <div>
             <h2>Editar informações do procurador</h2>
             {usuarioCorrespondente ? (
-                <form>
+                <form onSubmit={handleSave}>
                     <div>
                         <label>Nome completo:</label>
                         <input
@@ -128,17 +165,22 @@ const EditUsers = () => {
                         <label>Email:
                             <input
                                 type="text"
-                                value={usuarioCorrespondente.Usua_Email || "Data não encontrado"}
-                                readOnly />
+                                value={email}  // Agora é controlado pelo estado
+                                onChange={(e) => setEmail(e.target.value)}
+                                />
                         </label>
 
                         <label>Telefone:
                             <input
                                 type="text"
-                                value={usuarioCorrespondente.Usua_Telefone || "Data não encontrado"}
-                                readOnly />
+                                value={telefone}  // Agora é controlado pelo estado
+                                onChange={(e) => setTelefone(e.target.value)}    
+                            />
                         </label>
-                 </div>
+                    </div>
+                    
+                    {/* Botão de salvar */}
+                    <button type="submit">Salvar alterações</button>
 
                 </form>
             ) : (

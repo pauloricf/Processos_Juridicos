@@ -21,9 +21,19 @@ export const getAttorneys = async() => {
 
 export const deleteEmployee = async (id) => {
   try {
-    const procur = await api.get(`/deleteUsua/:${id}`);
-    console.log(procur.data);
+    const procur = await api.delete(`/deleteUsua/:${id}`);
+    console.log("Informações do usuário deletado", procur.data);
     return procur.data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export const editEmployee = async (id, userData) => {
+  try {
+    const usuario = await api.put(`/atualizarUsua/${id}`, userData);
+    console.log("Informações editadas do Usuário", usuario.data);
+    return usuario.data;
   } catch (error) {
     console.log(error);
   }

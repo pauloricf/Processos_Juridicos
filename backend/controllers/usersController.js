@@ -94,7 +94,7 @@ async function editEmployee(req, res) {
     // Atributos
     const {id} = req.params;
 
-    const {Usua_Matricula, Usua_Nome, Usua_Email, Usua_TipoUsuario, Usua_Identidade, Usua_Telefone, Usua_Sexo, Usua_CPF} = req.body;
+    const {Usua_Email, Usua_Telefone} = req.body;
     
     try{
         // Atualiza o procurador que vai ficar com o processo
@@ -102,15 +102,9 @@ async function editEmployee(req, res) {
             where: {
                 id: parseInt(id)
             },
-            data: {
-                Usua_Matricula: Usua_Matricula,
-                Usua_Nome: Usua_Nome,
-                Usua_CPF: Usua_CPF,
-                Usua_Identidade: Usua_Identidade, 
+            data: { 
                 Usua_Telefone: Usua_Telefone,
                 Usua_Email: Usua_Email,
-                Usua_TipoUsuario: Usua_TipoUsuario,
-                Usua_Sexo: Usua_Sexo,
             }
         })
         
@@ -147,7 +141,6 @@ async function getAttorneys(req, res) {
     };
 }
 
-// Fazer a ideia de Deletar Funcionário que é tirar o acesso dele no sistema
 async function deleteEmployee(req, res) {
     try {
         const { id } = req.params;
