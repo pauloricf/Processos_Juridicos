@@ -1,5 +1,5 @@
-import React from "react";
-import { TableContainer, Table, TableHead, TableBody, TableCell, TableRow } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { TableContainer, Table, TableHead, TableBody, TableCell, TableRow, Checkbox } from "@mui/material";
 import styles from "./ProcessTable.module.css"; // Alteração para module CSS
 import { FaTrash, FaPencil, FaCircle } from "react-icons/fa6";
 import { Link } from "react-router-dom";
@@ -14,8 +14,21 @@ const formatDate = (date) => {
   });
 };
 
-const ProcessTable = ({ processes, calculatePrazo }) => {
-  console.log(processes);
+const ProcessTable = ({ processes, calculatePrazo, handleSelectedProcessesChange, processesInTransfer }) => {
+  const [selectedProcesses, setSelectedProcesses] = useState([]);
+  const handleSelectProcess = (id) => {
+    setSelectedProcesses((prevSelected) =>
+      prevSelected.includes(id) ? prevSelected.filter((processId) => processId !== id) : [...prevSelected, id]
+    );
+  };
+
+  console.log("processtransfer table", processesInTransfer);
+  console.log("??", processesInTransfer.processos);
+  useEffect(() => {
+    handleSelectedProcessesChange(selectedProcesses);
+  }, [selectedProcesses, handleSelectedProcessesChange]);
+  // console.log(processes);
+  console.log("selectedprocess", selectedProcesses);
   return (
     <TableContainer sx={{ maxHeight: 500 }} className={styles.table_container}>
       <Table stickyHeader>
@@ -35,7 +48,17 @@ const ProcessTable = ({ processes, calculatePrazo }) => {
         </TableHead>
         <TableBody>
           {processes?.map((process) => (
-            <TableRow key={process.id}>
+            <TableRow
+              key={process.id}
+              sx={{
+                backgroundColor: processesInTransfer.some((transfer) => transfer.processos.some((p) => p.id === process.id))
+                  ? "#F3E9C780"
+                  : "inherit",
+                
+              }}>
+              <TableCell>
+                <Checkbox checked={selectedProcesses.includes(process.id)} onChange={() => handleSelectProcess(process.id)} />
+              </TableCell>
               <TableCell>
                 {process.Pcss_Status === "Emitido" && <FaCircle color="#2871A7" />}
                 {process.Pcss_Status === "Concluido" && <FaCircle color="#19D109" />}
@@ -44,7 +67,15 @@ const ProcessTable = ({ processes, calculatePrazo }) => {
               <TableCell>{process.Pcss_NumeroProcesso}</TableCell>
               <TableCell>{process.Pcss_Siged}</TableCell>
               <TableCell>{process.Pcss_Requerente}</TableCell>
-              <TableCell>{process.Pcss_TipoPrazoId === 1 ? "AO" : process.Pcss_TipoPrazoId === 2 ? "JE" : process.Pcss_TipoPrazoId === 3 ? "MS" : "Personalizado"}</TableCell>
+              <TableCell>
+                {process.Pcss_TipoPrazoId === 1
+                  ? "AO"
+                  : process.Pcss_TipoPrazoId === 2
+                  ? "JE"
+                  : process.Pcss_TipoPrazoId === 3
+                  ? "MS"
+                  : "Personalizado"}
+              </TableCell>
               <TableCell>{process.assuntos[0]?.Pass_Assunto || "assunto"}</TableCell>
               <TableCell>{formatDate(process.Pcss_DataVencimento)}</TableCell>
               <TableCell>{calculatePrazo(process.Pcss_DataVencimento, process.id)}</TableCell>

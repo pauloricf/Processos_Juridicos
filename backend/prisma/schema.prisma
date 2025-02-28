@@ -5,7 +5,9 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
+  output = "../generated/prisma_client"
 }
 
 datasource db {
@@ -90,11 +92,12 @@ model Processos {
   assuntos          ProcAssuntos[]
   judiciais         ProcJudiciais?
   documentos        DocumentosAnexados[]
-  Transferencias    Transferencias[]
   ProcMovimentacoes ProcMovimentacoes[]
 
   Pcss_Procurador_id Int?
-  Pcss_Procuradores  Procuradores? @relation(fields: [Pcss_Procurador_id], references: [id])
+  Pcss_Procuradores  Procuradores?   @relation(fields: [Pcss_Procurador_id], references: [id])
+  TransferenciaId    Int? // ID da transferência (pode ser nulo se não houver transferência)
+  transferencia      Transferencias? @relation(fields: [TransferenciaId], references: [id])
 }
 
 model ProcJudiciais {
@@ -141,14 +144,14 @@ model Transferencias {
   id          Int      @id @default(autoincrement())
   Tran_Data   DateTime @db.Date
   Tran_Motivo String   @db.VarChar(150)
+  Tran_Status String   @default("Pendente") @db.VarChar(50)
 
   Tran_UsuarioOrigem_id     Int
   Tran_ProcuradorDestino_id Int
-  Tran_NumeroProcesso_id    Int
 
   usuarioOrigem     Usuarios     @relation(fields: [Tran_UsuarioOrigem_id], references: [id])
   procuradorDestino Procuradores @relation(fields: [Tran_ProcuradorDestino_id], references: [id])
-  processo          Processos    @relation(fields: [Tran_NumeroProcesso_id], references: [id])
+  processos         Processos[]
 }
 
 model ProcMovimentacoes {

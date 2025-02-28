@@ -11,11 +11,11 @@ const calendarRouter = require("./routes/calendarRouter");
 const documentRouter = require("./routes/documentRouter");
 const { iniciarMonitoramento } = require("./services/alertService");
 const authRouter = require("./routes/authRouter");
-const cookieParser = require("cookie-parser")
+const cookieParser = require("cookie-parser");
 
 // Usando Cors para permitir requisições de qualquer origem
 app.use(cors());
-app.use(cookieParser())
+app.use(cookieParser());
 
 // Restando da configuração com o servidor
 app.use(express.json());
@@ -31,7 +31,7 @@ app.use("/api/", calendarRouter);
 app.use("/api/document", documentRouter);
 app.use("/api/", authRouter);
 const corsOptions = {
-  origin: "http://localhost:3000/", // Permitir apenas o frontend local
+  origin: ["http://localhost:3000/", "http://192.168.1.4:3000/"], // Permitir apenas o frontend local
   methods: "GET,POST,PUT,DELETE",
   credentials: true, // Permite que cookies e credenciais sejam compartilhados
 };

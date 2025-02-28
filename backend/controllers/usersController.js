@@ -10,7 +10,17 @@ async function registerEmployee(req, res) {
   console.log(req.body);
 
   // Atributos
-  const { Usua_Matricula, Usua_Nome, Usua_Email, Usua_CPF, Usua_TipoUsuario, Usua_Identidade, Usua_Telefone, Usua_Sexo, Pcrd_NumeroOAB } = req.body;
+  const {
+    Usua_Matricula,
+    Usua_Nome,
+    Usua_Email,
+    Usua_CPF,
+    Usua_TipoUsuario,
+    Usua_Identidade,
+    Usua_Telefone,
+    Usua_Sexo,
+    Pcrd_NumeroOAB,
+  } = req.body;
 
   let cargo;
 
@@ -132,9 +142,38 @@ async function getEmployee(req, res) {
 async function getAttorneys(req, res) {
   try {
     // Pegando os usuários cadastrados que são procuradores
-    const procurador = await prisma.procuradores.findMany();
-    res.status(200).json(procurador);
+    const procuradores = await prisma.procuradores.findMany({
+      include: {
+        usuario: true,
+        Processos: {
+          select: {
+            Pcss_Status: true
+          }
+        },
+        // id: true,
+      },
+    });
+    // Agora vamos processar a contagem dos status para cada procurador
+    const procuradoresComContagem = procuradores.map((procurador) => {
+      const totalProcessos = procurador.Processos.length;
+      const emitidos = procurador.Processos.filter((p) => p.Pcss_Status === "Emitido").length;
+      const concluidos = procurador.Processos.filter((p) => p.Pcss_Status === "Concluído").length;
+      const vencidos = procurador.Processos.filter((p) => p.Pcss_Status === "Vencido").length;
+
+      return {
+        ...procurador,
+        totalProcessos,
+        emitidos,
+        concluidos,
+        vencidos,
+      };
+    });
+
+    // Respondendo com os procuradores e suas contagens
+    res.status(200).json(procuradoresComContagem);
+    // res.status(200).json(procurador);
   } catch (error) {
+    console.log(error);
     // Mensagem de erro
     res.status(500).json({ error: "Erro ao pegar as informações" });
   }

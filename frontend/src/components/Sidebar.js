@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import styles from "./Sidebar.module.css"; // Alteração para module CSS
 import logo_uea from "../img/uea.svg";
 import { FaRegCalendarAlt } from "react-icons/fa";
@@ -6,10 +6,17 @@ import { FaRegNewspaper, FaPeopleGroup } from "react-icons/fa6";
 import { Link, useLocation } from "react-router-dom";
 import { CiLogout } from "react-icons/ci";
 import AuthContext from "../context/AuthContext";
+import IconButton from "@mui/material/IconButton";
+import AccountCircle from "@mui/icons-material/AccountCircle";
+import { Box, capitalize, Menu, MenuItem, Typography } from "@mui/material"; // Importe Menu e MenuItem
 
 function Sidebar() {
+  const { user } = useContext(AuthContext);
   const location = useLocation();
   const { logoutContext } = useContext(AuthContext);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [menuOpen, setMenuOpen] = useState(false);
+
   let page = "";
   switch (true) {
     case location.pathname === "/process":
@@ -35,6 +42,18 @@ function Sidebar() {
     logoutContext();
   };
 
+  // Função para abrir o menu ao passar o mouse
+  const handleMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+    setMenuOpen(true);
+  };
+
+  // Função para fechar o menu apenas quando o mouse sai do botão e do menu
+  const handleMenuClose = () => {
+    setMenuOpen(false);
+    setAnchorEl(null);
+  };
+
   return (
     <div className={styles.sidebar}>
       <div className={styles.sidebar_logo}>
@@ -43,6 +62,64 @@ function Sidebar() {
         </div>
       </div>
       <ul className={styles.sidebar_ul}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "start",
+            width: "150px",
+            padding: "10px",
+            backgroundColor: "#17427c",
+            borderRadius: "15%",
+          }}>
+          <IconButton
+            sx={{ position: "relative", margin: "auto" }}
+            size="large"
+            aria-label="account of current user"
+            aria-controls="menu-appbar"
+            aria-haspopup="true"
+            color="inherit"
+            onMouseEnter={handleMenuOpen} // Abre o menu ao passar o mouse
+          >
+            <AccountCircle />
+          </IconButton>
+
+          {/* Menu de Logout */}
+          <Menu
+            id="logout-menu"
+            anchorEl={anchorEl}
+            open={menuOpen}
+            onClose={handleMenuClose}
+            MenuListProps={{
+              onMouseEnter: () => setMenuOpen(true), // Mantém aberto se o mouse estiver dentro
+              onMouseLeave: handleMenuClose, // Fecha quando o mouse sair
+            }}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "center",
+            }}
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "center",
+            }}>
+            <MenuItem onClick={logoutUser}>Logout</MenuItem>
+          </Menu>
+
+          <Typography variant="subtitle2">Logado como {user && capitalize(user?.user.name)}</Typography>
+          <br />
+          {user?.user.role === "ProcuradorEfetivo" ? (
+            <Typography variant="subtitle2" fontWeight="bold" color="white">
+              Procurador Efetivo
+            </Typography>
+          ) : user?.user.role === "ProcuradorGeral" ? (
+            <Typography variant="subtitle2">Procurador Geral</Typography>
+          ) : user?.user.role === "Secretario" ? (
+            <Typography variant="subtitle2">Secretária</Typography>
+          ) : (
+            <Typography variant="subtitle2">Assessora</Typography>
+          )}
+        </Box>
+
         <li className={styles.li_content}>
           <Link to="/calendar-page">
             <button className={styles.button_li}>
@@ -67,22 +144,6 @@ function Sidebar() {
             </button>
           </Link>
         </li>
-        <li>
-          <button className={styles.button_li} onClick={logoutUser}>
-            <CiLogout style={{ fontSize: "20px" }} />
-            Logout
-          </button>
-        </li>
-        {/* <li>
-                    <Link to="/register-process">
-                        <button 
-                            className={`${styles.button_li} ${page === "register-process" ? styles.active : ""}`}
-                        >
-                            <FaRegCalendarAlt className={styles.icon_li} />
-                            Cadastrar
-                        </button>
-                    </Link>
-                </li> */}
       </ul>
     </div>
   );

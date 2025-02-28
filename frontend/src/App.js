@@ -38,6 +38,7 @@ import EditUsers from "./pages/OptionsUsersPage/EditUsers";
 import LoginPage from "./pages/LoginPage/LoginPage";
 import { AuthProvider } from "./context/AuthContext";
 import PrivateRoute from "./components/PrivateRoute";
+import ExchangeProcesses from "./pages/ExchangeProcesses/ExchangeProcesses";
 
 const Layout = () => (
   <>
@@ -64,6 +65,7 @@ const App = () => {
       </Routes>
       <AuthProvider>
         <Routes>
+          <Route path="/" element={<Navigate to="/login" />} />
           <Route path="/" element={<Layout />}>
             <Route path="/register-process" element={<PrivateRoute element={<RegisterProcessPage />} />} />
             <Route path="/process" element={<PrivateRoute element={<ProcessPage />} />} />
@@ -72,6 +74,7 @@ const App = () => {
             <Route path="/user" element={<PrivateRoute element={<UsersPage />} />} />
             <Route path="/calendar-page" element={<PrivateRoute element={<CalendarPage />} />} />
             <Route path="/edit-user/:id" element={<PrivateRoute element={<EditUsers />} />} />
+            <Route path="/processes/exchange" element={<PrivateRoute element={<ExchangeProcesses />} />} />
           </Route>
           <Route path="/login" element={<LoginPage />} />
         </Routes>
