@@ -7,7 +7,7 @@ const calculateDataVencimento = async (dataEmitido, prazo, prazoCorrido) => {
   const isDiaUtil = (data) => {
     const feriados = [];
     const diaSemana = data.getUTCDay();
-    console.log("Dia da semana", diaSemana);
+    // console.log("Dia da semana", diaSemana);
     return diaSemana !== 0 && diaSemana !== 6 && !feriados.includes(data);
   };
 
@@ -280,6 +280,7 @@ async function cadastrarProcesso(req, res) {
       }
 
       console.log("Processo cadastrado com sucesso");
+      console.log(novoProcesso);
 
       // Resposta
       res.status(200).json(novoProcesso);

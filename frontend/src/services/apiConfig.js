@@ -1,7 +1,8 @@
 import axios from "axios";
 
+const baseURL = window.location.hostname === "localhost" ? "http://localhost:3003/api" : "http://192.168.1.4:3003/api";
 const api = axios.create({
-  baseURL: "http://localhost:3003/api",
+  baseURL,
   headers: {
     "Content-Type": "application/json",
     "Cache-Control": "no-cache",

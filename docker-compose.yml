@@ -1,0 +1,53 @@
+services:
+  backend:
+    build: ./backend
+    container_name: api-proju
+    ports:
+      - "3003:3003"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    env_file:
+      - ./backend/.env
+
+  frontend:
+    build: ./frontend
+    container_name: front-proju
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+  postgres:
+    image: postgres:17
+    container_name: db-proju
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: proJu
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      interval: 5s
+      timeout: 2s
+      retries: 20
+
+    
+  prisma-studio:
+    image: node:latest
+    working_dir: /usr/src/app
+    volumes:
+      - ./backend/prisma:/usr/src/app
+    command: npx prisma studio --port 5555 --browser none
+    ports:
+      - "5555:5555"
+    env_file:
+      - ./backend/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      backend:
+        condition: service_started
+
