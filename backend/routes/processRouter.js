@@ -1,12 +1,14 @@
-const express = require('express');
+const express = require("express");
 const routes = express.Router();
-const processController = require("../controllers/processController") 
+const processController = require("../controllers/processController");
+const { verify } = require("../middlewares/verifyToken");
 
 // Rota
-routes.post("/process", processController.cadastrarProcesso)
-routes.get("/process", processController.getAllProcessos)
-routes.put("/process/:id", processController.updateProcess)
-routes.get("/process/:id", processController.getProcessById)
+routes.post("/process", verify, processController.cadastrarProcesso);
+routes.get("/process", verify, processController.getAllProcessos);
+routes.put("/process/:id", verify, processController.updateProcess);
+routes.get("/process/:id", verify, processController.getProcessById);
+routes.get("/attorneys/:id/processes/", verify, processController.getProcessesByAttorney);
 
 // Exportar
 module.exports = routes;
