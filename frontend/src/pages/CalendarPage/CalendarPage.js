@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./CalendarPage.module.css";
 import { postChangeCalendar } from "../../services/calendarService";
 //import api from '../services/apiConfig';
@@ -18,7 +18,25 @@ const CalendarPage = () => {
 
   const [selectedDay, setSelectedDay] = useState(null);
   const [dayData, setDayData] = useState({});
-  const [savedDayData, setSavedDayData] = useState({}); // Novo estado para salvar os dados
+  const [savedDayData, setSavedDayData] = useState({});
+
+  useEffect(() => {
+    if (selectedMonth !== null) {
+      fetch(`/api/calendario?year=${year}&month=${selectedMonth}`)
+        .then((res) => res.json())
+        .then((data) => {
+          const formattedData = {};
+          data.forEach(({ Cale_Data, Cale_TipoData }) => {
+            const date = new Date(Cale_Data);
+            formattedData[`${selectedMonth}-${date.getDate()}`] = {
+              type: Cale_TipoData,
+              justification: "",
+            };
+          });
+          setDayData(formattedData);
+        });
+    }
+  }, [selectedMonth, year]);
 
   const handleSelectDay = (day) => {
     if (day > 0) {
@@ -26,13 +44,17 @@ const CalendarPage = () => {
     }
   };
 
-  const handleSaveDayData = (type, justification) => {
+  const handleSaveDayData = async (type, justification) => {
+    if (!selectedDay) return;
+
+    const date = new Date(year, selectedMonth, selectedDay).toISOString()
     setDayData((prev) => ({
       ...prev,
       [`${selectedMonth}-${selectedDay}`]: { type, justification },
     }));
     console.log(dayData);
-  };
+
+
 
   const [data, setData] = useState({
     Calt_Data: "",
