@@ -6,19 +6,12 @@ import ProcessPage from './pages/ProcessPage/ProcessPage';
 import RegisterProcessPage from "./pages/RegisterProcessPage/RegisterProcessPage";
 import { BrowserRouter as Router, Routes, Route, Outlet, useLocation } from 'react-router-dom';
 import RegisterUsersPage from './pages/UsersPages/RegisterUsersPage';
-import ListUsersPage from './pages/UsersPages/ListUsersPage';
 import UsersPage from './pages/UsersPages/UsersPage';
 import CalendarPage from './pages/CalendarPage/CalendarPage';
 import EditUsers from './pages/OptionsUsersPage/EditUsers';
 import DistributionPage from './pages/DistributionProcessPage/DistributionPage'
+import DeleteUserModal from './components/DeleteModal';
 
-
-//const Layout = () => (
-//  <>
-//    <Sidebar/>
-//    <Outlet/>
-//  </>
-//)
 
 const Layout = () => {
   const location = useLocation();
@@ -46,7 +39,8 @@ const App = () => {
           <Route path='/user' element={<UsersPage/>}/>
           <Route path='/calendar-page' element={<CalendarPage />} />
           <Route path='/user/edit-user/:id' element={<EditUsers />} />
-          <Route path='/user/distribution' element={<DistributionPage/>} />
+          <Route path='/user/distribution' element={<DistributionPage />} />
+          <Route path='/modal' element={<DeleteUserModal />} />
         </Route>
       </Routes>
     </Router>

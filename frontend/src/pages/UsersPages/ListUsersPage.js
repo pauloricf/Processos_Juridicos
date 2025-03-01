@@ -1,9 +1,11 @@
 import { Fab, Table, TableBody, TableCell, TableContainer, TableRow } from '@mui/material';
 import React from 'react';
+import { useState } from "react";
 import styles from './ListUsersPage.module.css';
 import { FaPencilAlt, FaBed, FaTrash, FaFileAlt } from "react-icons/fa";
 import { Link } from 'react-router-dom';
-import EditUsers from '../OptionsUsersPage/EditUsers';
+import DeleteUser from "../../components/DeleteModal";
+import { deleteEmployee } from '../../services/usersService';
 
 const UsersTable = ({ users, processes, procurador}) => {
     console.log("Valores de Procurador:", procurador);
@@ -52,11 +54,6 @@ const UsersTable = ({ users, processes, procurador}) => {
                                 <TableCell classNameame={styles.text}>
                                     {user.nome}
 
-                                {/*     
-                                    <TableCell>
-                                        Total de Processos: {user.totalProcessos}
-                                    </TableCell>
-                                */}
                                 </TableCell>
 
                                 <TableCell>
@@ -70,30 +67,19 @@ const UsersTable = ({ users, processes, procurador}) => {
                                 </TableCell>
 
                                 <TableCell>
-                                    <Link>
-                                        <FaTrash className={styles.icons_trash} />
-                                    </Link>
+                                    <DeleteUser
+                                        userId={user.id}
+                                        deleteUser={user} />
                                 </TableCell>
 
                                 <TableCell>
                                     <FaFileAlt className={styles.icons_file}/>
                                 </TableCell>
                                 
-                                {/* 
-                                <TableCell className={styles.number_process_emitido}>
-                                    {user.emitidos}   
-                                </TableCell>
-
-                                <TableCell className={styles.number_process_concluido}>
-                                    {user.concluidos}       
-                                </TableCell>
-
-                                <TableCell className={styles.number_process_vencido}>
-                                    {user.vencidos}
-                                </TableCell>
-                                */}
                             </TableRow>
+
                         ))}
+
                     </TableBody>
                 </Table>
             </TableContainer>
@@ -118,7 +104,9 @@ const UsersTable = ({ users, processes, procurador}) => {
                                 </TableCell>
 
                                 <TableCell>
-                                    <FaTrash className={styles.icons_trash}/>
+                                    <DeleteUser
+                                        userId={user.id}
+                                        deleteUser={deleteEmployee} />
                                 </TableCell>
 
                                 <TableCell>
