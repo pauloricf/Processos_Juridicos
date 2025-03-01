@@ -29,31 +29,14 @@ function Form() {
             [e.target.name]: e.target.value
         });
     };
-   // validação dos campos
-   const validate = () => {
-        const newErrors = {}
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-        const cpfRegex = /^\d{3}\.\d{3}\.\d{3}-\d{2}$/
-        const phoneRegex = /^\+\d{2} \(\d{2}\) \d{5}-\d{4}$/
-
-        if (!formData.fullName) newErrors.fullName = 'O nome completo é obrigatório.';
-        if (!emailRegex.test(formData.email)) newErrors.email = 'Email inválido.';
-        if (!cpfRegex.test(formData.cpf)) newErrors.cpf = 'CPF inválido. Use o formato 000.000.000-00.';
-        if (!formData.rg) newErrors.rg = 'O RG é obrigatório.';
-        if (!formData.matricula) newErrors.matricula = 'A matrícula é obrigatória.';
-        if (!formData.birthday) newErrors.birthday = 'A data de nascimento é obrigatória.';
-        if (formData.sex === '...') newErrors.sex = 'Selecione um sexo.';
-        if (!phoneRegex.test(formData.phone)) newErrors.phone = 'Telefone inválido. Use o formato +00 (00) 00000-0000.';
-
-        return newErrors
-   }
-
+   
    // Enviar os dados para a API
    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (formData.position === "ProcuradorGeral" || formData.position === "ProcuradorEfetivo"){
+       if (formData.position === "ProcuradorGeral" || formData.position === "ProcuradorEfetivo") {
             try {
+                console.log("Dados do número OAB", formData.numeroOab);
                 const response = await api.post('/cadastrarUsua', {
                     Usua_Matricula: formData.matricula,
                     Usua_Nome: formData.fullName,
@@ -63,9 +46,10 @@ function Form() {
                     Usua_Identidade: formData.rg,
                     Usua_Telefone: formData.phone,
                     Usua_Sexo: formData.sex,
-                    Pcrd_NumeroOAB: formData.numeroOab,
+                    Pcrd_NumeroOAB: formData.numeroOab
                 });
-    
+                
+                console.log("Dados do número OAB" ,response.Pcrd_NumeroOAB);
                 alert('Funcionário cadastrado com sucesso!');
                 console.log(response.data);
             } catch (error) {

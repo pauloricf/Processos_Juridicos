@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { FaTrash } from "react-icons/fa"; // Importando o ícone
 import styles from './DeleteModal.module.css';
 
-const DeleteUser = ({ userId, deleteUser }) => {
+const DeleteUser = ({ userId, userName, deleteUser }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     // Abrir o modal
@@ -36,7 +36,7 @@ const DeleteUser = ({ userId, deleteUser }) => {
             {isModalOpen && (
                 <div className={styles.modal}>
                     <div className={styles.modal_container}>
-                        <p>Tem certeza que deseja excluir o usuário com ID {userId}?</p>
+                        <p>Tem certeza que deseja excluir o usuário {userName}?</p>
                         <button onClick={handleConfirmDelete}>Sim, excluir</button>
                         <button onClick={handleCloseModal}>Cancelar</button>
                     </div>

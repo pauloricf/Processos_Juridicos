@@ -12,10 +12,6 @@ const UsersTable = ({ users, processes, procurador}) => {
     console.log("Valores de users:", users);
     console.log("Valores de processes:", processes);
 
-    const procuradores = users.filter(user =>
-        user.Usua_TipoUsuario === 'ProcuradorGeral  ' || user.Usua_TipoUsuario === 'ProcuradorEfetivo'
-    );
-
     const assessores = users.filter(user => 
         user.Usua_TipoUsuario === 'Assessoria       '
     );
@@ -41,8 +37,6 @@ const UsersTable = ({ users, processes, procurador}) => {
       });
           
     console.log('informações pegadas:', processosPorProcurador);
-    console.log('informações pegadas de secretário:', secretarios);
-
     return (
         <div>
             <h4>Procuradores (as)</h4>
@@ -53,6 +47,7 @@ const UsersTable = ({ users, processes, procurador}) => {
                             <TableRow key={user.id}>
                                 <TableCell classNameame={styles.text}>
                                     {user.nome}
+                                    {user.Pcrd_Usuario_id}
 
                                 </TableCell>
 
@@ -68,8 +63,9 @@ const UsersTable = ({ users, processes, procurador}) => {
 
                                 <TableCell>
                                     <DeleteUser
-                                        userId={user.id}
-                                        deleteUser={user} />
+                                        userId={user.Pcrd_Usuario_id}
+                                        userName={user.nome}
+                                        deleteUser={deleteEmployee} />
                                 </TableCell>
 
                                 <TableCell>
@@ -106,6 +102,7 @@ const UsersTable = ({ users, processes, procurador}) => {
                                 <TableCell>
                                     <DeleteUser
                                         userId={user.id}
+                                        userName={user.Usua_Nome}
                                         deleteUser={deleteEmployee} />
                                 </TableCell>
 
@@ -143,7 +140,10 @@ const UsersTable = ({ users, processes, procurador}) => {
                                 </TableCell>
 
                                 <TableCell>
-                                    <FaTrash className={styles.icons_trash}/>
+                                     <DeleteUser
+                                        userId={user.id}
+                                        userName={user.Usua_Nome}
+                                        deleteUser={deleteEmployee} />
                                 </TableCell>
 
                                 <TableCell>
