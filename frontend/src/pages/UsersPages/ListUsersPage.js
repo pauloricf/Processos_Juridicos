@@ -34,8 +34,8 @@ const UsersTable = ({ users, processes, procurador}) => {
           concluidos: processosDoProcurador.filter(proc => proc.Pcss_Status === "Concluído").length,
           vencidos: processosDoProcurador.filter(proc => proc.Pcss_Status === "Vencido").length,
         };
-      });
-          
+    });
+    
     console.log('informações pegadas:', processosPorProcurador);
     return (
         <div>
@@ -47,7 +47,6 @@ const UsersTable = ({ users, processes, procurador}) => {
                             <TableRow key={user.id}>
                                 <TableCell classNameame={styles.text}>
                                     {user.nome}
-                                    {user.Pcrd_Usuario_id}
 
                                 </TableCell>
 

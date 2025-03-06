@@ -37,8 +37,10 @@ const DeleteUser = ({ userId, userName, deleteUser }) => {
                 <div className={styles.modal}>
                     <div className={styles.modal_container}>
                         <p>Tem certeza que deseja excluir o usuário {userName}?</p>
-                        <button onClick={handleConfirmDelete}>Sim, excluir</button>
-                        <button onClick={handleCloseModal}>Cancelar</button>
+                        <div className={styles.modal_buttons}>
+                            <button className={styles.button_cancel} onClick={handleCloseModal}>Cancelar</button>
+                            <button className={styles.button_erase} onClick={handleConfirmDelete}>Excluir</button>
+                        </div>
                     </div>
                 </div>
             )}

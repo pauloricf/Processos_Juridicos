@@ -27,3 +27,23 @@
     transform: translateY(-10%);
     top: 10%;
 }
+
+.modal_buttons {
+    display: flex;
+    justify-content: flex-end;
+    /* Alinha os botões à direita */
+    gap: 10px;
+    /* Espaço entre os botões */
+    margin-top: 20px;
+    /* Espaço entre o texto e os botões */
+}
+
+.button_erase{
+    background-color: green;
+    color: white;
+}
+
+.button_cancel {
+    background-color: red;
+    color: white;
+}

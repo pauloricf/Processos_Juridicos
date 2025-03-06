@@ -144,14 +144,32 @@ async function getAttorneys(req, res) {
 async function deleteEmployee(req, res) {
     try {
         const { id } = req.params;
-        await prisma.usuarios.delete({
-            where: { id: parseInt(id) }
+        const userId = parseInt(id);
+
+        // Verifica se o usuário é um procurador
+        const procurador = await prisma.procuradores.findFirst({
+            where: { Pcrd_Usuario_id: userId }
         });
+
+        // Se for procurador, deletamos primeiro da tabela Procuradores
+        if (procurador) {
+            await prisma.procuradores.deleteMany({
+                where: { id: procurador.id }
+            });
+        }
+
+        // Agora deletamos da tabela Usuarios
+        await prisma.usuarios.delete({
+            where: { id: userId }
+        });
+
         res.json({ message: "O usuário foi deletado com sucesso" });
     } catch (error) {
+        console.error("Erro ao deletar usuário:", error);
         res.status(500).json({ error: "Erro ao deletar o usuário" });
-    }   
+    }
 }
+
 
 
 // Exportar funções

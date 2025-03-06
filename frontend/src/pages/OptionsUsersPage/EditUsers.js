@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styles from "./EditUsers.module.css";
 import { editEmployee, getEmployee, getAttorneys} from '../../services/usersService';
 import { useParams } from "react-router-dom";
+import { Link } from 'react-router-dom';
 
 const EditUsers = () => {
     const { id } = useParams(); // ID do procurador vindo da URL
@@ -87,12 +88,12 @@ const EditUsers = () => {
     }, [usuarioCorrespondente]); // Atualiza os estados quando usuarioCorrespondente mudar
 
     return (
-        <div>
+        <div className={styles.form_container}>
             <h2>Editar informações do procurador</h2>
             {usuarioCorrespondente ? (
                 <form onSubmit={handleSave}>
-                    <div>
-                        <label>Nome completo:</label>
+                    <div className={styles.form_row}>
+                        <label className={styles.label_text}>Nome completo:</label>
                         <input
                             type="text"
                             value={usuarioCorrespondente.Usua_Nome || "Nome não encontrado"}
@@ -100,22 +101,22 @@ const EditUsers = () => {
                         />
                     </div>
 
-                    <div>
-                        <label>Identidade (RG):
+                    <div className={styles.form_row}>
+                        <label className={styles.label_text}>Identidade (RG):
                             <input
                                 type="text"
                                 value={usuarioCorrespondente.Usua_Identidade || "Nome não encontrado"} 
                                 readOnly/>
                         </label>
 
-                        <label>CPF:
+                        <label className={styles.label_text}>CPF:
                             <input
                                 type="text"
                                 value={usuarioCorrespondente.Usua_CPF || "Nome não encontrado"}
                                 readOnly />
                         </label>
                         
-                        <label>Data de nascimento:
+                        <label className={styles.label_text}>Data de nascimento:
                             <input
                                 type="text"
                                 value={usuarioCorrespondente.Usua_Data_Nascimento || "Data não encontrado"}
@@ -124,15 +125,15 @@ const EditUsers = () => {
 
                     </div>
 
-                    <div>
-                        <label>Matricula:
+                    <div className={styles.form_row}>
+                        <label className={styles.label_text}>Matricula:
                             <input
                                 type="text"
                                 value={usuarioCorrespondente.Usua_Matricula || "Data não encontrado"}
                                 readOnly />
                         </label>
 
-                        <label>Sexo:
+                        <label className={styles.label_text}>Sexo:
                             <input
                                 type="text"
                                 value={usuarioCorrespondente.Usua_Sexo || "Data não encontrado"}
@@ -141,8 +142,8 @@ const EditUsers = () => {
 
                     </div>
 
-                    <div>
-                        <label>Cargo:
+                    <div className={styles.form_row}>
+                        <label className={styles.label_text}>Cargo:
                             <input
                                 type="text"
                                 value={
@@ -152,7 +153,7 @@ const EditUsers = () => {
                             />
                         </label>
 
-                        <label>Número da OAB:
+                        <label className={styles.label_text}>Número da OAB:
                             <input
                                 type="text"
                                 value={procur ? procur.Pcrd_NumeroOAB : ""}
@@ -161,8 +162,8 @@ const EditUsers = () => {
                         </label>
                     </div>
 
-                    <div>
-                        <label>Email:
+                    <div className={styles.form_row}>
+                        <label className={styles.label_text}>Email:
                             <input
                                 type="text"
                                 value={email}  // Agora é controlado pelo estado
@@ -170,7 +171,7 @@ const EditUsers = () => {
                                 />
                         </label>
 
-                        <label>Telefone:
+                        <label className={styles.label_text}>Telefone:
                             <input
                                 type="text"
                                 value={telefone}  // Agora é controlado pelo estado
@@ -180,8 +181,18 @@ const EditUsers = () => {
                     </div>
                     
                     {/* Botão de salvar */}
-                    <button type="submit">Salvar alterações</button>
+                    <div className={styles.form_buttons}>
+                        
+                        <Link to="/user">
+                            <button className={styles.btn_cancel}>
+                                Cancelar
+                            </button>
+                        </Link>
 
+                        <button className={styles.btn_concluir}
+                            type="submit">Salvar alterações
+                        </button>
+                    </div>
                 </form>
             ) : (
                 <p>Carregando dados do usuário...</p>
