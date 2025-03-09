@@ -1,22 +1,21 @@
 import "./App.css";
 import Sidebar from "./components/Sidebar";
-import SidebarGerenciar from "./components/SidebarGerenciar";
+import SidebarGerenciar from "./pages/UsersPages/SidebarGerenciar";
 import EditProcessPage from "./pages/EditProcessPage/EditProcessPage";
 import ProcessPage from "./pages/ProcessPage/ProcessPage";
 import "./App.css";
 import RegisterProcessPage from "./pages/RegisterProcessPage/RegisterProcessPage";
 import { BrowserRouter as Router, Routes, Route, Outlet, useLocation, Navigate } from "react-router-dom";
-import RegisterUsersPage from "./pages/UsersPages/RegisterUsersPage";
+import RegisterUsersPage from "./pages/RegisterUserPage/RegisterUsersPage";
 import UsersPage from "./pages/UsersPages/UsersPage";
 import CalendarPage from "./pages/CalendarPage/CalendarPage";
 import EditUsers from "./pages/OptionsUsersPage/EditUsers";
 import DistributionPage from "./pages/DistributionProcessPage/DistributionPage";
-import DeleteUserModal from "./components/DeleteModal";
+import DeleteUserModal from "./pages/UsersPages/DeleteModal";
 
 import LoginPage from "./pages/LoginPage/LoginPage";
 import { AuthProvider } from "./context/AuthContext";
 import PrivateRoute from "./components/PrivateRoute";
-import ExchangeProcesses from "./pages/ExchangeProcesses/ExchangeProcesses";
 
 const Layout = () => {
   const location = useLocation();
@@ -41,12 +40,11 @@ const App = () => {
           <Route path="/" element={<Layout />}>
             <Route path="/register-process" element={<PrivateRoute element={<RegisterProcessPage />} />} />
             <Route path="/process" element={<PrivateRoute element={<ProcessPage />} />} />
-            <Route path="/register-user" element={<PrivateRoute element={<RegisterUsersPage />} />} />
+            <Route path="/user/register-user" element={<PrivateRoute element={<RegisterUsersPage />} />} />
             <Route path="/process/edit/:id" element={<PrivateRoute element={<EditProcessPage />} />} />
             <Route path="/user" element={<PrivateRoute element={<UsersPage />} />} />
             <Route path="/calendar-page" element={<PrivateRoute element={<CalendarPage />} />} />
             <Route path="/edit-user/:id" element={<PrivateRoute element={<EditUsers />} />} />
-            <Route path="/processes/exchange" element={<PrivateRoute element={<ExchangeProcesses />} />} />
             <Route path="/user/edit-user/:id" element={<EditUsers />} />
             <Route path="/user/distribution" element={<DistributionPage />} />
             <Route path="/modal" element={<DeleteUserModal />} />

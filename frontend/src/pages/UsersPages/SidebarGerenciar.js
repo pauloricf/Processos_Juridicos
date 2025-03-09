@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { FaUserPlus, FaUsers } from "react-icons/fa6";
 import { BsArrowLeft } from "react-icons/bs";
 import { RiArticleLine } from "react-icons/ri";
-import logo_uea from '../img/uea.svg';
+import logo_uea from '../../img/uea.svg';
 
 function SidebarUser() {
     return (
