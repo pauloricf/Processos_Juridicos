@@ -1,9 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styles from "./CalendarPage.module.css";
 import { postChangeCalendar } from "../../services/calendarService";
 //import api from '../services/apiConfig';
 
-const months = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+const months = [
+  "Janeiro",
+  "Fevereiro",
+  "Março",
+  "Abril",
+  "Maio",
+  "Junho",
+  "Julho",
+  "Agosto",
+  "Setembro",
+  "Outubro",
+  "Novembro",
+  "Dezembro",
+];
 
 const getDaysInMonth = (year, month) => new Date(year, month + 1, 0).getDate();
 const getFirstDayOfMonth = (year, month) => new Date(year, month, 1).getDay();
@@ -18,25 +31,7 @@ const CalendarPage = () => {
 
   const [selectedDay, setSelectedDay] = useState(null);
   const [dayData, setDayData] = useState({});
-  const [savedDayData, setSavedDayData] = useState({});
-
-  useEffect(() => {
-    if (selectedMonth !== null) {
-      fetch(`/api/calendario?year=${year}&month=${selectedMonth}`)
-        .then((res) => res.json())
-        .then((data) => {
-          const formattedData = {};
-          data.forEach(({ Cale_Data, Cale_TipoData }) => {
-            const date = new Date(Cale_Data);
-            formattedData[`${selectedMonth}-${date.getDate()}`] = {
-              type: Cale_TipoData,
-              justification: "",
-            };
-          });
-          setDayData(formattedData);
-        });
-    }
-  }, [selectedMonth, year]);
+  const [savedDayData, setSavedDayData] = useState({}); // Novo estado para salvar os dados
 
   const handleSelectDay = (day) => {
     if (day > 0) {
@@ -44,20 +39,12 @@ const CalendarPage = () => {
     }
   };
 
-  const handleSaveDayData = async (type, justification) => {
-    if (!selectedDay) return;
-
-    const date = new Date(year, selectedMonth, selectedDay).toISOString()
+  const handleSaveDayData = (type, justification) => {
     setDayData((prev) => ({
       ...prev,
       [`${selectedMonth}-${selectedDay}`]: { type, justification },
     }));
-
-    await fetch("/api/calendario", {
-      method: "POST",
-      headers: { "Content-type": "application/json" },
-      body: JSON.stringify({Cale_Data: date, Cale_TipoData: type})
-    })
+    console.log(dayData);
   };
 
   const [data, setData] = useState({
@@ -131,7 +118,10 @@ const CalendarPage = () => {
                           {Array.from({ length: 7 }, (_, day) => {
                             const dayNumber = week * 7 + day - firstDay + 1;
                             return (
-                              <td key={day} className={dayNumber > 0 && dayNumber <= daysInMonth ? styles.day : styles.empty} onClick={() => dayNumber > 0 && dayNumber <= daysInMonth}>
+                              <td
+                                key={day}
+                                className={dayNumber > 0 && dayNumber <= daysInMonth ? styles.day : styles.empty}
+                                onClick={() => dayNumber > 0 && dayNumber <= daysInMonth}>
                                 {dayNumber > 0 && dayNumber <= daysInMonth ? dayNumber : ""}
                               </td>
                             );
@@ -175,7 +165,11 @@ const CalendarPage = () => {
                       return (
                         <td
                           key={day}
-                          className={dayNumber > 0 && dayNumber <= getDaysInMonth(year, selectedMonth) ? styles.day + (selectedDay === dayNumber ? " " + styles.selectedDay : "") : styles.empty}
+                          className={
+                            dayNumber > 0 && dayNumber <= getDaysInMonth(year, selectedMonth)
+                              ? styles.day + (selectedDay === dayNumber ? " " + styles.selectedDay : "")
+                              : styles.empty
+                          }
                           onClick={() => handleSelectDay(dayNumber)}>
                           {dayNumber > 0 && dayNumber <= getDaysInMonth(year, selectedMonth) ? dayNumber : ""}
                         </td>
