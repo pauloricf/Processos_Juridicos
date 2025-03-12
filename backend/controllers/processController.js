@@ -92,6 +92,7 @@ async function cadastrarProcesso(req, res) {
       });
 
       console.log("Procurador selecionado:", procurador);
+      console.log(procurador.id);
 
       let prazoDias = 0;
       if (idCategoria) {
@@ -127,7 +128,7 @@ async function cadastrarProcesso(req, res) {
             Pcss_Requerido,
             Pcss_DataEmitido: new Date(Pcss_DataEmitido),
             Pcss_DataVencimento: new Date(Pcss_DataVencimento), // Usando a data de início do formulário
-            Pcss_Procurador_id: {
+            Pcss_Procuradores: {
               connect: {
                 id: procurador.id,
               },
@@ -175,7 +176,7 @@ async function cadastrarProcesso(req, res) {
             Pcss_Requerido,
             Pcss_DataEmitido: new Date(Pcss_DataEmitido),
             Pcss_DataVencimento: new Date(Pcss_DataVencimento),
-            Pcss_Procurador_id: {
+            Pcss_Procuradores: {
               connect: {
                 id: procurador.id,
               },
