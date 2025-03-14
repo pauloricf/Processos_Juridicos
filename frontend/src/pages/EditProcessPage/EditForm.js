@@ -3,12 +3,14 @@ import styles from "./EditForm.module.css";
 import { getProcessById, updateProcess } from "../../services/processService";
 import ModalDocuments from "./ModalDocuments";
 import { Alert, Snackbar } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const EditForm = ({ id }) => {
   console.log(id);
   const [modalOpen, setModalOpen] = useState(false);
   const handleOpenModal = () => setModalOpen(true);
   const handleCloseModal = () => setModalOpen(false);
+  const navigate = useNavigate();
 
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -231,7 +233,7 @@ const EditForm = ({ id }) => {
 
         {/* Botões */}
         <div className={styles.form_buttons}>
-          <button type="button" onClick={() => {}}>
+          <button type="button" onClick={() => (navigate("/process"))}>
             Voltar
           </button>
           <button type="button" onClick={handleOpenModal}>

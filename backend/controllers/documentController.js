@@ -5,7 +5,7 @@ async function anexarDocumento(req, res) {
   try {
     console.log(1);
     const { Danex_Nome, Danex_Usuario, Danex_NumeroProcesso_id } = req.body;
-    const filePath = req.file.path;
+    const filePath = `/uploads/${req.file.filename}`;
 
     // Criação do registro no banco de dados
     const novoDocumento = await prisma.documentosAnexados.create({
