@@ -3,6 +3,7 @@ import { TableContainer, Table, TableHead, TableBody, TableCell, TableRow, Check
 import styles from "./ProcessTable.module.css"; // Alteração para module CSS
 import { FaTrash, FaPencil, FaCircle } from "react-icons/fa6";
 import { Link } from "react-router-dom";
+import ModalViewProcess from "./ModalViewProcess";
 
 const formatDate = (date) => {
   const dateIso = new Date(date);
@@ -16,19 +17,26 @@ const formatDate = (date) => {
 
 const ProcessTable = ({ processes, calculatePrazo, handleSelectedProcessesChange, processesInTransfer }) => {
   const [selectedProcesses, setSelectedProcesses] = useState([]);
+  const [clickedProcess, setClickedProcess] = useState(null);
   const handleSelectProcess = (id) => {
     setSelectedProcesses((prevSelected) =>
       prevSelected.includes(id) ? prevSelected.filter((processId) => processId !== id) : [...prevSelected, id]
     );
   };
 
-  console.log("processtransfer table", processesInTransfer);
-  console.log("??", processesInTransfer?.processos);
   useEffect(() => {
     handleSelectedProcessesChange(selectedProcesses);
   }, [selectedProcesses, handleSelectedProcessesChange]);
   // console.log(processes);
   console.log("selectedprocess", selectedProcesses);
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const handleOpenModal = (process) => {
+    setClickedProcess(process);
+    setModalOpen(true);
+  };
+  const handleCLoseModal = () => setModalOpen(false);
+
   return (
     <TableContainer sx={{ maxHeight: 500 }} className={styles.table_container}>
       <Table stickyHeader>
@@ -52,12 +60,19 @@ const ProcessTable = ({ processes, calculatePrazo, handleSelectedProcessesChange
             <TableRow
               key={process.id}
               sx={{
+                cursor: "pointer",
                 backgroundColor: processesInTransfer.some((transfer) => transfer.processos.some((p) => p.id === process.id))
                   ? "#F3E9C780"
                   : "inherit",
-              }}>
+              }}
+              hover
+              onClick={() => handleOpenModal(process)}>
               <TableCell>
-                <Checkbox checked={selectedProcesses.includes(process.id)} onChange={() => handleSelectProcess(process.id)} />
+                <Checkbox
+                  checked={selectedProcesses.includes(process.id)}
+                  onChange={() => handleSelectProcess(process.id)}
+                  onClick={(e) => e.stopPropagation()}
+                />
               </TableCell>
               <TableCell>
                 {process.Pcss_Status === "Emitido" && <FaCircle color="#2871A7" />}
@@ -83,7 +98,7 @@ const ProcessTable = ({ processes, calculatePrazo, handleSelectedProcessesChange
                 <FaTrash />
               </TableCell>
               <TableCell>
-                <Link to={`/process/edit/${process.id}`}>
+                <Link to={`/process/edit/${process.id}`} onClick={(e) => e.stopPropagation()}>
                   <FaPencil />
                 </Link>
               </TableCell>
@@ -91,6 +106,8 @@ const ProcessTable = ({ processes, calculatePrazo, handleSelectedProcessesChange
           ))}
         </TableBody>
       </Table>
+
+      <ModalViewProcess open={modalOpen} onClose={handleCLoseModal} process={clickedProcess} />
     </TableContainer>
   );
 };

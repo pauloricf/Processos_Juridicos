@@ -21,6 +21,14 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+const corsOptions = {
+  origin: ["http://localhost:3000/", "http://192.168.1.4:3000/", "http://localhost:3060/", "http://backend:3060"], // Permitir apenas o frontend local
+  methods: "GET,POST,PUT,DELETE",
+  credentials: true, // Permite que cookies e credenciais sejam compartilhados
+};
+
+app.options("*", cors());
+app.use(cors(corsOptions));
 // Usando as rotas
 app.use("/api/", processRouter);
 app.use("/api/", usersRouter);
@@ -30,16 +38,12 @@ app.use("/api/", procMovimentacoesRouter);
 app.use("/api/", calendarRouter);
 app.use("/api/document", documentRouter);
 app.use("/api/", authRouter);
-const corsOptions = {
-  origin: ["http://localhost:3000/", "http://192.168.1.4:3000/"], // Permitir apenas o frontend local
-  methods: "GET,POST,PUT,DELETE",
-  credentials: true, // Permite que cookies e credenciais sejam compartilhados
-};
+const path = require("path");
 
-app.use(cors(corsOptions));
-
+// Servir arquivos estáticos da pasta 'uploads'
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 // Inicia o servidor
-const PORT = process.env.PORT || 3003;
+const PORT = process.env.PORT || 3035;
 app.listen(PORT, () => {
   console.log(`Servidor rodando em http://localhost:${PORT}`);
   iniciarMonitoramento();
