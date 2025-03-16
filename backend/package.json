@@ -23,6 +23,10 @@
     "dev": "nodemon server.js",
     "db:deploy": "npx prisma migrate deploy"
   },
+  "prisma": {
+    "seed": "npx node prisma/seed.js"
+  },
+
   "author": "",
   "license": "ISC",
   "description": ""
