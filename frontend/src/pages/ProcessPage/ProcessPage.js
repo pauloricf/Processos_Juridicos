@@ -135,14 +135,12 @@ const ProcessPage = () => {
   };
 
   const handleAcceptTransfer = async (notificationId) => {
-    
     try {
-      const response = await acceptTransfer(notificationId)
+      const response = await acceptTransfer(notificationId);
       console.log(response);
       // fetchProcesses();
     } catch (error) {
       console.log(error);
-      
     }
   };
 

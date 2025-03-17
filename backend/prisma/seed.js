@@ -4,7 +4,7 @@ const bcrypt = require("bcryptjs");
 const prisma = new PrismaClient();
 
 async function main() {
-  const cpf = "00000000000"; // CPF do admin
+  const cpf = "5"; // CPF do admin
   const senhaHash = await bcrypt.hash(cpf, 10);
 
   // Verificar se o usuário admin já existe
