@@ -22,7 +22,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const corsOptions = {
-  origin: ["http://localhost:3000/", "http://192.168.1.4:3000/", "http://localhost:3060/", "http://backend:3060"], // Permitir apenas o frontend local
+  origin: ["http://localhost:3000/", "http://192.168.1.4:3000/", "http://localhost:3060/", "http://192.169.137.112:3060/"], // Permitir apenas o frontend local
   methods: "GET,POST,PUT,DELETE",
   credentials: true, // Permite que cookies e credenciais sejam compartilhados
 };
