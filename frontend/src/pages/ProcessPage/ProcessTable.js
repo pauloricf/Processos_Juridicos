@@ -107,7 +107,12 @@ const ProcessTable = ({ processes, calculatePrazo, handleSelectedProcessesChange
         </TableBody>
       </Table>
 
-      <ModalViewProcess open={modalOpen} onClose={handleCLoseModal} process={clickedProcess} />
+      <ModalViewProcess
+        open={modalOpen}
+        onClose={handleCLoseModal}
+        process={clickedProcess}
+        prazo={calculatePrazo(clickedProcess?.Pcss_DataVencimento, clickedProcess?.id)}
+      />
     </TableContainer>
   );
 };
