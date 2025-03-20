@@ -1,5 +1,6 @@
 // Importando as libs
 const { PrismaClient } = require("@prisma/client");
+const { recalcularPrazos, recalcularPrazosHelper } = require("./deadlineController");
 // const { connect } = require("../routes/processRouter");
 const prisma = new PrismaClient();
 
@@ -53,8 +54,14 @@ async function updateCalendar(req, res) {
           id: parseInt(Calt_Usuario_id),
         },
       });
+      console.log("usuario", usuario);
 
-      if (String(usuario.Usua_TipoUsuario).trim() !== "secretaria") {
+      if (!usuario) {
+        return res.status(404).json({ error: "Usuário não encontrado." });
+      }
+
+      console.log("PAssou", usuario.Usua_TipoUsuario);
+      if (String(usuario.Usua_TipoUsuario).trim() !== "Secretária") {
         return res.status(403).json({ error: "Apenas usuários do tipo Secretária podem alterar o calendário." });
       }
 
@@ -77,6 +84,7 @@ async function updateCalendar(req, res) {
         },
       });
 
+      await recalcularPrazosHelper();
       // Resposta
       res.status(200).json(novaAlteracaoData);
     }
@@ -87,13 +95,23 @@ async function updateCalendar(req, res) {
   }
 }
 
-async function getCalendar(req, res) {
+async function getCalendarChanges(req, res) {
   try {
-    // Pegando as datas cadastradas
-    const datas = await prisma.calendario.findMany();
-    res.status(200).json(datas);
+    const { year, month } = req.query;
+    console.log(year, month);
+    const dates = await prisma.calendarioAlteracoes.findMany({
+      where: {
+        Calt_Data: {
+          gte: new Date(year, month, 1),
+          lt: new Date(year, month + 1, 1),
+        },
+      },
+    });
+    console.log(dates);
+    res.status(200).json(dates);
   } catch (error) {
     // Mensagem de erro
+    console.log(error);
     res.status(500).json({ error: "Erro ao pegar as datas cadastradas" });
   }
 }
@@ -102,5 +120,5 @@ async function getCalendar(req, res) {
 module.exports = {
   calendar,
   updateCalendar,
-  getCalendar,
+  getCalendarChanges,
 };

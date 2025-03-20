@@ -40,7 +40,7 @@ const ModalDocuments = ({ open, onClose, showSnackbar }) => {
     formData.append("Danex_NumeroProcesso_id", parseInt(id));
     console.log(formData);
     try {
-      const response = await api.post("/document/upload", formData, {
+      const response = await api.post("/documents/upload", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       console.log(response.data);

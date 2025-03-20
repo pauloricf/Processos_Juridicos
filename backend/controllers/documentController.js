@@ -25,4 +25,35 @@ async function anexarDocumento(req, res) {
   }
 }
 
-module.exports = { anexarDocumento };
+const getDocumentsByProcessId = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const documents = await prisma.documentosAnexados.findMany({
+      where: {
+        Danex_NumeroProcesso_id: parseInt(id),
+      },
+    });
+
+    res.status(200).json(documents);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Erro ao buscar documentos" });
+  }
+}
+
+const deleteDocument = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await prisma.documentosAnexados.delete({
+      where: {
+        Danex_Id: parseInt(id),
+      },
+    });
+
+    res.status(204).json({ message: "Documento deletado com sucesso" });
+  } catch (error) {
+    res.status(500).json({ error: "Erro ao deletar documento" });
+  }
+}
+
+module.exports = { anexarDocumento, getDocumentsByProcessId, deleteDocument};

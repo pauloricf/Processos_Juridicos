@@ -36,7 +36,7 @@ app.use("/api/", transferRouter);
 app.use("/api/", licensesRouter);
 app.use("/api/", procMovimentacoesRouter);
 app.use("/api/", calendarRouter);
-app.use("/api/document", documentRouter);
+app.use("/api/documents", documentRouter);
 app.use("/api/", authRouter);
 const path = require("path");
 

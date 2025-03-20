@@ -1,44 +1,9 @@
 // Importando as libs
 const { PrismaClient } = require("@prisma/client");
+const { calculateDataVencimento } = require("./deadlineController");
 // const { connect } = require("../routes/processRouter");
 const prisma = new PrismaClient();
 
-const calculateDataVencimento = async (dataEmitido, prazo, prazoCorrido) => {
-  const isDiaUtil = (data) => {
-    const feriados = [];
-    const diaSemana = data.getUTCDay();
-    // console.log("Dia da semana", diaSemana);
-    return diaSemana !== 0 && diaSemana !== 6 && !feriados.includes(data);
-  };
-
-  let dataVencimento = new Date(dataEmitido);
-  console.log("Data de vencimento inicial", dataVencimento);
-  console.log("dia data de vencimento inicial", dataVencimento.getUTCDate());
-
-  if (prazoCorrido) {
-    dataVencimento.setDate(dataVencimento.getDate() + prazo);
-  } else if (!prazoCorrido && prazo > 0) {
-    // Obtém a lista de feriados do banco (se houver)
-    // const feriados = await prisma.calendario.findMany({
-    //     where: { Cale_TipoData: "FERIADO" },
-    //     select: { Cale_Data: true }
-    // });
-
-    // const feriadosSet = new Set(feriados.map(f => f.Cale_Data.toISOString().split("T")[0]));
-
-    let diasAdicionados = 0;
-    while (diasAdicionados < prazo) {
-      dataVencimento.setUTCDate(dataVencimento.getUTCDate() + 1);
-      if (isDiaUtil(dataVencimento)) {
-        diasAdicionados++;
-      }
-    }
-  }
-
-  dataVencimento.setUTCHours(23, 59, 59, 999);
-  console.log("Data de vencimento final", dataVencimento);
-  return dataVencimento;
-};
 // Função para cadastrar processos
 async function cadastrarProcesso(req, res) {
   try {
@@ -406,6 +371,22 @@ const getProcessesByAttorney = async (req, res) => {
     res.status(500).json({ error: "Erro ao buscar processos do procurador" });
   }
 };
+
+const deleteProcess = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const process = await prisma.processos.delete({
+      where: {
+        id: parseInt(id),
+      }
+    });
+    console.log(process)
+    res.status(200).json(process);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Erro ao deletar o Processo" });
+  }
+};
 // Exportar funções
 module.exports = {
   cadastrarProcesso,
@@ -413,4 +394,5 @@ module.exports = {
   updateProcess,
   getProcessById,
   getProcessesByAttorney,
+  deleteProcess,
 };

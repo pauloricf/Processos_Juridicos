@@ -39,6 +39,42 @@ async function main() {
   } else {
     console.log("Usuário admin já existe.");
   }
+
+  // Criar instâncias de tiposPrazos
+  const tiposPrazos = [
+    {
+      Tpraz_Tipo: "Ação Ordinária",
+      Tpraz_Dias: 30,
+      Tpraz_Corrido: false,
+    },
+    {
+      Tpraz_Tipo: "Juizado Especial",
+      Tpraz_Dias: 10,
+      Tpraz_Corrido: false,
+    },
+    {
+      Tpraz_Tipo: "Mandado de Segurança",
+      Tpraz_Dias: 10,
+      Tpraz_Corrido: true,
+    },
+  ];
+
+  for (const tipoPrazo of tiposPrazos) {
+    const existingTipoPrazo = await prisma.tiposPrazos.findFirst({
+      where: {
+        Tpraz_Tipo: tipoPrazo.Tpraz_Tipo,
+      },
+    });
+
+    if (!existingTipoPrazo) {
+      await prisma.tiposPrazos.create({
+        data: tipoPrazo,
+      });
+      console.log(`Tipo de prazo "${tipoPrazo.Tpraz_Tipo}" criado com sucesso!`);
+    } else {
+      console.log(`Tipo de prazo "${tipoPrazo.Tpraz_Tipo}" já existe.`);
+    }
+  }
 }
 
 main()

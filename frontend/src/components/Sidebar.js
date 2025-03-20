@@ -109,13 +109,13 @@ function Sidebar() {
 
           <Typography variant="subtitle2">Logado como {user && capitalize(user?.user.name)}</Typography>
           <br />
-          {user?.user.role === "ProcuradorEfetivo" ? (
+          {user?.user.role.trim() === "ProcuradorEfetivo" ? (
             <Typography variant="subtitle2" fontWeight="bold" color="white">
               Procurador Efetivo
             </Typography>
-          ) : user?.user.role === "ProcuradorGeral" ? (
+          ) : user?.user.role.trim() === "ProcuradorGeral" ? (
             <Typography variant="subtitle2">Procurador Geral</Typography>
-          ) : user?.user.role === "Secretario" ? (
+          ) : user?.user.role.trim() === "Secretária" ? (
             <Typography variant="subtitle2">Secretária</Typography>
           ) : (
             <Typography variant="subtitle2">Assessora</Typography>

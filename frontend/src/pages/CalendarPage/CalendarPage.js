@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import styles from "./CalendarPage.module.css";
-import { postChangeCalendar } from "../../services/calendarService";
+import { getCalendarChanges, postChangeCalendar } from "../../services/calendarService";
+import AuthContext from "../../context/AuthContext";
 //import api from '../services/apiConfig';
 
 const months = [
@@ -25,13 +26,28 @@ const CalendarPage = () => {
   const [year, setYear] = useState(new Date().getFullYear());
   const [selectedMonth, setSelectedMonth] = useState(null);
 
+  const fetchModifiedDays = async (month) => {
+    try {
+      console.log("month", month);
+      const response = await getCalendarChanges(year, month);
+      setModifiedDays(response);
+      console.log(response);
+    } catch (error) {
+      console.error("Erro ao buscar modificações:", error);
+    }
+  };
   const handlePrevYear = () => setYear(year - 1);
   const handleNextYear = () => setYear(year + 1);
-  const handleSelectMonth = (month) => setSelectedMonth(month);
+  const handleSelectMonth = async (month) => {
+    console.log("selectedmonth", month);
+    fetchModifiedDays(month);
+    setSelectedMonth(month);
+  };
 
   const [selectedDay, setSelectedDay] = useState(null);
   const [dayData, setDayData] = useState({});
   const [savedDayData, setSavedDayData] = useState({}); // Novo estado para salvar os dados
+  const [modifiedDays, setModifiedDays] = useState([]);
 
   const handleSelectDay = (day) => {
     if (day > 0) {
@@ -46,11 +62,11 @@ const CalendarPage = () => {
     }));
     console.log(dayData);
   };
-
+  const { user } = useContext(AuthContext);
   const [data, setData] = useState({
     Calt_Data: "",
     Calt_Motivo: "",
-    Calt_Usuario_id: 1,
+    Calt_Usuario_id: user.user.id,
     tipo_data: "",
   });
   // Atualizar os dados do form
@@ -73,9 +89,10 @@ const CalendarPage = () => {
       [`${selectedMonth}-${selectedDay}`]: dayData[`${selectedMonth}-${selectedDay}`],
     });
     console.log("saved data", savedDayData);
-    const date = new Date(`${year}-${selectedMonth + 1}-${selectedDay}`);
+    const date = new Date(Date.UTC(year, selectedMonth, selectedDay));
     console.log(date);
     console.log("data", data);
+
     const response = await postChangeCalendar({
       ...data,
       Calt_Data: date,
@@ -212,15 +229,33 @@ const CalendarPage = () => {
               </button>
             </div>
           )}
-
+          {selectedMonth !== null && (
+            <div className={styles.modifiedDaysContainer}>
+              <h3>Dias modificados em {months[selectedMonth]}:</h3>
+              {modifiedDays?.length > 0 ? (
+                <ul>
+                  {modifiedDays?.map((day) => (
+                    <li key={day.id}>
+                      {new Date(day.Calt_Data).getUTCDate()} - {day.Calt_Motivo} ({day.Calt_Tipo})
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>Nenhuma alteração registrada para este mês.</p>
+              )}
+            </div>
+          )}
           {/* Exibe os dados salvos */}
           <div className={styles.savedDataPanel}>
             {Object.entries(savedDayData)
               .filter(([key, value]) => key.startsWith(`${selectedMonth}-`) && value.type)
               .map(([key, value]) => {
-                const day = key.split("-")[1]; // Pegando apenas o dia
-                const dayName = new Date(year, selectedMonth, day).toLocaleDateString("pt-BR", { weekday: "short" });
-
+                const day = key.split("-")[1];
+                const utcDate = new Date(Date.UTC(year, selectedMonth, day));
+                const dayName = utcDate.toLocaleDateString("pt-BR", {
+                  weekday: "short",
+                  timeZone: "UTC", // Força usar UTC no toLocaleDateString
+                });
                 return (
                   <div key={key} className={styles.editedDay}>
                     <span className={styles.dayLabel}>
