@@ -55,13 +55,30 @@ async function transferencia(req, res) {
 const getNotifications = async (req, res) => {
   const { id } = req.params;
   console.log("currentuser", id);
+  const usuario = await prisma.usuarios.findUnique({
+    where: {
+      id: parseInt(id),
+    },
+  });
+
+  // Verifica se o usuário foi encontrado
+  if (!usuario) {
+    return res.status(404).json({ error: "Usuário não encontrado." });
+  }
+
+  // Verifica se o usuário é um procurador
+  if (String(usuario.Usua_TipoUsuario).trim() !== "Procurador") {
+    return;
+  }
   const procurador = await prisma.procuradores.findFirst({
     where: {
       Pcrd_Usuario_id: parseInt(id),
     },
   });
 
-  // console.log(procurador);
+  if (!procurador) {
+    return res.status(404).json({ error: "Procurador não encontrado." });
+  }
 
   try {
     const tranferOrder = await prisma.transferencias.findMany({

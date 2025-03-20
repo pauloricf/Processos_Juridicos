@@ -48,14 +48,14 @@ async function main() {
       Tpraz_Corrido: false,
     },
     {
-      Tpraz_Tipo: "Mandado de Segurança",
-      Tpraz_Dias: 10,
-      Tpraz_Corrido: true,
-    },
-    {
       Tpraz_Tipo: "Juizado Especial",
       Tpraz_Dias: 10,
       Tpraz_Corrido: false,
+    },
+    {
+      Tpraz_Tipo: "Mandado de Segurança",
+      Tpraz_Dias: 10,
+      Tpraz_Corrido: true,
     },
   ];
 

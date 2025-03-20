@@ -185,7 +185,7 @@ const ModalViewProcess = ({ open, onClose, process, prazo }) => {
                       placeholder="Data de emissão"
                       name="Pcss_DataEmitido"
                       value={process?.Pcss_DataEmitido.split("T")[0]}
-                      disabled={true}
+                      disabled
                     />
                   </div>
                   <div className={styles.form_group}>

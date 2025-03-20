@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import ProcessTable from "./ProcessTable";
 import styles from "./ProcessPage.module.css"; // Alterado para importar o módulo CSS
 import { FaCircle, FaSearch, FaFilter } from "react-icons/fa";
-import { getAllProcess, getProcessesByAttorney, updateProcess } from "../../services/processService";
+import { deleteProcess, getAllProcess, getProcessesByAttorney, updateProcess } from "../../services/processService";
 import { IoAddOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../../context/AuthContext";
@@ -98,30 +98,33 @@ const ProcessPage = () => {
     fetchProcesses();
     fetchNotifications();
     fetchProcessesInTransfer();
-  }, []);
+  }, [user.user.id]);
 
   console.log("processos em transferencia", processesInTransfer);
   console.log("notifications", notifications);
   const updateStatus = async (id, status) => {
     try {
       await updateProcess(id, { Pcss_Status: status });
-      setProcesses((prevProcesses) =>
-        prevProcesses.map((process) => (process.id === id ? { ...process, Pcss_Status: status } : process))
-      );
+      setProcesses((prevProcesses) => {
+        const updatedProcesses = prevProcesses.map((process) =>
+          process.id === id ? { ...process, Pcss_Status: status } : process
+        );
+        return updatedProcesses;
+      });
     } catch (error) {
-      // console.log(error);
+      console.log(error);
     }
   };
 
   const calculatePrazo = (date, id) => {
     const dateToday = new Date();
-    // console.log(dateToday);
     const dateVencimento = new Date(date);
-    dateVencimento.setHours(dateVencimento.getHours() + 4 + 23, 59, 59);
-    // console.log(dateVencimento);
 
+    // Ajuste no cálculo considerando UTC
+    dateVencimento.setUTCHours(23, 59, 59, 999);
     const diffTime = dateVencimento - dateToday;
-    // console.log("difftime", diffTime);
+
+    // Cálculo correto de dias considerando o timestamp completo
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
     if (diffTime < 0) {
@@ -129,27 +132,35 @@ const ProcessPage = () => {
       if (process && process.Pcss_Status !== "Vencido") {
         updateStatus(id, "Vencido");
       }
+      return `Vencido há ${Math.abs(diffDays)} dias`;
     }
-    // console.log(diffDays);
-    return diffDays;
+
+    return diffDays >= 0 ? `${diffDays} dias restantes` : "Calculando...";
   };
 
   const handleAcceptTransfer = async (notificationId) => {
-    
     try {
-      const response = await acceptTransfer(notificationId)
+      const response = await acceptTransfer(notificationId);
       console.log(response);
       // fetchProcesses();
     } catch (error) {
       console.log(error);
-      
     }
   };
 
   const handleRejectTransfer = async (notificationId) => {
     return;
   };
+  console.log("RENDERIZOU");
 
+  const handleDeleteProcess = async(id) => {
+    try {
+      const response = await deleteProcess(id);
+      console.log(response)
+    } catch (error) {
+      console.log(error)
+    }
+  }
   return (
     <div className={styles.page_content}>
       <div className={styles.main_container}>
@@ -217,6 +228,7 @@ const ProcessPage = () => {
             calculatePrazo={calculatePrazo}
             handleSelectedProcessesChange={handleSelectedProcessesChange}
             processesInTransfer={processesInTransfer}
+            handleDeleteProcess={handleDeleteProcess}
           />
         </div>
         <Button

@@ -45,3 +45,12 @@ export const getProcessesByAttorney = async (id) => {
     console.error("Erro ao buscar processos do procurador", error);
   }
 };
+
+export const deleteProcess = async (id) => {
+  try {
+    const response = await api.delete(`/process/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Erro ao deletar o processo", error);
+  }
+};

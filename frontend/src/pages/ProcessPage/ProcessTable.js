@@ -15,7 +15,7 @@ const formatDate = (date) => {
   });
 };
 
-const ProcessTable = ({ processes, calculatePrazo, handleSelectedProcessesChange, processesInTransfer }) => {
+const ProcessTable = ({ processes, calculatePrazo, handleSelectedProcessesChange, processesInTransfer, handleDeleteProcess }) => {
   const [selectedProcesses, setSelectedProcesses] = useState([]);
   const [clickedProcess, setClickedProcess] = useState(null);
   const handleSelectProcess = (id) => {
@@ -95,7 +95,12 @@ const ProcessTable = ({ processes, calculatePrazo, handleSelectedProcessesChange
               <TableCell>{formatDate(process.Pcss_DataVencimento)}</TableCell>
               <TableCell>{calculatePrazo(process.Pcss_DataVencimento, process.id)}</TableCell>
               <TableCell>
-                <FaTrash />
+                <FaTrash
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDeleteProcess(process.id);
+                  }}
+                />
               </TableCell>
               <TableCell>
                 <Link to={`/process/edit/${process.id}`} onClick={(e) => e.stopPropagation()}>
