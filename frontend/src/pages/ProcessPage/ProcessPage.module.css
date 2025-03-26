@@ -64,6 +64,10 @@
   gap: 5px;
 }
 
+.filter_section_bar button:hover{
+  background-color: #4b5f70;
+}
+
 .content h3 {
   margin: 10px;
 }
@@ -77,6 +81,8 @@
   flex-grow: 1;
   overflow-x: auto;
 }
+
+
 
 @media (max-width: 1000px) {
   html{
@@ -107,4 +113,8 @@
 .add_icon{
   margin-right: 20px;
   cursor: pointer;
+}
+
+.swal-over-modal {
+  z-index: 2000 !important;
 }

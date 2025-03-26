@@ -12,6 +12,7 @@ const documentRouter = require("./routes/documentRouter");
 const { iniciarMonitoramento } = require("./services/alertService");
 const authRouter = require("./routes/authRouter");
 const cookieParser = require("cookie-parser");
+const reportRouter = require("./routes/reportRouter");
 
 // Usando Cors para permitir requisições de qualquer origem
 app.use(cors());
@@ -38,7 +39,9 @@ app.use("/api/", procMovimentacoesRouter);
 app.use("/api/", calendarRouter);
 app.use("/api/documents", documentRouter);
 app.use("/api/", authRouter);
+app.use("/api/", reportRouter);
 const path = require("path");
+const { report } = require("process");
 
 // Servir arquivos estáticos da pasta 'uploads'
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));

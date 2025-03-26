@@ -1,6 +1,6 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import ProcessTable from "./ProcessTable";
-import styles from "./ProcessPage.module.css"; // Alterado para importar o módulo CSS
+import styles from "./ProcessPage.module.css";
 import { FaCircle, FaSearch, FaFilter } from "react-icons/fa";
 import { deleteProcess, getAllProcess, getProcessesByAttorney, updateProcess } from "../../services/processService";
 import { IoAddOutline } from "react-icons/io5";
@@ -14,223 +14,243 @@ import { acceptTransfer, getProcessesInTransfer, getTransferNotifications } from
 import { formatDateBR } from "../../utils/utils";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
+import Swal from "sweetalert2";
 
 const ProcessPage = () => {
+  const renderCount = useRef(0);
   const [processes, setProcesses] = useState([]);
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
   const [modalOpen, setModalOpen] = useState(false);
-  const handleOpenModal = () => setModalOpen(true);
-  const handleCLoseModal = () => setModalOpen(false);
-  const [selectedProcessCount, setSelectedProcessCount] = useState(0);
-  const [attorneys, setAttorneys] = useState([]);
-  console.log("selectedprocesscount", selectedProcessCount);
-  const [selectedProcesses, setSelectedProcesses] = useState([]); // Lista de processos selecionados
-  const handleSelectedProcessesChange = (selected) => {
-    setSelectedProcesses(selected);
-    console.log(selected);
-    console.log("selectedprocesses", selectedProcesses); // Atualizando os processos selecionados
-  };
-  const [notifications, setNotifications] = useState([]); // Lista de notificações
-  const [anchorEl, setAnchorEl] = useState(null); // Estado do menu
-  const handleMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
+  const [selectedProcesses, setSelectedProcesses] = useState([]);
+  const [notifications, setNotifications] = useState([]);
+  const [anchorEl, setAnchorEl] = useState(null);
   const [processesInTransfer, setProcessesInTransfer] = useState([]);
-  // console.log("quantidade de processos", notifications[0].processos.leng)
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
-  const searchedProcesses = search.length > 0 ? processes.filter((process) => process.Pcss_NumeroProcesso.includes(search)) : [];
+  const [attorneys, setAttorneys] = useState([]);
+  const [statusButton, setStatusButton] = useState("");
 
-  const handleFilteredProcesses = (e) => {
-    // console.log(1);
-  };
+  // Debug de renderizações (remover em produção)
+  useEffect(() => {
+    renderCount.current++;
+    console.log(`Renderizou ProcessPage: ${renderCount.current} vezes`);
+  });
 
-  const fetchAttorneys = async () => {
-    const response = await getAttorneys();
-    setAttorneys(response);
-  };
+  const handleOpenModal = useCallback(() => setModalOpen(true), []);
+  const handleCLoseModal = useCallback(() => setModalOpen(false), []);
+
+  const fetchAttorneys = useCallback(async () => {
+    try {
+      const response = await getAttorneys();
+      setAttorneys(response);
+    } catch (error) {
+      console.error("Erro ao buscar procuradores:", error);
+    }
+  }, []);
+
+  const loadAllData = useCallback(async () => {
+    try {
+      const [processesData, notificationsData, transfersData] = await Promise.all([
+        user?.user?.role === "ProcuradorEfetivo" ? getProcessesByAttorney(user.user.id) : getAllProcess(user?.user?.id),
+        getTransferNotifications(user?.user?.id),
+        getProcessesInTransfer(user?.user?.id),
+      ]);
+
+      setProcesses(processesData || []);
+      setNotifications(notificationsData || []);
+      setProcessesInTransfer(transfersData || []);
+    } catch (error) {
+      console.error("Erro ao carregar dados:", error);
+    }
+  }, [user?.user?.id, user?.user?.role]);
 
   useEffect(() => {
-    if (modalOpen) fetchAttorneys();
-  }, [modalOpen]);
+    loadAllData();
+  }, [loadAllData]);
 
-  console.log(attorneys);
-
-  const fetchProcesses = async () => {
-    try {
-      if (user.user.role === "ProcuradorEfetivo") {
-        const response = await getProcessesByAttorney(user.user.id);
-        // console.log("Dados retornados da API", response);
-        setProcesses(response);
-      } else {
-        const response = await getAllProcess(user.user.id);
-        setProcesses(response);
-      }
-    } catch (error) {
-      console.log("erro", error);
-    }
-  };
-
-  const fetchProcessesInTransfer = async () => {
-    try {
-      const response = await getProcessesInTransfer(user.user.id);
-      setProcessesInTransfer(response);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  // const handleSelectedProcessesChange = (count) => {
-  //   setSelectedProcessCount(count);
-  // };
-
-  const fetchNotifications = async () => {
-    try {
-      const response = await getTransferNotifications(user.user.id);
-      setNotifications(response);
-    } catch (error) {
-      console.log("error");
-    }
-  };
   useEffect(() => {
-    fetchProcesses();
-    fetchNotifications();
-    fetchProcessesInTransfer();
-  }, [user.user.id]);
+    if (modalOpen) {
+      fetchAttorneys();
+    }
+  }, [modalOpen, fetchAttorneys]);
 
-  console.log("processos em transferencia", processesInTransfer);
-  console.log("notifications", notifications);
-  const updateStatus = async (id, status) => {
+  const updateStatus = useCallback(async (id, status) => {
     try {
       await updateProcess(id, { Pcss_Status: status });
-      setProcesses((prevProcesses) => {
-        const updatedProcesses = prevProcesses.map((process) =>
-          process.id === id ? { ...process, Pcss_Status: status } : process
-        );
-        return updatedProcesses;
-      });
+      setProcesses((prev) => prev.map((p) => (p.id === id ? { ...p, Pcss_Status: status } : p)));
     } catch (error) {
-      console.log(error);
+      console.error("Erro ao atualizar status:", error);
     }
-  };
+  }, []);
 
-  const calculatePrazo = (date, id) => {
-    const dateToday = new Date();
-    const dateVencimento = new Date(date);
+  const calculatePrazo = useCallback(
+    (date, id) => {
+      const dateToday = new Date();
+      const dateVencimento = new Date(date);
+      dateVencimento.setUTCHours(23, 59, 59, 999);
+      const diffTime = dateVencimento - dateToday;
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-    // Ajuste no cálculo considerando UTC
-    dateVencimento.setUTCHours(23, 59, 59, 999);
-    const diffTime = dateVencimento - dateToday;
-
-    // Cálculo correto de dias considerando o timestamp completo
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-    if (diffTime < 0) {
-      const process = processes.find((p) => p.id === id);
-      if (process && process.Pcss_Status !== "Vencido") {
-        updateStatus(id, "Vencido");
+      if (diffTime < 0) {
+        const process = processes.find((p) => p.id === id);
+        if (process && process.Pcss_Status !== "Vencido") {
+          updateStatus(id, "Vencido");
+        }
+        return `Vencido há ${Math.abs(diffDays)} dias`;
       }
-      return `Vencido há ${Math.abs(diffDays)} dias`;
+
+      return diffDays >= 0 ? `${diffDays} dias restantes` : "Calculando...";
+    },
+    [processes, updateStatus]
+  );
+
+  const handleAcceptTransfer = useCallback(
+    async (notificationId) => {
+      try {
+        await acceptTransfer(notificationId);
+        loadAllData();
+      } catch (error) {
+        console.error("Erro ao aceitar transferência:", error);
+      }
+    },
+    [loadAllData]
+  );
+
+  const handleRejectTransfer = useCallback(() => {}, []);
+
+  const handleDeleteProcess = useCallback(
+    async (id) => {
+      try {
+        await deleteProcess(id);
+        loadAllData();
+      } catch (error) {
+        console.error("Erro ao deletar processo:", error);
+      }
+    },
+    [loadAllData]
+  );
+
+  const handleSelectedProcessesChange = useCallback((selected) => {
+    setSelectedProcesses(selected);
+  }, []);
+
+  const handleMenuOpen = useCallback((event) => {
+    setAnchorEl(event.currentTarget);
+  }, []);
+
+  const handleMenuClose = useCallback(() => {
+    setAnchorEl(null);
+  }, []);
+
+  // const searchedProcesses = useMemo(
+  //   () => (search.length > 0 ? processes.filter((p) => p.Pcss_NumeroProcesso.includes(search)) : processes),
+  //   [search, processes]
+  // );
+
+  const filteredProcesses = useMemo(() => {
+    let filtered = processes;
+
+    // Aplica filtro de status
+    if (statusButton === "Emitidos") {
+      filtered = filtered.filter((p) => p.Pcss_Status === "Emitido");
+    } else if (statusButton === "Concluídos") {
+      filtered = filtered.filter((p) => p.Pcss_Status === "Concluído");
+    } else if (statusButton === "Vencidos") {
+      filtered = filtered.filter((p) => p.Pcss_Status === "Vencido");
     }
 
-    return diffDays >= 0 ? `${diffDays} dias restantes` : "Calculando...";
-  };
-
-  const handleAcceptTransfer = async (notificationId) => {
-    try {
-      const response = await acceptTransfer(notificationId);
-      console.log(response);
-      // fetchProcesses();
-    } catch (error) {
-      console.log(error);
+    // Aplica filtro de busca
+    if (search.length > 0) {
+      filtered = filtered.filter((p) => p.Pcss_NumeroProcesso.includes(search));
     }
-  };
 
-  const handleRejectTransfer = async (notificationId) => {
-    return;
-  };
-  console.log("RENDERIZOU");
+    return filtered;
+  }, [processes, statusButton, search]);
 
-  const handleDeleteProcess = async(id) => {
-    try {
-      const response = await deleteProcess(id);
-      console.log(response)
-    } catch (error) {
-      console.log(error)
-    }
-  }
+  const handleConcludeClick = useCallback(
+    async (id) => {
+      try {
+        await updateStatus(id, "Concluído");
+        Swal.fire("Concluído!", "O processo foi concluído com sucesso.", "success");
+      } catch (error) {
+        console.error("Erro ao concluir processo:", error);
+        Swal.fire("Erro!", "Ocorreu um erro ao concluir o processo.", "error");
+      }
+    },
+    [updateStatus]
+  );
+
+  const memoizedNotifications = useMemo(
+    () =>
+      notifications?.map((notification) => (
+        <MenuItem key={notification.id} sx={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
+          <Typography>
+            O(a) Procurador {notification.usuarioOrigem?.Usua_Nome} solicitou a troca de {notification.processos?.length}{" "}
+            processos no dia {formatDateBR(notification.Tran_Data)}
+          </Typography>
+          <Stack direction="row" spacing={1} sx={{ marginTop: "0.5rem", marginLeft: "auto" }}>
+            <IconButton color="success" onClick={() => handleAcceptTransfer(notification.id)}>
+              <CheckCircleIcon />
+            </IconButton>
+            <IconButton color="error" onClick={() => handleRejectTransfer(notification.id)}>
+              <CancelIcon />
+            </IconButton>
+          </Stack>
+        </MenuItem>
+      )),
+    [notifications, handleAcceptTransfer]
+  );
+
   return (
     <div className={styles.page_content}>
       <div className={styles.main_container}>
-        {/* Ícone de notificações com contador */}
         <IconButton color="inherit" onClick={handleMenuOpen} sx={{ marginLeft: "auto" }}>
           <Badge badgeContent={notifications?.length} color="error">
             <NotificationsIcon fontSize="large" />
           </Badge>
         </IconButton>
 
-        {/* Menu dropdown de notificações */}
         <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose} sx={{ width: "100vw" }}>
-          {notifications?.length > 0 ? (
-            notifications.map((notification) => (
-              <MenuItem
-                key={notification.id}
-                // onClick={handleMenuClose}
-                sx={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
-                <Typography>
-                  O(a) Procurador {notification.usuarioOrigem.Usua_Nome} solicitou a troca de {notification.processos?.length}{" "}
-                  processos no dia {formatDateBR(notification.Tran_Data)}
-                </Typography>
-                {/* Botões de Aceitar e Recusar em Linha */}
-                <Stack direction="row" spacing={1} sx={{ marginTop: "0.5rem", marginLeft: "auto" }}>
-                  <IconButton color="success" onClick={() => handleAcceptTransfer(notification.id)}>
-                    <CheckCircleIcon />
-                  </IconButton>
-                  <IconButton color="error" onClick={() => handleRejectTransfer(notification.id)}>
-                    <CancelIcon />
-                  </IconButton>
-                </Stack>
-              </MenuItem>
-            ))
-          ) : (
-            <MenuItem disabled>Nenhuma notificação</MenuItem>
-          )}
+          {notifications?.length > 0 ? memoizedNotifications : <MenuItem disabled>Nenhuma notificação</MenuItem>}
         </Menu>
+
         <div className={styles.filter_section_bar}>
           <label>Selecionar Status: </label>
-          <button onClick={handleFilteredProcesses}>
+          <button onClick={() => setStatusButton(prev => prev === "Emitidos" ? "" : "Emitidos")}>
             <FaCircle color="#2871A7" />
             Emitidos
           </button>
-          <button>
+          <button onClick={() => setStatusButton(prev => prev === "Concluídos" ? "" : "Concluídos")}>
             <FaCircle color="#19D109" />
             Concluídos
           </button>
-          <button>
+          <button onClick={() => setStatusButton(prev => prev === "Vencidos" ? "" : "Vencidos")}>
             <FaCircle color="#FF0000" />
             Vencidos
           </button>
           <div className={styles.search_input_container}>
-            <input type="text" className={styles.input} value={search} onChange={(e) => setSearch(e.target.value)}></input>
+            <input type="text" className={styles.input} value={search} onChange={(e) => setSearch(e.target.value)} />
             <FaSearch className={styles.icon_search} />
           </div>
           <FaFilter className={styles.icon_filter} />
         </div>
+
         <div className={styles.content}>
           <div className={styles.title_container}>
             <h3>Listagem de processos cadastrados</h3>
             <IoAddOutline className={styles.add_icon} onClick={() => navigate("/register-process")} />
           </div>
+
           <ProcessTable
-            processes={search.length > 0 ? searchedProcesses : processes}
+            processes={filteredProcesses}
             calculatePrazo={calculatePrazo}
             handleSelectedProcessesChange={handleSelectedProcessesChange}
             processesInTransfer={processesInTransfer}
             handleDeleteProcess={handleDeleteProcess}
+            handleConcludeProcess={handleConcludeClick}
           />
         </div>
+
         <Button
           onClick={handleOpenModal}
           variant="contained"
@@ -239,10 +259,11 @@ const ProcessPage = () => {
           Trocar Processos
         </Button>
       </div>
+
       <ModalExchangeProcesses
         open={modalOpen}
         onClose={handleCLoseModal}
-        selectedProcessCount={selectedProcessCount}
+        selectedProcessCount={selectedProcesses.length}
         attorneys={attorneys}
         processes={selectedProcesses}
       />
@@ -250,4 +271,4 @@ const ProcessPage = () => {
   );
 };
 
-export default ProcessPage;
+export default React.memo(ProcessPage);

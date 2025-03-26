@@ -13,9 +13,10 @@ export const getTransferNotifications = async (id) => {
   try {
     const response = await api.get(`/transferOrders/${id}`);
     console.log(id);
-    return response.data;
+    return response.data || [];
   } catch (error) {
     console.log(error);
+    return [];
   }
 };
 
@@ -35,4 +36,4 @@ export const acceptTransfer = async (id) => {
   } catch (error) {
     console.log(error);
   }
-}
+};

@@ -16,6 +16,7 @@ import DeleteUserModal from "./pages/UsersPages/DeleteModal";
 import LoginPage from "./pages/LoginPage/LoginPage";
 import { AuthProvider } from "./context/AuthContext";
 import PrivateRoute from "./components/PrivateRoute";
+import ReportsPage from "./pages/ReportsPage/ReportsPage";
 
 const Layout = () => {
   const location = useLocation();
@@ -44,10 +45,11 @@ const App = () => {
             <Route path="/process/edit/:id" element={<PrivateRoute element={<EditProcessPage />} />} />
             <Route path="/user" element={<PrivateRoute element={<UsersPage />} />} />
             <Route path="/calendar-page" element={<PrivateRoute element={<CalendarPage />} />} />
-            <Route path="/edit-user/:id" element={<PrivateRoute element={<EditUsers />} />} />
+            {/* <Route path="/edit-user/:id" element={<PrivateRoute element={<EditUsers />} />} /> */}
             <Route path="/user/edit-user/:id" element={<EditUsers />} />
             <Route path="/user/distribution" element={<DistributionPage />} />
             <Route path="/modal" element={<DeleteUserModal />} />
+            <Route path="/reports" element={<ReportsPage />} />
           </Route>
           <Route path="/login" element={<LoginPage />} />
         </Routes>

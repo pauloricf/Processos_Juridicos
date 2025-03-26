@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styles from "./RegisterForm.module.css";
 import { postProcess } from "../../services/processService";
+import { useNavigate } from "react-router-dom";
 
 function Form() {
   const [formData, setFormData] = useState(() => {
@@ -28,7 +29,7 @@ function Form() {
           prazo: "",
         };
   });
-
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
@@ -346,6 +347,9 @@ function Form() {
 
         {/* Botões */}
         <div className={styles.form_buttons}>
+          <button onClick={() => navigate("/process")}>
+            Voltar
+          </button>
           <button
             type="reset"
             onClick={() =>

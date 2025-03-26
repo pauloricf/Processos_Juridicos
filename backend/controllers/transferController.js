@@ -67,8 +67,8 @@ const getNotifications = async (req, res) => {
   }
 
   // Verifica se o usuário é um procurador
-  if (String(usuario.Usua_TipoUsuario).trim() !== "Procurador") {
-    return;
+  if (!["Procurador", "ProcuradorEfetivo"].includes(String(usuario.Usua_TipoUsuario).trim())) {
+    return res.status(200).json([]); // Retorna array vazio
   }
   const procurador = await prisma.procuradores.findFirst({
     where: {
