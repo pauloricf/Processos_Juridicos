@@ -12,6 +12,7 @@ const documentRouter = require("./routes/documentRouter");
 const { iniciarMonitoramento } = require("./services/alertService");
 const authRouter = require("./routes/authRouter");
 const cookieParser = require("cookie-parser");
+const reportRouter = require("./routes/reportRouter");
 
 // Usando Cors para permitir requisições de qualquer origem
 app.use(cors());
@@ -22,7 +23,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const corsOptions = {
-  origin: ["http://localhost:3000/", "http://192.168.1.4:3000/", "http://localhost:3060/", "http://192.169.137.112:3060/"], // Permitir apenas o frontend local
+  origin: ["*"], // Permitir apenas o frontend local
   methods: "GET,POST,PUT,DELETE",
   credentials: true, // Permite que cookies e credenciais sejam compartilhados
 };
@@ -38,6 +39,7 @@ app.use("/api/", procMovimentacoesRouter);
 app.use("/api/", calendarRouter);
 app.use("/api/documents", documentRouter);
 app.use("/api/", authRouter);
+app.use("/api/", reportRouter);
 const path = require("path");
 
 // Servir arquivos estáticos da pasta 'uploads'

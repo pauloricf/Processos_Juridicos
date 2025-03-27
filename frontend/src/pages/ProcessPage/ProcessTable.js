@@ -15,7 +15,14 @@ const formatDate = (date) => {
   });
 };
 
-const ProcessTable = ({ processes, calculatePrazo, handleSelectedProcessesChange, processesInTransfer, handleDeleteProcess }) => {
+const ProcessTable = ({
+  processes,
+  calculatePrazo,
+  handleSelectedProcessesChange,
+  processesInTransfer,
+  handleDeleteProcess,
+  handleConcludeProcess,
+}) => {
   const [selectedProcesses, setSelectedProcesses] = useState([]);
   const [clickedProcess, setClickedProcess] = useState(null);
   const handleSelectProcess = (id) => {
@@ -38,7 +45,7 @@ const ProcessTable = ({ processes, calculatePrazo, handleSelectedProcessesChange
   const handleCLoseModal = () => setModalOpen(false);
 
   return (
-    <TableContainer sx={{ maxHeight: 500 }} className={styles.table_container}>
+    <TableContainer sx={{}} className={styles.table_container}>
       <Table stickyHeader>
         <TableHead>
           <TableRow>
@@ -63,6 +70,8 @@ const ProcessTable = ({ processes, calculatePrazo, handleSelectedProcessesChange
                 cursor: "pointer",
                 backgroundColor: processesInTransfer.some((transfer) => transfer.processos.some((p) => p.id === process.id))
                   ? "#F3E9C780"
+                  : process.Pcss_Status === "Concluído"
+                  ? "#D0F0C0"
                   : "inherit",
               }}
               hover
@@ -76,7 +85,7 @@ const ProcessTable = ({ processes, calculatePrazo, handleSelectedProcessesChange
               </TableCell>
               <TableCell>
                 {process.Pcss_Status === "Emitido" && <FaCircle color="#2871A7" />}
-                {process.Pcss_Status === "Concluido" && <FaCircle color="#19D109" />}
+                {process.Pcss_Status === "Concluído" && <FaCircle color="#19D109" />}
                 {process.Pcss_Status === "Vencido" && <FaCircle color="#FF0000" />}
               </TableCell>
               <TableCell>{process.Pcss_NumeroProcesso}</TableCell>
@@ -117,6 +126,7 @@ const ProcessTable = ({ processes, calculatePrazo, handleSelectedProcessesChange
         onClose={handleCLoseModal}
         process={clickedProcess}
         prazo={calculatePrazo(clickedProcess?.Pcss_DataVencimento, clickedProcess?.id)}
+        handleConcludeProcess={() => handleConcludeProcess(clickedProcess?.id)}
       />
     </TableContainer>
   );
