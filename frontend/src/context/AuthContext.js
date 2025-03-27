@@ -22,12 +22,14 @@ export const AuthProvider = ({ children }) => {
     if (token && storedUser) {
       try {
         const parsedUser = JSON.parse(storedUser);
-        setUser(parsedUser);
+        if (parsedUser) {
+          setUser(parsedUser);
+        }
       } catch (error) {
         console.error("Erro ao tentar parsear o usuário:", error);
-        // Caso não seja válido, você pode querer limpar os dados do localStorage ou tomar outra ação
         localStorage.removeItem("user");
         localStorage.removeItem("token");
+        setUser(null);
       }
     }
   }, []);

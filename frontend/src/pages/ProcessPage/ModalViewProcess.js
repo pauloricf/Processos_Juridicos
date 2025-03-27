@@ -1,9 +1,11 @@
-import { Container, Modal } from "@mui/material";
+import { Button, Container, Dialog, DialogActions, DialogContent, DialogTitle, Modal } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import styles from "./ModalViewProcess.module.css";
 import { getDocumentsByProcessId } from "../../services/documentService";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
-const ModalViewProcess = ({ open, onClose, process, prazo }) => {
+const ModalViewProcess = ({ open, onClose, process, prazo, handleConcludeProcess }) => {
   const [showDocuments, setShowDocuments] = useState(false);
   const [documents, setDocuments] = useState([]);
   const style = {
@@ -19,6 +21,7 @@ const ModalViewProcess = ({ open, onClose, process, prazo }) => {
     p: 4,
     overflowY: "auto",
   };
+  const [openConfirm, setOpenConfirm] = useState(false);
   console.log("process", process);
   const formattedAssuntos = process?.assuntos ? process.assuntos.map((assunto) => assunto.Pass_Assunto).join(", ") : "";
   const processType = process?.judiciais ? "Processo Judicial" : "Processo não Judicial";
@@ -272,10 +275,22 @@ const ModalViewProcess = ({ open, onClose, process, prazo }) => {
             <button className={styles.btn} onClick={toggleDocuments}>
               Documentos
             </button>
-            <button className={styles.btn} onClick={onClose}>
+            <button className={styles.btn} onClick={() => setOpenConfirm(true)}>
               Concluir
             </button>
           </div>
+          <>
+            <Dialog open={openConfirm} onClose={() => setOpenConfirm(false)}>
+              <DialogTitle>Tem certeza?</DialogTitle>
+              <DialogContent>Deseja realmente concluir este processo?</DialogContent>
+              <DialogActions>
+                <Button onClick={() => setOpenConfirm(false)}>Cancelar</Button>
+                <Button onClick={handleConcludeProcess} color="primary">
+                  Confirmar
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </>
         </Container>
       </Modal>
     </>
