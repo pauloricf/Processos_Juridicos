@@ -80,7 +80,8 @@ function Form() {
         Pjud_DataAudiencia: formData.Pjud_DataAudiencia,
       });
 
-      if (response.data) {
+      console.log("response", response);
+      if (response) {
         alert("Processo cadastrado com sucesso!");
         setFormData({
           Pcss_NumeroProcesso: "",
@@ -352,7 +353,9 @@ function Form() {
 
         {/* Botões */}
         <div className={styles.form_buttons}>
-          <button onClick={() => navigate("/process")}>Voltar</button>
+          <button type="button" onClick={() => navigate("/process")}>
+            Voltar
+          </button>
           <button
             type="reset"
             onClick={() =>
