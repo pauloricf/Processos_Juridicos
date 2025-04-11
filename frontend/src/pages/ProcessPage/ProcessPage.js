@@ -15,8 +15,8 @@ import { formatDateBR } from "../../utils/utils";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
 import Swal from "sweetalert2";
-import ContainerComponent from "../../components/Container";
-import HeaderPage from "../../components/HeaderPage";
+import ContainerComponent from "../../components/layout/Container";
+import HeaderPage from "../../components/layout/HeaderPage";
 
 const ProcessPage = () => {
   const renderCount = useRef(0);
@@ -31,6 +31,7 @@ const ProcessPage = () => {
   const [processesInTransfer, setProcessesInTransfer] = useState([]);
   const [attorneys, setAttorneys] = useState([]);
   const [statusButton, setStatusButton] = useState("");
+  const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false);
 
   // Debug de renderizações (remover em produção)
   useEffect(() => {
@@ -122,11 +123,20 @@ const ProcessPage = () => {
 
   const handleDeleteProcess = useCallback(
     async (id) => {
-      try {
+      const result = await Swal.fire({
+        title: "Tem certeza?",
+        text: "Você não poderá reverter isso!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Sim, excluir!",
+      });
+
+      if (result.isConfirmed) {
         await deleteProcess(id);
-        loadAllData();
-      } catch (error) {
-        console.error("Erro ao deletar processo:", error);
+        await loadAllData();
+        Swal.fire("Excluído!", "O processo foi deletado.", "success");
       }
     },
     [loadAllData]

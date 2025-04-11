@@ -1,17 +1,20 @@
-import "./RegisterUsersPage.css";
 import FormsUsers from "./FormsUsers";
+import ContainerComponent from "../../components/layout/Container";
+import HeaderPage from "../../components/layout/HeaderPage";
+import styles from "./RegisterUsersPage.module.css"; 
 
 function RegisterUsersPage() {
+  
   return (
-    <div className="page-content">
-      {/* <Sidebar /> */}
-      <div className="main-container">
-        <div className="gray-bar"></div>
-        <div className="content">
-          <FormsUsers />
-        </div>
-      </div>
-    </div>
+    <>
+      <HeaderPage>
+        <div className={styles.gray_bar}></div>
+      </HeaderPage>
+      <ContainerComponent className={styles.content}>
+        <FormsUsers />
+      </ContainerComponent>
+    </>
+    
   );
 }
 

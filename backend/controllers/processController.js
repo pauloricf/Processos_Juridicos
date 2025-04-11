@@ -275,27 +275,39 @@ const updateProcess = async (req, res) => {
       Pcss_DataVencimento,
       Pcss_TipoPrazoId,
       Pcss_Procurador_id,
+      Pass_Assuntos,
     } = req.body;
 
-    const processo = await prisma.processos.update({
-      where: {
-        id: parseInt(id),
-      },
-      data: {
-        Pcss_NumeroProcesso,
-        Pcss_Siged,
-        Pcss_ValorAcao,
-        Pcss_DataInicio,
-        Pcss_Status,
-        Pcss_Observacoes,
-        Pcss_Destino,
-        Pcss_Requerente,
-        Pcss_Requerido,
-        Pcss_DataVencimento: Pcss_DataVencimento ? new Date(Pcss_DataVencimento) : undefined,
-        Pcss_TipoPrazoId,
-        Pcss_Procurador_id,
-      },
-    });
+    const processo = await prisma.$transaction([
+      // 1. Deletar todos os assuntos existentes
+      prisma.procAssuntos.deleteMany({
+        where: { Pass_NumeroProcesso_id: parseInt(id) },
+      }),
+      prisma.processos.update({
+        where: {
+          id: parseInt(id),
+        },
+        data: {
+          Pcss_NumeroProcesso,
+          Pcss_Siged,
+          Pcss_ValorAcao,
+          Pcss_DataInicio,
+          Pcss_Status,
+          Pcss_Observacoes,
+          Pcss_Destino,
+          Pcss_Requerente,
+          Pcss_Requerido,
+          Pcss_DataVencimento: Pcss_DataVencimento ? new Date(Pcss_DataVencimento) : undefined,
+          Pcss_TipoPrazoId,
+          Pcss_Procurador_id,
+          assuntos: {
+            create: Pass_Assuntos?.map((assunto) => ({
+              Pass_Assunto: assunto,
+            })),
+          },
+        },
+      }),
+    ]);
 
     res.status(200).json(processo);
   } catch (error) {
@@ -378,9 +390,9 @@ const deleteProcess = async (req, res) => {
     const process = await prisma.processos.delete({
       where: {
         id: parseInt(id),
-      }
+      },
     });
-    console.log(process)
+    console.log(process);
     res.status(200).json(process);
   } catch (error) {
     console.log(error);

@@ -35,7 +35,7 @@ const EditForm = ({ id }) => {
     Pcss_DataEmitido: "",
     Pcss_DataVencimento: "",
     tipo: "",
-    Pass_Assuntos: "",
+    assuntos: [],
     Pjud_Vara: "",
     Pjud_LocalAudiencia: "",
     Pjud_DataAudiencia: "",
@@ -60,7 +60,7 @@ const EditForm = ({ id }) => {
           Pcss_DataEmitido: data.Pcss_DataEmitido.split("T")[0] || "",
           Pcss_DataVencimento: data.Pcss_DataVencimento.split("T")[0] || "",
           tipo: data.judiciais ? "pjud" : "pnjud",
-          Pass_Assuntos: data.Pass_Assuntos || "",
+          Pass_Assuntos: data.assuntos.map((assunto) => assunto.Pass_Assunto).join(", ") || "",
           Pjud_Vara: data.Pjud_Vara || "",
           Pjud_LocalAudiencia: data.Pjud_LocalAudiencia || "",
           Pjud_DataAudiencia: data.Pjud_DataAudiencia || "",
@@ -101,17 +101,23 @@ const EditForm = ({ id }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await updateProcess(id, formData);
+    const assuntos = formData.Pass_Assuntos.split(",").map((a) => a.trim());
+    console.log("assuntos", assuntos);
+    const response = await updateProcess(id, {
+      ...formData,
+      Pass_Assuntos: assuntos,
+      Pcss_ValorAcao: parseFloat(formData.Pcss_ValorAcao.replace(/\./g, "").replace(",", ".")),
+    });
     console.log(response);
   };
-
+  console.log("formdata", formData);
   return (
     <div className={styles.form_container}>
       <form onSubmit={handleSubmit}>
         {/* Informações básicas */}
 
         <section>
-          <select onChange={handleChange} value={formData.tipo} name="tipo">
+          <select onChange={handleChange} value={formData.tipo} name="tipo" disabled>
             <option value="">Tipo de processo</option>
             <option value="pjud">Processo Judicial</option>
             <option value="pnjud">Processo não Judicial</option>
@@ -121,22 +127,47 @@ const EditForm = ({ id }) => {
           <div className={styles.form_row}>
             <div className={styles.form_group}>
               <label>Siged</label>
-              <input type="text" placeholder="Nº do Siged" name="Pcss_Siged" value={formData.Pcss_Siged} onChange={handleChange} />
+              <input
+                type="text"
+                placeholder="Nº do Siged"
+                name="Pcss_Siged"
+                value={formData.Pcss_Siged}
+                onChange={handleChange}
+              />
             </div>
 
             <div className={styles.form_group}>
               <label>Nº do processo</label>
-              <input type="text" placeholder="Nº do processo" name="Pcss_NumeroProcesso" value={formData.Pcss_NumeroProcesso} onChange={handleChange} />
+              <input
+                type="text"
+                placeholder="Nº do processo"
+                name="Pcss_NumeroProcesso"
+                value={formData.Pcss_NumeroProcesso}
+                onChange={handleChange}
+              />
             </div>
 
             <div className={styles.form_group}>
               <label>Vara</label>
-              <input type="text" placeholder="Vara" name="Pjud_Vara" value={formData.Pjud_Vara} onChange={handleChange} disabled={!(formData.tipo === "pjud")} />
+              <input
+                type="text"
+                placeholder="Vara"
+                name="Pjud_Vara"
+                value={formData.Pjud_Vara}
+                onChange={handleChange}
+                disabled={!(formData.tipo === "pjud")}
+              />
             </div>
 
             <div className={styles.form_group}>
               <label>Destino</label>
-              <input type="text" placeholder="Destino" name="Pcss_Destino" value={formData.Pcss_Destino} onChange={handleChange} />
+              <input
+                type="text"
+                placeholder="Destino"
+                name="Pcss_Destino"
+                value={formData.Pcss_Destino}
+                onChange={handleChange}
+              />
             </div>
           </div>
           <div className={styles.form_row}>
@@ -153,24 +184,51 @@ const EditForm = ({ id }) => {
 
             <div className={styles.form_group}>
               <label>Prazo</label>
-              <input type="text" placeholder="Prazo" name="prazo" value={formData.prazo} onChange={handleChange} disabled={!(formData.categoria === "outro")} />
+              <input
+                type="text"
+                placeholder="Prazo"
+                name="prazo"
+                value={formData.prazo}
+                onChange={handleChange}
+                disabled={!(formData.categoria === "outro")}
+              />
             </div>
             <div className={styles.form_group}>
               <div className={styles.form_radio}>
-                <input type="radio" name="prazoCorrido" value={true} onChange={handleChange} disabled={!(formData.categoria === "outro")} checked={formData.prazoCorrido} />
+                <input
+                  type="radio"
+                  name="prazoCorrido"
+                  value={true}
+                  onChange={handleChange}
+                  disabled={!(formData.categoria === "outro")}
+                  checked={formData.prazoCorrido}
+                />
 
                 <label>corridos</label>
               </div>
 
               <div className={styles.form_radio}>
-                <input type="radio" name="prazoCorrido" value={false} onChange={handleChange} disabled={!(formData.categoria === "outro")} checked={formData.prazoCorrido === false} />
+                <input
+                  type="radio"
+                  name="prazoCorrido"
+                  value={false}
+                  onChange={handleChange}
+                  disabled={!(formData.categoria === "outro")}
+                  checked={formData.prazoCorrido === false}
+                />
                 <label>úteis</label>
               </div>
             </div>
 
             <div className={styles.form_group}>
               <label>Valor da ação</label>
-              <input type="text" placeholder="Valor do processo" name="Pcss_ValorAcao" value={formData.Pcss_ValorAcao} onChange={handleChange} />
+              <input
+                type="text"
+                placeholder="Valor do processo"
+                name="Pcss_ValorAcao"
+                value={formData.Pcss_ValorAcao}
+                onChange={handleChange}
+              />
             </div>
           </div>
         </section>
@@ -178,7 +236,13 @@ const EditForm = ({ id }) => {
         <div className={styles.form_row}>
           <div className={styles.form_group}>
             <label>Assuntos</label>
-            <input type="char" placeholder="Assuntos" name="Pass_Assuntos" value={formData.Pass_Assuntos} onChange={handleChange} />
+            <input
+              type="char"
+              placeholder="Assuntos"
+              name="Pass_Assuntos"
+              value={formData.Pass_Assuntos}
+              onChange={handleChange}
+            />
           </div>
         </div>
         {/* Datas */}
@@ -187,25 +251,60 @@ const EditForm = ({ id }) => {
           <div className={styles.form_row}>
             <div className={styles.form_group}>
               <label>Data de Emissão</label>
-              <input type="date" placeholder="Data de emissão" name="Pcss_DataEmitido" value={formData.Pcss_DataEmitido} onChange={handleChange} disabled={true} />
+              <input
+                type="date"
+                placeholder="Data de emissão"
+                name="Pcss_DataEmitido"
+                value={formData.Pcss_DataEmitido}
+                onChange={handleChange}
+                disabled={true}
+              />
             </div>
             <div className={styles.form_group}>
               <label>Data de Vencimento</label>
-              <input readOnly type="date" placeholder="Data de Vencimento" name="Pcss_DataVencimento" value={formData.Pcss_DataVencimento} onChange={handleChange} />
+              <input
+                readOnly
+                type="date"
+                placeholder="Data de Vencimento"
+                name="Pcss_DataVencimento"
+                value={formData.Pcss_DataVencimento}
+                onChange={handleChange}
+              />
             </div>
             <div className={styles.form_group}>
               <label>Data de Intimação</label>
-              <input type="date" placeholder="Data de intimação" name="Pjud_DataIntimacao" value={formData.Pjud_DataIntimacao} onChange={handleChange} disabled={!(formData.tipo === "pjud")} />
+              <input
+                type="date"
+                placeholder="Data de intimação"
+                name="Pjud_DataIntimacao"
+                value={formData.Pjud_DataIntimacao}
+                onChange={handleChange}
+                disabled={!(formData.tipo === "pjud")}
+              />
             </div>
 
             <div className={styles.form_group}>
               <label>Data da Audiência</label>
-              <input type="date" placeholder="Data da audiência" name="Pjud_DataAudiencia" value={formData.Pjud_DataAudiencia} onChange={handleChange} disabled={!(formData.tipo === "pjud")} />
+              <input
+                type="date"
+                placeholder="Data da audiência"
+                name="Pjud_DataAudiencia"
+                value={formData.Pjud_DataAudiencia}
+                onChange={handleChange}
+                disabled={!(formData.tipo === "pjud")}
+              />
             </div>
 
             <div className={styles.form_group}>
               <label>Local da Audiência</label>
-              <input type="text" placeholder="Local da audiência" name="Pjud_LocalAudiencia" value={formData.Pjud_LocalAudiencia} onChange={handleChange} disabled={!(formData.tipo === "pjud")} />
+              <input
+                type="text"
+                placeholder="Local da audiência"
+                name="Pjud_LocalAudiencia"
+                value={formData.Pjud_LocalAudiencia}
+                onChange={handleChange}
+                disabled={!(formData.tipo === "pjud")}
+              />
             </div>
           </div>
         </section>
@@ -216,11 +315,23 @@ const EditForm = ({ id }) => {
           <div className={styles.form_row}>
             <div className={styles.form_group}>
               <label>Requerente</label>
-              <input type="text" placeholder="Requerente" name="Pcss_Requerente" value={formData.Pcss_Requerente} onChange={handleChange} />
+              <input
+                type="text"
+                placeholder="Requerente"
+                name="Pcss_Requerente"
+                value={formData.Pcss_Requerente}
+                onChange={handleChange}
+              />
             </div>
             <div className={styles.form_group}>
               <label>Requerido</label>
-              <input type="text" placeholder="Requerido" name="Pcss_Requerido" value={formData.Pcss_Requerido} onChange={handleChange} />
+              <input
+                type="text"
+                placeholder="Requerido"
+                name="Pcss_Requerido"
+                value={formData.Pcss_Requerido}
+                onChange={handleChange}
+              />
             </div>
           </div>
         </section>
@@ -228,12 +339,17 @@ const EditForm = ({ id }) => {
         {/* Observações */}
         <section>
           <h3>Observações:</h3>
-          <textarea placeholder="Digite aqui as observações" className={styles.observation} name="Pcss_Observacoes" value={formData.Pcss_Observacoes} onChange={handleChange}></textarea>
+          <textarea
+            placeholder="Digite aqui as observações"
+            className={styles.observation}
+            name="Pcss_Observacoes"
+            value={formData.Pcss_Observacoes}
+            onChange={handleChange}></textarea>
         </section>
 
         {/* Botões */}
         <div className={styles.form_buttons}>
-          <button type="button" onClick={() => (navigate("/process"))}>
+          <button type="button" onClick={() => navigate("/process")}>
             Voltar
           </button>
           <button type="button" onClick={handleOpenModal}>
@@ -261,7 +377,7 @@ const EditForm = ({ id }) => {
           <button type="submit">Atualizar</button>
         </div>
       </form>
-      <ModalDocuments open={modalOpen} onClose={handleCloseModal} showSnackbar={handleOpenSnackbar}/>
+      <ModalDocuments open={modalOpen} onClose={handleCloseModal} showSnackbar={handleOpenSnackbar} />
       <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar}>
         <Alert onClose={handleCloseSnackbar} severity={severity} sx={{ width: "100%" }} variant="filled">
           {snackbarMessage}

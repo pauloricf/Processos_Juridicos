@@ -1,204 +1,157 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import styles from "./EditUsers.module.css";
-import { editEmployee, getEmployee, getAttorneys} from '../../services/usersService';
-import { useParams } from "react-router-dom";
-import { Link } from 'react-router-dom';
+import { editEmployee, getEmployee, getAttorneys } from "../../services/usersService";
+import { useParams, Link } from "react-router-dom";
 
 const EditUsers = () => {
-    const { id } = useParams(); // ID do procurador vindo da URL
-    const userId = Number(id);
+  const { id } = useParams();
+  const userId = Number(id);
+  const { register, handleSubmit, setValue, reset } = useForm();
+  const [procur, setProcur] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-    const [users, setUsers] = useState([]);
-    const [procuradores, setProcuradores] = useState([]);
-    const [usuarioCorrespondente, setUsuarioCorrespondente] = useState(null);
-    const [procur, setProcur] = useState([]);
-    const [email, setEmail] = useState(""); // Estado para email
-    const [telefone, setTelefone] = useState(""); // Estado para telefone
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const [procuradoresResponse, usersResponse] = await Promise.all([getAttorneys(), getEmployee()]);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const procuradoresResponse = await getAttorneys();
-                const usersResponse = await getEmployee();
+        // Encontrar o procurador e usuário correspondentes
+        const procur = procuradoresResponse.find((proc) => proc.id.toString() === id);
+        const userToEdit = usersResponse.find((user) => user.id === (procur ? procur.Pcrd_Usuario_id : userId));
 
-                setProcuradores(procuradoresResponse);
-                setUsers(usersResponse);
-
-                console.log("Procuradores carregados: ", procuradoresResponse);
-                console.log("Usuários carregados: ", usersResponse);
-
-                // Encontrar o procurador correspondente ao ID da URL
-                const procurador = procuradoresResponse.find(proc => proc.id.toString() === id);
-                const procur = procuradoresResponse.find(proc => proc.id.toString() === id);
-                console.log("Procurador selecionado: ", procur);
-                setProcur(procur);
-
-                // Procurar o usuário diretamente na tabela Users
-                const usuarioSele = usersResponse.find(user => user.id === userId);
-                console.log("Usuário selecionado: ", usuarioSele);
-
-                if (procurador) {
-                    // Encontrar o usuário correspondente ao procurador
-                    const usuario = usersResponse.find(user => user.id === procurador.Pcrd_Usuario_id);
-                    setUsuarioCorrespondente(usuario);
-                } else {
-                    setUsuarioCorrespondente(usuarioSele);
-                }
-
-            } catch (error) {
-                console.log("Erro ao buscar dados:", error);
-            }
-        };
-
-        fetchData();
-    }, [id]);  
-
-    // Função para salvar alterações
-    const handleSave = async (e) => {
-        e.preventDefault(); // Evitar recarregamento da página
-
-        try {
-            let userToUpdate = userId; // Por padrão, atualiza pelo userId
-
-            if (procur && procur.Pcrd_Usuario_id) {
-                userToUpdate = procur.Pcrd_Usuario_id; // Atualiza pelo ID do usuário vinculado ao procurador
-            }
-
-            const response = await editEmployee(userToUpdate, { Usua_Email: email, Usua_Telefone: telefone });
-
-            if (response) {
-                alert("Usuário atualizado com sucesso!");
-                console.log("Resposta da API sobre a atualização:", response);
-            } else {
-                throw new Error("Resposta da API inválida.");
-            }
-        } catch (error) {
-            console.log("Erro ao atualizar usuário:", error);
-            alert("Erro ao atualizar usuário.");
+        if (userToEdit) {
+          // Preencher o formulário com os dados do usuário
+          reset({
+            ...userToEdit,
+            // Campos específicos do procurador
+            ...(procur && {
+              Pcrd_Cargo: procur.Pcrd_Cargo,
+              Pcrd_NumeroOAB: procur.Pcrd_NumeroOAB,
+            }),
+          });
         }
+
+        setProcur(procur);
+        setLoading(false);
+      } catch (error) {
+        console.error("Erro ao buscar dados:", error);
+        setLoading(false);
+      }
     };
 
-    useEffect(() => {
-        if (usuarioCorrespondente) {
-            setEmail(usuarioCorrespondente.Usua_Email || "");  // Inicializa com o valor do usuário
-            setTelefone(usuarioCorrespondente.Usua_Telefone || "");
-            console.log("Email do usuário:", usuarioCorrespondente.Usua_Email);
-            console.log("Telefone do usuário:", usuarioCorrespondente.Usua_Telefone);
-        }
-    }, [usuarioCorrespondente]); // Atualiza os estados quando usuarioCorrespondente mudar
+    fetchData();
+  }, [id, reset]);
 
-    return (
-        <div className={styles.form_container}>
-            <h2>Editar informações do procurador</h2>
-            {usuarioCorrespondente ? (
-                <form onSubmit={handleSave}>
-                    <div className={styles.form_row}>
-                        <label className={styles.label_text}>Nome completo:</label>
-                        <input
-                            type="text"
-                            value={usuarioCorrespondente.Usua_Nome || "Nome não encontrado"}
-                            readOnly
-                        />
-                    </div>
+  const onSubmit = async (data) => {
+    try {
+      const userToUpdate = procur ? procur.Pcrd_Usuario_id : userId;
+      const userData = {
+        Usua_Nome: data.Usua_Nome,
+        Usua_Identidade: data.Usua_Identidade,
+        Usua_CPF: data.Usua_CPF,
+        Usua_Data_Nascimento: data.Usua_Data_Nasc0000imento,
+        Usua_Matricula: data.Usua_Matricula,
+        Usua_Sexo: data.Usua_Sexo,
+        Usua_Email: data.Usua_Email,
+        Usua_Telefone: data.Usua_Telefone,
+      };
 
-                    <div className={styles.form_row}>
-                        <label className={styles.label_text}>Identidade (RG):
-                            <input
-                                type="text"
-                                value={usuarioCorrespondente.Usua_Identidade || "Nome não encontrado"} 
-                                readOnly/>
-                        </label>
+      await editEmployee(userToUpdate, userData);
+      alert("Usuário atualizado com sucesso!");
+    } catch (error) {
+      console.error("Erro ao atualizar usuário:", error);
+      alert("Erro ao atualizar usuário.");
+    }
+  };
 
-                        <label className={styles.label_text}>CPF:
-                            <input
-                                type="text"
-                                value={usuarioCorrespondente.Usua_CPF || "Nome não encontrado"}
-                                readOnly />
-                        </label>
-                        
-                        <label className={styles.label_text}>Data de nascimento:
-                            <input
-                                type="text"
-                                value={usuarioCorrespondente.Usua_Data_Nascimento || "Data não encontrado"}
-                                readOnly />
-                        </label>
+  if (loading) return <p>Carregando dados do usuário...</p>;
 
-                    </div>
-
-                    <div className={styles.form_row}>
-                        <label className={styles.label_text}>Matricula:
-                            <input
-                                type="text"
-                                value={usuarioCorrespondente.Usua_Matricula || "Data não encontrado"}
-                                readOnly />
-                        </label>
-
-                        <label className={styles.label_text}>Sexo:
-                            <input
-                                type="text"
-                                value={usuarioCorrespondente.Usua_Sexo || "Data não encontrado"}
-                                readOnly />
-                        </label>
-
-                    </div>
-
-                    <div className={styles.form_row}>
-                        <label className={styles.label_text}>Cargo:
-                            <input
-                                type="text"
-                                value={
-                                    procur ? `Procurador ${procur.Pcrd_Cargo}` : usuarioCorrespondente?.Usua_TipoUsuario || "Data não encontrada"
-                                }
-                                readOnly
-                            />
-                        </label>
-
-                        <label className={styles.label_text}>Número da OAB:
-                            <input
-                                type="text"
-                                value={procur ? procur.Pcrd_NumeroOAB : ""}
-                                readOnly
-                            />
-                        </label>
-                    </div>
-
-                    <div className={styles.form_row}>
-                        <label className={styles.label_text}>Email:
-                            <input
-                                type="text"
-                                value={email}  // Agora é controlado pelo estado
-                                onChange={(e) => setEmail(e.target.value)}
-                                />
-                        </label>
-
-                        <label className={styles.label_text}>Telefone:
-                            <input
-                                type="text"
-                                value={telefone}  // Agora é controlado pelo estado
-                                onChange={(e) => setTelefone(e.target.value)}    
-                            />
-                        </label>
-                    </div>
-                    
-                    {/* Botão de salvar */}
-                    <div className={styles.form_buttons}>
-                        
-                        <Link to="/user">
-                            <button className={styles.btn_cancel}>
-                                Cancelar
-                            </button>
-                        </Link>
-
-                        <button className={styles.btn_concluir}
-                            type="submit">Salvar alterações
-                        </button>
-                    </div>
-                </form>
-            ) : (
-                <p>Carregando dados do usuário...</p>
-            )}
+  return (
+    <div className={styles.form_container}>
+      <h2>Editar informações do {procur ? "procurador" : "usuário"}</h2>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div className={styles.form_row}>
+          <label className={styles.label_text}>
+            Nome completo:
+            <input type="text" {...register("Usua_Nome")} />
+          </label>
         </div>
-    );
-}
+
+        <div className={styles.form_row}>
+          <label className={styles.label_text}>
+            Identidade (RG):
+            <input type="text" {...register("Usua_Identidade")} />
+          </label>
+
+          <label className={styles.label_text}>
+            CPF:
+            <input type="text" {...register("Usua_CPF")} />
+          </label>
+
+          <label className={styles.label_text}>
+            Data de nascimento:
+            <input type="date" {...register("Usua_Data_Nascimento")} />
+          </label>
+        </div>
+
+        <div className={styles.form_row}>
+          <label className={styles.label_text}>
+            Matrícula:
+            <input type="text" {...register("Usua_Matricula")} />
+          </label>
+
+          <label className={styles.label_text}>
+            Sexo:
+            <select {...register("Usua_Sexo")}>
+              <option value="M">Masculino</option>
+              <option value="F">Feminino</option>
+              <option value="O">Outro</option>
+            </select>
+          </label>
+        </div>
+
+        {procur && (
+          <div className={styles.form_row}>
+            <label className={styles.label_text}>
+              Cargo:
+              <input type="text" {...register("Pcrd_Cargo")} disabled />
+            </label>
+
+            <label className={styles.label_text}>
+              Número da OAB:
+              <input type="text" {...register("Pcrd_NumeroOAB")} />
+            </label>
+          </div>
+        )}
+
+        <div className={styles.form_row}>
+          <label className={styles.label_text}>
+            Email:
+            <input type="email" {...register("Usua_Email")} />
+          </label>
+
+          <label className={styles.label_text}>
+            Telefone:
+            <input type="tel" {...register("Usua_Telefone")} />
+          </label>
+        </div>
+
+        <div className={styles.form_buttons}>
+          <Link to="/user">
+            <button type="button" className={styles.btn_cancel}>
+              Cancelar
+            </button>
+          </Link>
+
+          <button type="submit" className={styles.btn_concluir}>
+            Salvar alterações
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+};
 
 export default EditUsers;

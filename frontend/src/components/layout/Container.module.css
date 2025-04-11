@@ -11,5 +11,6 @@
   flex-grow: 1;
   overflow-x: auto;
   max-height: 550px;
+  min-height: 550px;
 }
 

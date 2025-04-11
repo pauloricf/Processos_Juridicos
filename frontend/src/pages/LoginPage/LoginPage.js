@@ -4,16 +4,26 @@ import { useForm } from "react-hook-form";
 import { useContext } from "react";
 import AuthContext from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { useFeedback } from "../../context/FeedbackContext";
 
 const LoginPage = () => {
-  const { loginContext } = useContext(AuthContext)
-  const navigate = useNavigate()
+  const { loginContext } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const { showFeedback } = useFeedback();
 
   const onSubmit = async (data) => {
-    console.log(data);
-    const response = await loginContext(data);
-    if (response) navigate("/process")
-    console.log(response);
+    try {
+      const response = await loginContext(data);
+
+      if (response.success) {
+        showFeedback("Login realizado com sucesso", "success");
+        navigate("/process");
+      } else {
+        showFeedback(response.error || "Erro ao realizar login", "error");
+      }
+    } catch (error) {
+      showFeedback(error.message || "Erro desconhecido ao realizar login", "error");
+    }
   };
   const {
     register,
@@ -33,8 +43,16 @@ const LoginPage = () => {
             variant="filled"
             sx={{ width: "100%", backgroundColor: "white", marginBottom: "1rem" }}
           />
-          <TextField {...register("password")} label="Senha" variant="filled" type="password" sx={{ width: "100%", backgroundColor: "white" }} />
-          <FormControlLabel control={<Checkbox />} label="Mantenha-me conectado" />
+          <TextField
+            {...register("password", { required: "Senha é obrigatório" })}
+            error={!!errors.password}
+            helperText={errors.password?.message}
+            label="Senha"
+            variant="filled"
+            type="password"
+            sx={{ width: "100%", backgroundColor: "white" }}
+          />
+          {/* <FormControlLabel control={<Checkbox />} label="Mantenha-me conectado" /> */}
 
           <Button type="submit" sx={{ marginTop: "1rem", marginBottom: "1rem" }}>
             Entrar

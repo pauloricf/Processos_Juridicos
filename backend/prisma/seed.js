@@ -43,17 +43,17 @@ async function main() {
   // Criar instâncias de tiposPrazos
   const tiposPrazos = [
     {
-      Tpraz_Tipo: "Ação Ordinária",
+      Tpraz_Tipo: "acao_ordinaria",
       Tpraz_Dias: 30,
       Tpraz_Corrido: false,
     },
     {
-      Tpraz_Tipo: "Juizado Especial",
+      Tpraz_Tipo: "juizado_especial",
       Tpraz_Dias: 10,
       Tpraz_Corrido: false,
     },
     {
-      Tpraz_Tipo: "Mandado de Segurança",
+      Tpraz_Tipo: "mandado_seguranca",
       Tpraz_Dias: 10,
       Tpraz_Corrido: true,
     },

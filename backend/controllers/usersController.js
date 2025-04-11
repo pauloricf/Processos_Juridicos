@@ -104,28 +104,27 @@ async function editEmployee(req, res) {
   // Atributos
   const { id } = req.params;
 
-    const {Usua_Email, Usua_Telefone} = req.body;
-    
-    try{
-        // Atualiza o procurador que vai ficar com o processo
-        const atualizar_informacoes = await prisma.usuarios.update({
-            where: {
-                id: parseInt(id)
-            },
-            data: { 
-                Usua_Telefone: Usua_Telefone,
-                Usua_Email: Usua_Email,
-            }
-        })
-        
-        // Resposta
-        res.status(200).json(atualizar_informacoes);
+  const { Usua_Email, Usua_Telefone } = req.body;
 
-    } catch (error) {
-        console.error("Erro ao atualizar as informações do usuário: ", error);
-        res.status(500).json({error: "Erro ao atualizar as informações do usuário."});
-    }
-} 
+  try {
+    // Atualiza o procurador que vai ficar com o processo
+    const atualizar_informacoes = await prisma.usuarios.update({
+      where: {
+        id: parseInt(id),
+      },
+      data: {
+        Usua_Telefone: Usua_Telefone,
+        Usua_Email: Usua_Email,
+      },
+    });
+
+    // Resposta
+    res.status(200).json(atualizar_informacoes);
+  } catch (error) {
+    console.error("Erro ao atualizar as informações do usuário: ", error);
+    res.status(500).json({ error: "Erro ao atualizar as informações do usuário." });
+  }
+}
 
 // Pegar as informações dos usuários
 async function getEmployee(req, res) {
@@ -147,8 +146,8 @@ async function getAttorneys(req, res) {
         usuario: true,
         Processos: {
           select: {
-            Pcss_Status: true
-          }
+            Pcss_Status: true,
+          },
         },
         // id: true,
       },
@@ -180,41 +179,39 @@ async function getAttorneys(req, res) {
 }
 
 async function deleteEmployee(req, res) {
-    try {
-        const { id } = req.params;
-        const userId = parseInt(id);
+  try {
+    const { id } = req.params;
+    const userId = parseInt(id);
 
-        // Verifica se o usuário é um procurador
-        const procurador = await prisma.procuradores.findFirst({
-            where: { Pcrd_Usuario_id: userId }
-        });
+    // Verifica se o usuário é um procurador
+    const procurador = await prisma.procuradores.findFirst({
+      where: { Pcrd_Usuario_id: userId },
+    });
 
-        // Se for procurador, deletamos primeiro da tabela Procuradores
-        if (procurador) {
-            await prisma.procuradores.deleteMany({
-                where: { id: procurador.id }
-            });
-        }
-
-        // Agora deletamos da tabela Usuarios
-        await prisma.usuarios.delete({
-            where: { id: userId }
-        });
-
-        res.json({ message: "O usuário foi deletado com sucesso" });
-    } catch (error) {
-        console.error("Erro ao deletar usuário:", error);
-        res.status(500).json({ error: "Erro ao deletar o usuário" });
+    // Se for procurador, deletamos primeiro da tabela Procuradores
+    if (procurador) {
+      await prisma.procuradores.deleteMany({
+        where: { id: procurador.id },
+      });
     }
+
+    // Agora deletamos da tabela Usuarios
+    await prisma.usuarios.delete({
+      where: { id: userId },
+    });
+
+    res.json({ message: "O usuário foi deletado com sucesso" });
+  } catch (error) {
+    console.error("Erro ao deletar usuário:", error);
+    res.status(500).json({ error: "Erro ao deletar o usuário" });
+  }
 }
-
-
 
 // Exportar funções
 module.exports = {
-    registerEmployee,
-    editEmployee,
-    getEmployee,
-    getAttorneys,
-    deleteEmployee
-}
+  registerEmployee,
+  editEmployee,
+  getEmployee,
+  getAttorneys,
+  deleteEmployee,
+};

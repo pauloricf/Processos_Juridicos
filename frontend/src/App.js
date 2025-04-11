@@ -4,6 +4,7 @@ import SidebarGerenciar from "./pages/UsersPages/SidebarGerenciar";
 import EditProcessPage from "./pages/EditProcessPage/EditProcessPage";
 import ProcessPage from "./pages/ProcessPage/ProcessPage";
 import "./App.css";
+import "./styles/globals.css";
 import RegisterProcessPage from "./pages/RegisterProcessPage/RegisterProcessPage";
 import { BrowserRouter as Router, Routes, Route, Outlet, useLocation, Navigate } from "react-router-dom";
 import RegisterUsersPage from "./pages/RegisterUserPage/RegisterUsersPage";
@@ -17,6 +18,7 @@ import LoginPage from "./pages/LoginPage/LoginPage";
 import { AuthProvider } from "./context/AuthContext";
 import PrivateRoute from "./components/PrivateRoute";
 import ReportsPage from "./pages/ReportsPage/ReportsPage";
+import { FeedbackProvider } from "./context/FeedbackContext";
 
 const Layout = () => {
   const location = useLocation();
@@ -37,25 +39,27 @@ const Layout = () => {
 const App = () => {
   return (
     <Router>
-      <AuthProvider>
-        <Routes>
-          <Route path="/" element={<Navigate to="/login" />} />
-          <Route path="/" element={<Layout />}>
-            <Route path="/register-process" element={<PrivateRoute element={<RegisterProcessPage />} />} />
-            <Route path="/process" element={<PrivateRoute element={<ProcessPage />} />} />
-            <Route path="/user/register-user" element={<PrivateRoute element={<RegisterUsersPage />} />} />
-            <Route path="/process/edit/:id" element={<PrivateRoute element={<EditProcessPage />} />} />
-            <Route path="/user" element={<PrivateRoute element={<UsersPage />} />} />
-            <Route path="/calendar-page" element={<PrivateRoute element={<CalendarPage />} />} />
-            {/* <Route path="/edit-user/:id" element={<PrivateRoute element={<EditUsers />} />} /> */}
-            <Route path="/user/edit-user/:id" element={<EditUsers />} />
-            <Route path="/user/distribution" element={<DistributionPage />} />
-            <Route path="/modal" element={<DeleteUserModal />} />
-            <Route path="/reports" element={<ReportsPage />} />
-          </Route>
-          <Route path="/login" element={<LoginPage />} />
-        </Routes>
-      </AuthProvider>
+      <FeedbackProvider>
+        <AuthProvider>
+          <Routes>
+            <Route path="/" element={<Navigate to="/login" />} />
+            <Route path="/" element={<Layout />}>
+              <Route path="/register-process" element={<PrivateRoute element={<RegisterProcessPage />} />} />
+              <Route path="/process" element={<PrivateRoute element={<ProcessPage />} />} />
+              <Route path="/user/register-user" element={<PrivateRoute element={<RegisterUsersPage />} />} />
+              <Route path="/process/edit/:id" element={<PrivateRoute element={<EditProcessPage />} />} />
+              <Route path="/user" element={<PrivateRoute element={<UsersPage />} />} />
+              <Route path="/calendar-page" element={<PrivateRoute element={<CalendarPage />} />} />
+              {/* <Route path="/edit-user/:id" element={<PrivateRoute element={<EditUsers />} />} /> */}
+              <Route path="/user/edit-user/:id" element={<EditUsers />} />
+              <Route path="/user/distribution" element={<DistributionPage />} />
+              <Route path="/modal" element={<DeleteUserModal />} />
+              <Route path="/reports" element={<ReportsPage />} />
+            </Route>
+            <Route path="/login" element={<LoginPage />} />
+          </Routes>
+        </AuthProvider>
+      </FeedbackProvider>
     </Router>
   );
 };

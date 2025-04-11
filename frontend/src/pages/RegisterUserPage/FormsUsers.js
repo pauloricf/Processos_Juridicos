@@ -1,222 +1,155 @@
-import React, { useState } from "react";
-import "./FormsUsers.css";
-// import Dropdowns from './Dropdowns'
-import api from "../../services/apiConfig";
-import { Link } from "react-router-dom";
+import React from "react";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { useNavigate } from "react-router-dom";
 import { FaAsterisk } from "react-icons/fa";
+import { useFeedback } from "../../context/FeedbackContext";
+import api from "../../services/apiConfig";
+import styles from "./FormsUsers.module.css"; // Importando o CSS do componente
 
-function Form() {
-  const [formData, setFormData] = useState({
-    fullName: "",
-    email: "",
-    rg: "",
-    cpf: "",
-    matricula: "",
-    birthday: "",
-    sex: "",
-    position: "",
-    numeroOab: "",
-    phone: "",
+// Esquema de validação com Yup
+const schema = yup.object().shape({
+  fullName: yup.string().required("Nome completo é obrigatório"),
+  email: yup.string().email("E-mail inválido").required("E-mail é obrigatório"),
+  rg: yup.string().required("RG é obrigatório"),
+  cpf: yup
+    .string()
+    .required("CPF é obrigatório")
+    .matches(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/, "Formato inválido (000.000.000-00)"),
+  matricula: yup.string().required("Matrícula é obrigatória"),
+  birthday: yup.date().required("Data de nascimento é obrigatória").max(new Date(), "Data não pode ser futura"),
+  sex: yup.string().required("Sexo é obrigatório"),
+  position: yup.string().required("Cargo é obrigatório"),
+  numeroOab: yup.string().when("position", {
+    is: (position) => ["ProcuradorGeral", "ProcuradorEfetivo"].includes(position),
+    then: yup.string().required("Número da OAB é obrigatório para procuradores"),
+  }),
+  phone: yup.string().required("Telefone é obrigatório"),
+});
+
+export default function Form() {
+  const { showFeedback } = useFeedback();
+  const navigate = useNavigate();
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: yupResolver(schema),
   });
 
-  const [errors, setErrors] = useState({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const position = watch("position");
 
-  // Atualizar os dados do form
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
+  const onSubmit = async (data) => {
+    try {
+      const payload = {
+        Usua_Matricula: data.matricula,
+        Usua_Nome: data.fullName,
+        Usua_Email: data.email,
+        Usua_CPF: data.cpf.replace(/\D/g, ""),
+        Usua_TipoUsuario: data.position,
+        Usua_Identidade: data.rg,
+        Usua_Telefone: data.phone,
+        Usua_Sexo: data.sex,
+        ...(position === "ProcuradorGeral" || position === "ProcuradorEfetivo" ? { Pcrd_NumeroOAB: data.numeroOab } : {}),
+      };
 
-  // Enviar os dados para a API
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (formData.position === "ProcuradorGeral" || formData.position === "ProcuradorEfetivo") {
-      try {
-        console.log("Dados do número OAB", formData.numeroOab);
-        const response = await api.post("/cadastrarUsua", {
-          Usua_Matricula: formData.matricula,
-          Usua_Nome: formData.fullName,
-          Usua_Email: formData.email,
-          Usua_CPF: formData.cpf,
-          Usua_TipoUsuario: formData.position,
-          Usua_Identidade: formData.rg,
-          Usua_Telefone: formData.phone,
-          Usua_Sexo: formData.sex,
-          Pcrd_NumeroOAB: formData.numeroOab,
-        });
-
-        console.log("Dados do número OAB", response.Pcrd_NumeroOAB);
-        alert("Funcionário cadastrado com sucesso!");
-        console.log(response.data);
-      } catch (error) {
-        console.error("Erro ao cadastrar funcionário:", error);
-        alert("Erro ao cadastrar funcionário. Confira os dados e tente novamente.");
-      }
-    } else {
-      try {
-        const response = await api.post("/cadastrarUsua", {
-          Usua_Matricula: formData.matricula,
-          Usua_Nome: formData.fullName,
-          Usua_Email: formData.email,
-          Usua_CPF: formData.cpf,
-          Usua_TipoUsuario: formData.position,
-          Usua_Identidade: formData.rg,
-          Usua_Telefone: formData.phone,
-          Usua_Sexo: formData.sex,
-        });
-
-        alert("Funcionário cadastrado com sucesso!");
-        console.log(response.data);
-      } catch (error) {
-        console.error("Erro ao cadastrar funcionário:", error);
-        alert("Erro ao cadastrar funcionário. Confira os dados e tente novamente.");
-      }
+      await api.post("/cadastrarUsua", payload);
+      showFeedback("Funcionário cadastrado com sucesso!", "success");
+      navigate("/user");
+    } catch (error) {
+      console.error("Erro ao cadastrar:", error);
+      showFeedback("Erro ao cadastrar. Verifique os dados e tente novamente.", "error");
     }
   };
+
   return (
-    <div className="form-container">
-      <form onSubmit={handleSubmit}>
-        {/* Informações básicas */}
+    <div className={styles.form_container}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <h2>Cadastro de servidores</h2>
 
-        <div className="form-row">
-          <label>
-            <span className="label-text">
-              Nome completo: <FaAsterisk className="asterisk" />
-            </span>
-            <input
-              type="text"
-              placeholder="Digite seu nome completo"
-              name="fullName"
-              required
-              onChange={handleChange}
-              value={formData.fullName}
-            />
-            {errors.fullName && <span className="error">{errors.fullName}</span>}
-          </label>
+        {/* Nome Completo */}
+        <div className={styles.form_row}>
+          <span className={styles.label_text}>Nome completo</span>
+          <input type="text" placeholder="Digite seu nome completo" {...register("fullName")} />
+          {errors.fullName && <span className={styles.error}>{errors.fullName.message}</span>}
         </div>
 
-        <div className="form-row">
-          <label>
-            <span className="label-text">
-              Identidade (RG): <FaAsterisk className="asterisk" />
-            </span>
-            <input type="text" name="rg" id="rg" placeholder="0000000-0" required value={formData.rg} onChange={handleChange} />
-            {errors.rg && <span className="error">{errors.rg}</span>}
-          </label>
+        {/* RG, CPF e Data de Nascimento */}
+        <div className={styles.form_row}>
+          <span className={styles.label_text}>Identidade (RG)</span>
+          <input type="text" placeholder="0000000-0" {...register("rg")} />
+          {errors.rg && <span className={styles.error}>{errors.rg.message}</span>}
 
-          <label>
-            <span className="label-text">
-              CPF: <FaAsterisk className="asterisk" />
-            </span>
-            <input
-              type="text"
-              name="cpf"
-              id="cpf"
-              placeholder="000.000.000-00"
-              required
-              value={formData.cpf}
-              onChange={handleChange}
-            />
-            {errors.cpf && <span className="error">{errors.cpf}</span>}
-          </label>
+          <span className={styles.label_text}>CPF</span>
+          <input type="text" placeholder="000.000.000-00" {...register("cpf")} />
+          {errors.cpf && <span className={styles.error}>{errors.cpf.message}</span>}
 
-          <label>
-            <span className="label-text">
-              Data de Nascimento: <FaAsterisk className="asterisk" />
-            </span>
-            <input type="date" name="birthday" id="birthday" required value={formData.birthday} onChange={handleChange} />
-            {errors.birthday && <span className="error">{errors.birthday}</span>}
-          </label>
+          <span className={styles.label_text}>Data de Nascimento</span>
+          <input type="date" {...register("birthday")} />
+          {errors.birthday && <span className={styles.error}>{errors.birthday.message}</span>}
         </div>
 
-        <div className="form-row">
-          <label>
-            <span className="label-text">
-              Matrícula: <FaAsterisk className="asterisk" />
-            </span>
-            <input
-              type="text"
-              name="matricula"
-              id="matricula"
-              placeholder="000000000"
-              required
-              value={formData.matricula}
-              onChange={handleChange}
-            />
-            {errors.matricula && <span className="error">{errors.matricula}</span>}
-          </label>
+        {/* Matrícula e Sexo */}
+        <div className={styles.form_row}>
+          <span className={styles.label_text}>Matrícula</span>
+          <input type="text" placeholder="000000000" {...register("matricula")} />
+          {errors.matricula && <span className={styles.error}>{errors.matricula.message}</span>}
 
-          <label>
-            <span className="label-text">
-              Sexo: <FaAsterisk className="asterisk" />
-            </span>
-            <select name="sex" id="sex" value={formData.sex} onChange={handleChange} required>
-              <option value="...">...</option>
-              <option value="Masculino">Masculino</option>
-              <option value="Feminino">Feminino</option>
-            </select>
-            {errors.sex && <span className="error">{errors.sex}</span>}
-          </label>
+          <span className={styles.label_text}>Sexo</span>
+          <select {...register("sex")}>
+            <option value="">Selecione...</option>
+            <option value="Masculino">Masculino</option>
+            <option value="Feminino">Feminino</option>
+          </select>
+          {errors.sex && <span className={styles.error}>{errors.sex.message}</span>}
         </div>
 
-        <div className="form-row">
-          <label>
-            <span className="label-text">
-              Cargo: <FaAsterisk className="asterisk" />
-            </span>
-            <select name="position" id="position" value={formData.position} onChange={handleChange} required>
-              <option value="" disabled>
-                Selecione um cargo...
-              </option>
-              <option value="ProcuradorGeral">Procurador(a) Geral</option>
-              <option value="ProcuradorEfetivo">Procurador(a) Efetivo</option>
-              <option value="Secretária">Secretario(a)</option>
-              <option value="Assessoria">Assessoria</option>
-              {/* outras opções */}
-            </select>
-          </label>
+        {/* Cargo e OAB */}
+        <div className={styles.form_row}>
+          <span className={styles.label_text}>Cargo</span>
+          <select {...register("position")}>
+            <option value="">Selecione um cargo...</option>
+            <option value="ProcuradorGeral">Procurador(a) Geral</option>
+            <option value="ProcuradorEfetivo">Procurador(a) Efetivo</option>
+            <option value="secretaria">Secretário(a)</option>
+            <option value="assessoria">Assessoria</option>
+          </select>
+          {errors.position && <span className={styles.error}>{errors.position.message}</span>}
 
-          <label>
+          <span className={styles.label_text}>
             Número da OAB:
-            <input type="text" placeholder="UF000000" name="numeroOab" value={formData.numeroOab} onChange={handleChange} />
-            {errors.numeroOab && <span className="error">{errors.numeroOab}</span>}
-          </label>
+            {(position === "ProcuradorGeral" || position === "ProcuradorEfetivo") && <FaAsterisk className={styles.asterisk} />}
+          </span>
+          <input
+            type="text"
+            placeholder="UF000000"
+            {...register("numeroOab")}
+            disabled={!["ProcuradorGeral", "ProcuradorEfetivo"].includes(position)}
+          />
+          {errors.numeroOab && <span className={styles.error}>{errors.numeroOab.message}</span>}
         </div>
 
-        <div className="form-row">
-          <label>
-            <span className="label-text">
-              Email: <FaAsterisk className="asterisk" />
-            </span>
-            <input
-              type="email"
-              placeholder="Digite seu email"
-              name="email"
-              required
-              onChange={handleChange}
-              value={formData.email}
-            />
-            {errors.email && <span className="error">{errors.email}</span>}
-          </label>
+        {/* Email e Telefone */}
+        <div className={styles.form_row}>
+          <span className={styles.label_text}>Email</span>
+          <input type="email" placeholder="Digite seu email" {...register("email")} />
+          {errors.email && <span className={styles.error}>{errors.email.message}</span>}
 
-          <label>
-            Telefone:
-            <input type="tel" placeholder="0000000-0000" name="phone" required value={formData.phone} onChange={handleChange} />
-            {errors.phone && <span className="error">{errors.phone}</span>}
-          </label>
+          <span className={styles.label_text}>Telefone</span>
+          <input type="tel" placeholder="(00) 00000-0000" {...register("phone")} />
+          {errors.phone && <span className={styles.error}>{errors.phone.message}</span>}
         </div>
 
-        <div className="form-buttons">
-          <Link to="/user">
-            <button className="btn-cancel">Cancelar</button>
-          </Link>
-
-          <button type="submit" className="btn-concluir" disabled={isSubmitting}>
+        {/* Botões */}
+        <div className={styles.form_buttons}>
+          <button type="button" className={styles.btn_cancel} onClick={() => navigate("/user")}>
+            Cancelar
+          </button>
+          <button type="submit" className={styles.btn_concluir} disabled={isSubmitting}>
             {isSubmitting ? "Enviando..." : "Concluir"}
           </button>
         </div>
@@ -224,5 +157,3 @@ function Form() {
     </div>
   );
 }
-
-export default Form;

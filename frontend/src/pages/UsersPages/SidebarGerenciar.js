@@ -18,7 +18,7 @@ function SidebarUser() {
             <h2 className={styles.title}>Gerenciar</h2>
             <ul className={styles.sidebar_ul}>
                 <li>
-                    <Link to="/register-process">
+                    <Link to="/process">
                         <button className={styles.button_li}>
                             <BsArrowLeft className={styles.icon_li} />
                             Voltar 

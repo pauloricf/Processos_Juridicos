@@ -12,9 +12,9 @@ const UsersTable = ({ users, processes, procurador }) => {
   console.log("Valores de users:", users);
   console.log("Valores de processes:", processes);
 
-  const assessores = users.filter((user) => user.Usua_TipoUsuario === "Assessoria       ");
+  const assessores = users.filter((user) => user.Usua_TipoUsuario.trim() === "assessoria");
 
-  const secretarios = users.filter((user) => user.Usua_TipoUsuario === "Secretária       ");
+  const secretarios = users.filter((user) => user.Usua_TipoUsuario === "secretaria");
 
   const processosPorProcurador = (procurador ?? []).map((procurador) => {
     const usuarioProcurador = users.find((user) => user.id === procurador.Pcrd_Usuario_id);

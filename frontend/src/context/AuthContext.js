@@ -37,21 +37,19 @@ export const AuthProvider = ({ children }) => {
   const loginContext = async (data) => {
     try {
       const loggedUser = await login(data);
-      console.log("loggeduser", loggedUser);
       if (loggedUser && loggedUser.token) {
         setUser(loggedUser);
         localStorage.setItem("user", JSON.stringify(loggedUser));
         localStorage.setItem("token", loggedUser.token);
-        console.log("Token armazenado:", loggedUser.token); // Log para verificar o token
+        return { success: true, data: loggedUser };
       } else {
         localStorage.removeItem("user");
         localStorage.removeItem("token");
-        alert("Credenciais inválidas");
+        return { success: false, error: "Credenciais inválidas" };
       }
-
-      return loggedUser;
     } catch (error) {
       console.log("Erro ao fazer login", error);
+      return { success: false, error: error.message || "Erro ao fazer login" };
     }
   };
 

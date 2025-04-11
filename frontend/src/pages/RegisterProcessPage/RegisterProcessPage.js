@@ -2,8 +2,8 @@ import React from "react";
 // import { ReactComponent as BackgroundImage } from '../img/azul.svg';
 import styles from "./RegisterProcessPage.module.css"; // Alteração para module CSS
 import Form from "./RegisterForm";
-import ContainerComponent from "../../components/Container";
-import HeaderPage from "../../components/HeaderPage";
+import ContainerComponent from "../../components/layout/Container";
+import HeaderPage from "../../components/layout/HeaderPage";
 
 function RegisterProcessPage() {
   return (

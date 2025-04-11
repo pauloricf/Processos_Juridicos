@@ -1,25 +1,25 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import api from '../../services/apiConfig';
+import React, { useState } from "react";
+import axios from "axios";
+import api from "../../services/apiConfig";
 import styles from "./EditProcessPage.module.css";
-import EditForm from './EditForm';
-import { useParams } from 'react-router-dom';
-import { Alert, Snackbar } from '@mui/material';
+import EditForm from "./EditForm";
+import { useParams } from "react-router-dom";
+import { Alert, Snackbar } from "@mui/material";
+import HeaderPage from "../../components/layout/HeaderPage";
+import ContainerComponent from "../../components/layout/Container";
 
 const EditProcessPage = () => {
-  const { id } = useParams()
+  const { id } = useParams();
 
-  
   return (
-      <div className={styles.page_content}>
-          <div className={styles.main_container}>
-            <div className={styles.gray_bar}></div>
-            <div className={styles.content}>
-                <EditForm id = {id}/>
-            </div>
-      </div>
-      
-      </div>
+    <>
+      <HeaderPage>
+        <div className={styles.gray_bar}></div>
+      </HeaderPage>
+      <ContainerComponent>
+        <EditForm id={id} />
+      </ContainerComponent>
+    </>
   );
 };
 
