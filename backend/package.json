@@ -1,5 +1,6 @@
 {
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "prisma": "^5.22.0"
   },
   "dependencies": {
@@ -7,6 +8,7 @@
     "bcryptjs": "^3.0.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
     "express": "^4.21.1",
     "jsonwebtoken": "^9.0.2",
     "multer": "^1.4.5-lts.1",
@@ -20,14 +22,15 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
-    "dev": "nodemon server.js",
+    "dev": "cross-env NODE_ENV=development nodemon server.js",
+    "prod": "cross-env NODE_ENV=production node server.js",
     "db:deploy": "npx prisma migrate deploy",
-    "migrate-deploy": "npx prisma migrate deploy && npx prisma db seed"
+    "migrate-deploy": "npx prisma migrate deploy && npx prisma db seed",
+    "vercel-build": "npx prisma migrate deploy && npx prisma db seed"
   },
   "prisma": {
     "seed": "npx node prisma/seed.js"
   },
-
   "author": "",
   "license": "ISC",
   "description": ""

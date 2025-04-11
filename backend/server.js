@@ -41,6 +41,7 @@ app.use("/api/documents", documentRouter);
 app.use("/api/", authRouter);
 app.use("/api/", reportRouter);
 const path = require("path");
+require("dotenv").config({ path: `.env.${process.env.NODE_ENV || "development"}` });  
 
 // Servir arquivos estáticos da pasta 'uploads'
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
