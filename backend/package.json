@@ -25,7 +25,8 @@
     "dev": "cross-env NODE_ENV=development nodemon server.js",
     "prod": "cross-env NODE_ENV=production node server.js",
     "db:deploy": "npx prisma migrate deploy",
-    "migrate-deploy": "npx prisma migrate deploy && npx prisma db seed"
+    "migrate-deploy": "npx prisma migrate deploy && npx prisma db seed",
+    "vercel-build": "npx prisma migratedeploy && npx prisma db seed"
   },
   "prisma": {
     "seed": "npx node prisma/seed.js"
