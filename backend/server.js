@@ -30,6 +30,9 @@ const corsOptions = {
 
 app.options("*", cors());
 app.use(cors(corsOptions));
+app.get("/", (req, res) => {
+  res.send("Backend rodando. Use rotas /api/...");
+});
 // Usando as rotas
 app.use("/api/", processRouter);
 app.use("/api/", usersRouter);
@@ -41,7 +44,7 @@ app.use("/api/documents", documentRouter);
 app.use("/api/", authRouter);
 app.use("/api/", reportRouter);
 const path = require("path");
-require("dotenv").config({ path: `.env.${process.env.NODE_ENV || "development"}` });  
+// require("dotenv").config({ path: `.env.${process.env.NODE_ENV || "development"}` });
 
 // Servir arquivos estáticos da pasta 'uploads'
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
@@ -51,3 +54,5 @@ app.listen(PORT, () => {
   console.log(`Servidor rodando em http://localhost:${PORT}`);
   iniciarMonitoramento();
 });
+
+module.exports = app;

@@ -14,7 +14,9 @@ const getBaseUrl = () => {
   }
 
   // Caso contrário, use o IP fixo
-  return "http://192.169.137.112:3035/api";
+  // return "http://192.169.137.112:3035/api";
+  return "https://processos-juridicos-1n5z.vercel.app/api";
+  
 };
 
 const baseURL = getBaseUrl();
