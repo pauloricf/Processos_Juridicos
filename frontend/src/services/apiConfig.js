@@ -1,14 +1,18 @@
 import axios from "axios";
 
+let navigate; // Variável para armazenar a função de navegação do React Router
+
+export const setNavigate = (navFunction) => {
+  navigate = navFunction; // Função para configurar o `navigate`
+};
+
 const getBaseUrl = () => {
   const hostname = window.location.hostname;
 
-  // Verifica se é localhost
   if (hostname === "localhost" || hostname === "127.0.0.1") {
     return "http://localhost:3035/api";
   }
 
-  // Verifica se está em uma rede local (ajuste o seu IP de rede aqui)
   if (hostname.startsWith("192.168.")) {
     return `http://${hostname}:3035/api`;
   }
@@ -16,7 +20,6 @@ const getBaseUrl = () => {
   // Caso contrário, use o IP fixo
   // return "http://192.169.137.112:3035/api";
   return "https://processos-juridicos-1n5z.vercel.app/api";
-  
 };
 
 const baseURL = getBaseUrl();
@@ -42,7 +45,9 @@ api.interceptors.response.use(
     if (error.response && (error.response.status === 403 || error.response.status === 401)) {
       localStorage.removeItem("user");
       localStorage.removeItem("token");
-      window.location.href = "/login"; // Redireciona para a página de login
+      if (navigate) {
+        navigate("/login"); // Usa o React Router para redirecionar
+      }
     }
     return Promise.reject(error);
   }

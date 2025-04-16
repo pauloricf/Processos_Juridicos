@@ -1,67 +1,95 @@
 .form_container {
-    width: 100%;
-    height: 88%;
-    max-width: 700px;
-    margin: 0 auto;
-    padding: 10px;
-    background: #fff;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    margin-top: 60px;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  /* height: 100%; */
+  font-size: 0.8rem;
 }
 
-.form_container h2 {
-    margin-bottom: 20px;
-    font-size: 1.5rem;
+.error{
+  color: red;
+  font-size: 0.8rem;
+  margin-left: 5px;
+}
+.form_container h3 {
+  margin-bottom: 10px;
+  margin-left: 0;
+}
+.form_group {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.form_radio {
+  flex-direction: row;
+  justify-content: flex-start;
+  position: relative;
+  gap: 0.3rem;
+  margin-bottom: 0.3rem;
+}
+
+.form_radio input {
+  left: 0;
 }
 
 .form_row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 15px;
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+  align-items: flex-end;
+  flex-wrap: wrap;
 }
 
-.form_container input{
-    padding: 8px;
-    font-size: 14px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    width: 100%;
+.form_container input,
+.form_container select {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.form_container textarea {
+  resize: none;
+  height: 100px;
+  max-width: fit-content;
 }
 
 .form_buttons {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  gap: 10px;
+  margin-top: auto;
 }
 
-.btn_cancel {
-    background-color: red;
-    border: none;
-    padding: 10px 15px;
-    font-size: 14px;
-    cursor: pointer;
-    border-radius: 4px;
-    margin-right: 20px;
+.form_container button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
-.btn_concluir {
-    background-color: #007BFF;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    font-size: 14px;
-    cursor: pointer;
-    border-radius: 4px;
+.form_container button[type="reset"] {
+  background: #ccc;
 }
 
-.btn_concluir:hover {
-    background-color: #0056b3;
+.form_container button[type="submit"] {
+  background: #00509e;
+  color: white;
 }
 
-.label_text {
-    display: flex;
-    align-items: center;
-    gap: 4px;
+.form_container section .form_container textarea {
+  width: 700px;
+  height: 40px;
+}
+
+.label_form {
+  display: flex;
+  align-items: center;
+
 }

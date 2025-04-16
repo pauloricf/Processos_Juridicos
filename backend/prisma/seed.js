@@ -26,6 +26,7 @@ async function main() {
         Usua_Identidade: "12345678901234",
         Usua_Telefone: "11999999999",
         Usua_Sexo: "Masculino",
+        Usua_DataNascimento: new Date("1990-01-01"),
         procuradores: {
           create: {
             Pcrd_NumeroOAB: "12345678901",

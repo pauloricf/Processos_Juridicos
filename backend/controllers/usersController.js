@@ -19,16 +19,25 @@ async function registerEmployee(req, res) {
     Usua_Identidade,
     Usua_Telefone,
     Usua_Sexo,
+    Usua_DataNascimento, // Adicionado
     Pcrd_NumeroOAB,
   } = req.body;
 
   let cargo;
-
   let tipoUsua;
 
   try {
     // Atributos que não podem ser vazios
-    if (!Usua_Nome || !Usua_CPF || !Usua_Email || !Usua_TipoUsuario || !Usua_Identidade || !Usua_Sexo || !Usua_Telefone) {
+    if (
+      !Usua_Nome ||
+      !Usua_CPF ||
+      !Usua_Email ||
+      !Usua_TipoUsuario ||
+      !Usua_Identidade ||
+      !Usua_Sexo ||
+      !Usua_Telefone ||
+      !Usua_DataNascimento
+    ) {
       res.json({ error: "Não é possível cadastrar o usuário porque há dados faltantes" });
     } else {
       tipoUsua = Usua_TipoUsuario;
@@ -52,6 +61,7 @@ async function registerEmployee(req, res) {
             Usua_Email,
             Usua_TipoUsuario,
             Usua_Sexo,
+            Usua_DataNascimento, // Adicionado
             procuradores: {
               create: {
                 Pcrd_NumeroOAB,
@@ -78,6 +88,7 @@ async function registerEmployee(req, res) {
             Usua_Email,
             Usua_TipoUsuario,
             Usua_Sexo,
+            Usua_DataNascimento, // Adicionado
           },
         });
 
@@ -131,6 +142,7 @@ async function getEmployee(req, res) {
   try {
     // Pegando os usuários cadastrados
     const funcionarios = await prisma.usuarios.findMany();
+    console.log(funcionarios);
     res.status(200).json(funcionarios);
   } catch (error) {
     // Mensagem de erro

@@ -14,21 +14,22 @@ datasource db {
 }
 
 model Usuarios {
-  id                 Int                    @id @default(autoincrement())
-  Usua_Matricula     String                 @unique @db.VarChar(11)
-  Usua_Nome          String                 @db.VarChar(100)
-  Usua_Email         String                 @unique @db.VarChar(84)
-  Usua_Senha         String                 @db.VarChar(80)
-  Usua_CPF           String                 @unique @db.Char(11)
-  Usua_TipoUsuario   String                 @db.Char(17) //Procurador -> Efetivo ou Geral, Secretária, Assessora
-  Usua_Identidade    String                 @unique @db.VarChar(14)
-  Usua_Telefone      String                 @db.Char(11)
-  Usua_Sexo          String                 @db.Char(9)
-  licenca            Licencas[]
-  calendario         CalendarioAlteracoes[]
-  procuradores       Procuradores[]
-  Transferencias     Transferencias[]
-  documentosAnexados DocumentosAnexados[]
+  id                  Int                    @id @default(autoincrement())
+  Usua_Matricula      String                 @unique @db.VarChar(11)
+  Usua_Nome           String                 @db.VarChar(100)
+  Usua_Email          String                 @unique @db.VarChar(84)
+  Usua_Senha          String                 @db.VarChar(80)
+  Usua_CPF            String                 @unique @db.Char(11)
+  Usua_TipoUsuario    String                 @db.Char(17) //Procurador -> Efetivo ou Geral, Secretária, Assessora
+  Usua_Identidade     String                 @unique @db.VarChar(14)
+  Usua_Telefone       String                 @db.Char(11)
+  Usua_Sexo           String                 @db.Char(9)
+  Usua_DataNascimento DateTime               @db.Date
+  licenca             Licencas[]
+  calendario          CalendarioAlteracoes[]
+  procuradores        Procuradores[]
+  Transferencias      Transferencias[]
+  documentosAnexados  DocumentosAnexados[]
 }
 
 model Calendario {
@@ -60,7 +61,7 @@ model CalendarioAlteracoes {
 
 model Procuradores {
   id                Int                 @id @default(autoincrement())
-  Pcrd_NumeroOAB    String              @db.Char(11)
+  Pcrd_NumeroOAB    String              @unique @db.Char(11)
   Pcrd_Cargo        String              @db.VarChar(7)
   Processos         Processos[]
   Transferencias    Transferencias[]
@@ -72,8 +73,8 @@ model Procuradores {
 
 model Processos {
   id                  Int      @id @default(autoincrement())
-  Pcss_NumeroProcesso String   @db.Char(25)
-  Pcss_Siged          String   @db.Char(22)
+  Pcss_NumeroProcesso String   @unique @db.Char(25)
+  Pcss_Siged          String   @unique @db.Char(22)
   Pcss_ValorAcao      Float    @db.DoublePrecision
   Pcss_DataInicio     DateTime @db.Date
   Pcss_Status         String   @db.VarChar(20)

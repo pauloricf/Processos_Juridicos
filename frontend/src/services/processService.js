@@ -15,7 +15,9 @@ export const postProcess = async (data) => {
     console.log(response.data);
     return response.data;
   } catch (error) {
+    
     console.error("Erro ao cadastrar o processo:", error);
+    throw error
   }
 };
 

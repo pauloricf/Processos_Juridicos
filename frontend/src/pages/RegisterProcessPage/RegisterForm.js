@@ -76,6 +76,8 @@ function Form() {
         }
       }
     });
+    const today = new Date().toISOString().split("T")[0]; // Formata a data como YYYY-MM-DD
+    setValue("Pcss_DataEmitido", today);
     return () => subscription.unsubscribe();
   }, [watch, setValue]);
 
@@ -96,8 +98,12 @@ function Form() {
         navigate("/process");
       }
     } catch (error) {
-      console.error("Erro ao cadastrar:", error);
-      showFeedback("Erro ao cadastrar processo. Verifique os dados e tente novamente.", "error");
+      // showFeedback("Erro ao cadastrar processo. Verifique os dados e tente novamente.", "error");
+      if (error.response?.data?.error) {
+        showFeedback(error.response.data.error, "error"); // Exibe o erro na Snackbar
+      } else {
+        showFeedback("Erro ao cadastrar processo. Verifique os dados e tente novamente.", "error");
+      }
     }
   };
 

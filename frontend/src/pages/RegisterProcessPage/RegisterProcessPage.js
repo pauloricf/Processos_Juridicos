@@ -4,14 +4,15 @@ import styles from "./RegisterProcessPage.module.css"; // Alteração para modul
 import Form from "./RegisterForm";
 import ContainerComponent from "../../components/layout/Container";
 import HeaderPage from "../../components/layout/HeaderPage";
+import GrayBar from "../../components/GrayBar";
 
 function RegisterProcessPage() {
   return (
     <>
       <HeaderPage>
-        <div className={styles.gray_bar}></div>
+        <GrayBar/>
       </HeaderPage>
-      <ContainerComponent className={styles.content}>
+      <ContainerComponent>
         <Form />
       </ContainerComponent>
     </>

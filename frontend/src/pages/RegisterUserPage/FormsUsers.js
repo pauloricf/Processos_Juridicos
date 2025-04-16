@@ -1,32 +1,12 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
 import { useNavigate } from "react-router-dom";
-import { FaAsterisk } from "react-icons/fa";
 import { useFeedback } from "../../context/FeedbackContext";
 import api from "../../services/apiConfig";
 import styles from "./FormsUsers.module.css"; // Importando o CSS do componente
-
-// Esquema de validação com Yup
-const schema = yup.object().shape({
-  fullName: yup.string().required("Nome completo é obrigatório"),
-  email: yup.string().email("E-mail inválido").required("E-mail é obrigatório"),
-  rg: yup.string().required("RG é obrigatório"),
-  cpf: yup
-    .string()
-    .required("CPF é obrigatório")
-    .matches(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/, "Formato inválido (000.000.000-00)"),
-  matricula: yup.string().required("Matrícula é obrigatória"),
-  birthday: yup.date().required("Data de nascimento é obrigatória").max(new Date(), "Data não pode ser futura"),
-  sex: yup.string().required("Sexo é obrigatório"),
-  position: yup.string().required("Cargo é obrigatório"),
-  numeroOab: yup.string().when("position", {
-    is: (position) => ["ProcuradorGeral", "ProcuradorEfetivo"].includes(position),
-    then: yup.string().required("Número da OAB é obrigatório para procuradores"),
-  }),
-  phone: yup.string().required("Telefone é obrigatório"),
-});
+import { schemaUser } from "../../schemas/userSchema";
+import InputMask from "react-input-mask";
 
 export default function Form() {
   const { showFeedback } = useFeedback();
@@ -38,24 +18,29 @@ export default function Form() {
     watch,
     formState: { errors, isSubmitting },
   } = useForm({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(schemaUser),
   });
 
   const position = watch("position");
 
   const onSubmit = async (data) => {
+    console.log(data);
     try {
       const payload = {
         Usua_Matricula: data.matricula,
         Usua_Nome: data.fullName,
         Usua_Email: data.email,
-        Usua_CPF: data.cpf.replace(/\D/g, ""),
+        Usua_CPF: data.cpf.replace(/\D/g, ""), // Remove símbolos do CPF
         Usua_TipoUsuario: data.position,
-        Usua_Identidade: data.rg,
-        Usua_Telefone: data.phone,
+        Usua_Identidade: data.rg.replace(/\D/g, ""), // Remove símbolos do RG
+        Usua_Telefone: data.phone.replace(/\D/g, ""), // Remove símbolos do telefone
         Usua_Sexo: data.sex,
-        ...(position === "ProcuradorGeral" || position === "ProcuradorEfetivo" ? { Pcrd_NumeroOAB: data.numeroOab } : {}),
+        Usua_DataNascimento: data.birthday,
+        ...(position === "ProcuradorGeral" || position === "ProcuradorEfetivo"
+          ? { Pcrd_NumeroOAB: data.numeroOab.replace(/\D/g, "") } // Remove símbolos do número da OAB
+          : {}),
       };
+      console.log("Payload enviado:", payload);
 
       await api.post("/cadastrarUsua", payload);
       showFeedback("Funcionário cadastrado com sucesso!", "success");
@@ -73,75 +58,131 @@ export default function Form() {
 
         {/* Nome Completo */}
         <div className={styles.form_row}>
-          <span className={styles.label_text}>Nome completo</span>
-          <input type="text" placeholder="Digite seu nome completo" {...register("fullName")} />
-          {errors.fullName && <span className={styles.error}>{errors.fullName.message}</span>}
+          <div className={styles.form_group}>
+            <div className={styles.label_form}>
+              <label>Nome completo</label>
+              <span className="required_asterisk">*</span>
+            </div>
+            <input type="text" placeholder="Digite seu nome completo" {...register("fullName")} />
+            {errors.fullName && <span className={styles.error}>{errors.fullName.message}</span>}
+          </div>
         </div>
 
         {/* RG, CPF e Data de Nascimento */}
         <div className={styles.form_row}>
-          <span className={styles.label_text}>Identidade (RG)</span>
-          <input type="text" placeholder="0000000-0" {...register("rg")} />
-          {errors.rg && <span className={styles.error}>{errors.rg.message}</span>}
+          <div className={styles.form_group}>
+            <div className={styles.label_form}>
+              <label>Identidade (RG)</label>
+              <span className="required_asterisk">*</span>
+            </div>
+            <InputMask mask="9999999-9" placeholder="0000000-0" {...register("rg")} />
+            {errors.rg && <span className={styles.error}>{errors.rg.message}</span>}
+          </div>
 
-          <span className={styles.label_text}>CPF</span>
-          <input type="text" placeholder="000.000.000-00" {...register("cpf")} />
-          {errors.cpf && <span className={styles.error}>{errors.cpf.message}</span>}
+          <div className={styles.form_group}>
+            <div className={styles.label_form}>
+              <label>CPF</label>
+              <span className="required_asterisk">*</span>
+            </div>
+            <InputMask mask="999.999.999-99" placeholder="000.000.000-00" {...register("cpf")} />
+            {errors.cpf && <span className={styles.error}>{errors.cpf.message}</span>}
+          </div>
 
-          <span className={styles.label_text}>Data de Nascimento</span>
-          <input type="date" {...register("birthday")} />
-          {errors.birthday && <span className={styles.error}>{errors.birthday.message}</span>}
+          <div className={styles.form_group}>
+            <div className={styles.label_form}>
+              <label>Data de Nascimento</label>
+              <span className="required_asterisk">*</span>
+            </div>
+            <input type="date" {...register("birthday")} />
+            {errors.birthday && <span className={styles.error}>{errors.birthday.message}</span>}
+          </div>
         </div>
 
         {/* Matrícula e Sexo */}
         <div className={styles.form_row}>
-          <span className={styles.label_text}>Matrícula</span>
-          <input type="text" placeholder="000000000" {...register("matricula")} />
-          {errors.matricula && <span className={styles.error}>{errors.matricula.message}</span>}
+          <div className={styles.form_group}>
+            <div className={styles.label_form}>
+              <label>Matrícula</label>
+              <span className="required_asterisk">*</span>
+            </div>
+            <input
+              type="text"
+              placeholder="000000000"
+              {...register("matricula")}
+              onInput={(e) => (e.target.value = e.target.value.replace(/\D/g, ""))}
+            />
+            {errors.matricula && <span className={styles.error}>{errors.matricula.message}</span>}
+          </div>
 
-          <span className={styles.label_text}>Sexo</span>
-          <select {...register("sex")}>
-            <option value="">Selecione...</option>
-            <option value="Masculino">Masculino</option>
-            <option value="Feminino">Feminino</option>
-          </select>
-          {errors.sex && <span className={styles.error}>{errors.sex.message}</span>}
+          <div className={styles.form_group}>
+            <div className={styles.label_form}>
+              <label>Sexo</label>
+              <span className="required_asterisk">*</span>
+            </div>
+            <select {...register("sex")}>
+              <option value="">Selecione...</option>
+              <option value="Masculino">Masculino</option>
+              <option value="Feminino">Feminino</option>
+            </select>
+            {errors.sex && <span className={styles.error}>{errors.sex.message}</span>}
+          </div>
         </div>
 
         {/* Cargo e OAB */}
         <div className={styles.form_row}>
-          <span className={styles.label_text}>Cargo</span>
-          <select {...register("position")}>
-            <option value="">Selecione um cargo...</option>
-            <option value="ProcuradorGeral">Procurador(a) Geral</option>
-            <option value="ProcuradorEfetivo">Procurador(a) Efetivo</option>
-            <option value="secretaria">Secretário(a)</option>
-            <option value="assessoria">Assessoria</option>
-          </select>
-          {errors.position && <span className={styles.error}>{errors.position.message}</span>}
+          <div className={styles.form_group}>
+            <div className={styles.label_form}>
+              <label>Cargo</label>
+              <span className="required_asterisk">*</span>
+            </div>
+            <select {...register("position")}>
+              <option value="">Selecione um cargo...</option>
+              <option value="ProcuradorGeral">Procurador(a) Geral</option>
+              <option value="ProcuradorEfetivo">Procurador(a) Efetivo</option>
+              <option value="secretaria">Secretário(a)</option>
+              <option value="assessoria">Assessoria</option>
+            </select>
+            {errors.position && <span className={styles.error}>{errors.position.message}</span>}
+          </div>
 
-          <span className={styles.label_text}>
-            Número da OAB:
-            {(position === "ProcuradorGeral" || position === "ProcuradorEfetivo") && <FaAsterisk className={styles.asterisk} />}
-          </span>
-          <input
-            type="text"
-            placeholder="UF000000"
-            {...register("numeroOab")}
-            disabled={!["ProcuradorGeral", "ProcuradorEfetivo"].includes(position)}
-          />
-          {errors.numeroOab && <span className={styles.error}>{errors.numeroOab.message}</span>}
+          <div className={styles.form_group}>
+            <div className={styles.label_form}>
+              <label>
+                Número da OAB:
+                {(position === "ProcuradorGeral" || position === "ProcuradorEfetivo") && (
+                  <span className="required_asterisk">*</span>
+                )}
+              </label>
+            </div>
+            <InputMask
+              mask="aa999999"
+              placeholder="UF000000"
+              {...register("numeroOab")}
+              disabled={!["ProcuradorGeral", "ProcuradorEfetivo"].includes(position)}
+            />
+            {errors.numeroOab && <span className={styles.error}>{errors.numeroOab.message}</span>}
+          </div>
         </div>
 
         {/* Email e Telefone */}
         <div className={styles.form_row}>
-          <span className={styles.label_text}>Email</span>
-          <input type="email" placeholder="Digite seu email" {...register("email")} />
-          {errors.email && <span className={styles.error}>{errors.email.message}</span>}
+          <div className={styles.form_group}>
+            <div className={styles.label_form}>
+              <label>Email</label>
+              <span className="required_asterisk">*</span>
+            </div>
+            <input type="email" placeholder="Digite seu email" {...register("email")} />
+            {errors.email && <span className={styles.error}>{errors.email.message}</span>}
+          </div>
 
-          <span className={styles.label_text}>Telefone</span>
-          <input type="tel" placeholder="(00) 00000-0000" {...register("phone")} />
-          {errors.phone && <span className={styles.error}>{errors.phone.message}</span>}
+          <div className={styles.form_group}>
+            <div className={styles.label_form}>
+              <label>Telefone</label>
+              {/* <span className="required_asterisk">*</span> */}
+            </div>
+            <InputMask mask="(99) 99999-9999" placeholder="(00) 00000-0000" {...register("phone")} />
+            {errors.phone && <span className={styles.error}>{errors.phone.message}</span>}
+          </div>
         </div>
 
         {/* Botões */}
@@ -149,8 +190,8 @@ export default function Form() {
           <button type="button" className={styles.btn_cancel} onClick={() => navigate("/user")}>
             Cancelar
           </button>
-          <button type="submit" className={styles.btn_concluir} disabled={isSubmitting}>
-            {isSubmitting ? "Enviando..." : "Concluir"}
+          <button type="submit" className={styles.btn_concluir}>
+            {"Concluir"}
           </button>
         </div>
       </form>

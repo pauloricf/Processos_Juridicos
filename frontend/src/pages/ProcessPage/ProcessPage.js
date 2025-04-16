@@ -17,6 +17,7 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import Swal from "sweetalert2";
 import ContainerComponent from "../../components/layout/Container";
 import HeaderPage from "../../components/layout/HeaderPage";
+import GrayBar from "../../components/GrayBar";
 
 const ProcessPage = () => {
   const renderCount = useRef(0);
@@ -227,17 +228,23 @@ const ProcessPage = () => {
           {notifications?.length > 0 ? memoizedNotifications : <MenuItem disabled>Nenhuma notificação</MenuItem>}
         </Menu>
 
-        <div className={styles.filter_section_bar}>
+        <GrayBar>
           <label>Selecionar Status: </label>
-          <button onClick={() => setStatusButton((prev) => (prev === "Emitidos" ? "" : "Emitidos"))}>
+          <button
+            className={`${styles.status_button} ${statusButton === "Emitidos" ? styles.active : ""}`}
+            onClick={() => setStatusButton((prev) => (prev === "Emitidos" ? "" : "Emitidos"))}>
             <FaCircle color="#2871A7" />
             Emitidos
           </button>
-          <button onClick={() => setStatusButton((prev) => (prev === "Concluídos" ? "" : "Concluídos"))}>
+          <button
+            className={`${styles.status_button} ${statusButton === "Concluídos" ? styles.active : ""}`}
+            onClick={() => setStatusButton((prev) => (prev === "Concluídos" ? "" : "Concluídos"))}>
             <FaCircle color="#19D109" />
             Concluídos
           </button>
-          <button onClick={() => setStatusButton((prev) => (prev === "Vencidos" ? "" : "Vencidos"))}>
+          <button
+            className={`${styles.status_button} ${statusButton === "Vencidos" ? styles.active : ""}`}
+            onClick={() => setStatusButton((prev) => (prev === "Vencidos" ? "" : "Vencidos"))}>
             <FaCircle color="#FF0000" />
             Vencidos
           </button>
@@ -246,7 +253,7 @@ const ProcessPage = () => {
             <FaSearch className={styles.icon_search} />
           </div>
           <FaFilter className={styles.icon_filter} />
-        </div>
+        </GrayBar>
       </HeaderPage>
       <ContainerComponent>
         <div className={styles.title_container}>

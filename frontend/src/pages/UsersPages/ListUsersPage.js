@@ -35,7 +35,7 @@ const UsersTable = ({ users, processes, procurador }) => {
   console.log("informações pegadas:", processosPorProcurador);
   return (
     <div>
-      <h4>Procuradores (as)</h4>
+      <h4 className={styles.h4_users}>Procuradores (as)</h4>
       <TableContainer className={styles.table_container}>
         <Table>
           <TableBody>
@@ -67,7 +67,7 @@ const UsersTable = ({ users, processes, procurador }) => {
       </TableContainer>
 
       {/* Assessores */}
-      <h4>Assessores (as)</h4>
+      <h4 className={styles.h4_users}>Assessores (as)</h4>
       <TableContainer className={styles.table_container}>
         <Table>
           <TableBody>
@@ -98,7 +98,7 @@ const UsersTable = ({ users, processes, procurador }) => {
         </Table>
       </TableContainer>
 
-      <h4>Secretário (as)</h4>
+      <h4 className={styles.h4_users}>Secretário (as)</h4>
       <TableContainer className={styles.table_container}>
         <Table>
           <TableBody>

@@ -1,15 +1,3 @@
-.filter_section_bar {
-  display: flex;
-  margin-bottom: 10px;
-  color: white;
-  align-items: center;
-  padding-left: 30px;
-  background-color: #4b5f70;
-  border-radius: 20px 20px;
-  gap: 3px;
-  width: 100%;
-}
-
 .search_input_container {
   display: flex;
   flex-direction: row;
@@ -40,32 +28,32 @@
   margin-right: 10px;
 }
 
-.filter_section_bar button {
-  display: flex;
-  align-items: center;
-  color: white;
-  background-color: #335b70;
-  border-radius: 20px 20px;
-  gap: 5px;
-}
-
-.filter_section_bar button:hover {
-  background-color: #4b5f70;
-}
-
 .title_container h3 {
   margin: 10px;
 }
-
-.content {
-  /* margin: 10px 30px 60px 100px;   */
-  width: 100%;
-  background-color: rgba(255, 255, 255, 0.8);
+.status_button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border: none;
   border-radius: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  flex-grow: 1;
-  overflow-x: auto;
+  background-color: #435660;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
+
+.status_button:hover {
+  background-color: #556a75;
+  transform: scale(1.05);
+}
+
+.status_button.active {
+  background-color: #2871A7;
+  color: white;
+  font-weight: bold;
+}z
 
 @media (max-width: 1000px) {
   html {
@@ -96,8 +84,4 @@
 .add_icon {
   margin-right: 20px;
   cursor: pointer;
-}
-
-.swal-over-modal {
-  z-index: 2000 !important;
 }

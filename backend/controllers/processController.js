@@ -34,6 +34,19 @@ async function cadastrarProcesso(req, res) {
 
     const valorAcao = parseFloat(req.body.Pcss_ValorAcao);
     const status = "Emitido";
+    const processoExistente = await prisma.processos.findFirst({
+      where: {
+        OR: [{ Pcss_NumeroProcesso: Pcss_NumeroProcesso }, { Pcss_Siged: Pcss_Siged }],
+      },
+    });
+
+    if (processoExistente) {
+      res.status(400).json({
+        error: "Já existe um processo com o mesmo número ou Siged.",
+      });
+      return
+    }
+
     // console.log("categoria", categoria)
     let idCategoria = 0;
     if (categoria == "acao_ordinaria") {
@@ -246,7 +259,7 @@ async function cadastrarProcesso(req, res) {
       }
 
       console.log("Processo cadastrado com sucesso");
-      console.log(novoProcesso);
+      // console.log(novoProcesso);
 
       // Resposta
       res.status(200).json(novoProcesso);

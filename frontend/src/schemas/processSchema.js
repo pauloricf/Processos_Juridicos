@@ -1,4 +1,4 @@
-import * as yup from "yup"; 
+import * as yup from "yup";
 
 export const schemaProcess = yup.object().shape({
   Pcss_NumeroProcesso: yup.string().required("Número do processo é obrigatório"),
@@ -8,7 +8,7 @@ export const schemaProcess = yup.object().shape({
   Pcss_ValorAcao: yup.string().required("Valor da ação é obrigatório"),
   categoria: yup.string().required("Categoria é obrigatória"),
   Pjud_Vara: yup.string().when("tipo", {
-    is: (val) => val === "pjud", 
+    is: (val) => val === "pjud",
     then: (schema) => schema.required("Vara é obrigatória para processo judicial"),
   }),
   Pjud_LocalAudiencia: yup.string(),
@@ -17,10 +17,14 @@ export const schemaProcess = yup.object().shape({
   Pass_Assuntos: yup.string(),
   Pcss_Requerente: yup.string().required("Requerente é obrigatório"),
   Pcss_Requerido: yup.string().required("Requerido é obrigatório"),
-  Pcss_DataEmitido: yup.date().required("Data de emissão é obrigatória"),
+  Pcss_DataEmitido: yup
+    .date()
+    .nullable()
+    .transform((value, originalValue) => (originalValue === "" ? null : value))
+    .required("Data de emissão é obrigatória"),
   tipo: yup.string().required("Tipo de processo é obrigatório"),
   prazo: yup.string().when("categoria", {
-    is: (val) => val === "outro", 
+    is: (val) => val === "outro",
     then: (schema) => schema.required("Prazo é obrigatório"),
   }),
   prazoCorrido: yup.boolean().when("categoria", {
@@ -28,4 +32,3 @@ export const schemaProcess = yup.object().shape({
     then: (schema) => schema.required("Tipo de prazo é obrigatório"),
   }),
 });
-

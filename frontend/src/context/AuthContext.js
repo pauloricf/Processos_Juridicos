@@ -1,6 +1,7 @@
 import React, { createContext, useEffect, useState } from "react";
 import { login, logout } from "../services/authService";
 import { useNavigate } from "react-router-dom";
+import { setNavigate } from "../services/apiConfig";
 
 const AuthContext = createContext();
 
@@ -11,6 +12,8 @@ export const AuthProvider = ({ children }) => {
   });
 
   const navigate = useNavigate();
+
+  setNavigate(navigate);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -37,11 +40,14 @@ export const AuthProvider = ({ children }) => {
   const loginContext = async (data) => {
     try {
       const loggedUser = await login(data);
+
       if (loggedUser && loggedUser.token) {
         setUser(loggedUser);
         localStorage.setItem("user", JSON.stringify(loggedUser));
         localStorage.setItem("token", loggedUser.token);
-        return { success: true, data: loggedUser };
+
+        // Retorna a flag isDefaultPassword
+        return { success: true, data: loggedUser, isDefaultPassword: loggedUser.isDefaultPassword };
       } else {
         localStorage.removeItem("user");
         localStorage.removeItem("token");

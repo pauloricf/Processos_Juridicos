@@ -10,14 +10,13 @@
     display: flex;
     flex-direction: row;
     width: 150px;
-    gap: 8px;
     background-color: #17547c;
     color: white;
     font-size: 20px;
     border: 2px solid black;
     border-radius: 12px;
-    padding: 4px;
-    width: 170px;
+    align-items: center;
+    justify-content: center;
 }
 
 .sidebar_logo img {
@@ -42,12 +41,13 @@
 .button_li {
     display: flex;
     flex-direction: row;
-    width: 170px;
+    width: 150px;
+    height: 2.5rem;
     align-items: center;
     gap: 8px;
     background-color: #17427c;
     color: white;
-}
+  }
 
 .button_li.active {
     color: #0092C1;
